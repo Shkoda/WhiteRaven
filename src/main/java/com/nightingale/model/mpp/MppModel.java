@@ -15,9 +15,9 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Created by Nightingale on 09.03.14.
  */
 @Singleton
-public class MppModel implements IMppModel{
-    private static final AtomicInteger processorId = new AtomicInteger(0);
-    private static final AtomicInteger linkId = new AtomicInteger(0);
+public class MppModel implements IMppModel {
+    private AtomicInteger processorId = new AtomicInteger(0);
+    private AtomicInteger linkId = new AtomicInteger(0);
 
     private Map<Integer, ProcessorVO> processors;
     private Map<Integer, ProcessorLinkVO> links;
@@ -38,9 +38,10 @@ public class MppModel implements IMppModel{
         for (ProcessorVO processorVO : other.getProcessors())
             processors.put(processorVO.getId(), processorVO);
         links.clear();
-        for (ProcessorLinkVO linkVO: other.getLinks())
+        for (ProcessorLinkVO linkVO : other.getLinks())
             links.put(linkVO.getId(), linkVO);
-
+        processorId = ((MppModel) other).processorId;
+        linkId = ((MppModel) other).linkId;
     }
 
     @Override

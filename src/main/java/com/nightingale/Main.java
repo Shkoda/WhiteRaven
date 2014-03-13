@@ -18,6 +18,9 @@ public class Main extends Application {
 
     private Pane mainPagePane;
 
+    public static  Scene scene;
+
+
     public static void main(String[] args) {
         Application.launch();
     }
@@ -30,7 +33,7 @@ public class Main extends Application {
         stage.setMinHeight(Config.SCENE_HEIGHT);
         stage.setMinWidth(Config.SCENE_WIDTH);
 
-        Scene scene = SceneBuilder.create()
+         scene = SceneBuilder.create()
                 .root(mainPagePane = mainView.getView())
                 .width(Config.SCENE_WIDTH)
                 .height(Config.SCENE_HEIGHT)
@@ -42,7 +45,6 @@ public class Main extends Application {
         mainPagePane.prefHeightProperty().bind(scene.heightProperty());
 
         stage.setScene(scene);
-      //  stage.setFullScreen(true);
         stage.show();
 
     }

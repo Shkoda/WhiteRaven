@@ -22,7 +22,7 @@ public class RemoveSelectionHandler implements EventHandler<MouseEvent> {
     @Override
     public void handle(MouseEvent mouseEvent) {
         if (cursorButton.isSelected()) {
-            mediator.turnOffActiveSelection();
+            mediator.turnOffAllSelection();
         }
     }
 }

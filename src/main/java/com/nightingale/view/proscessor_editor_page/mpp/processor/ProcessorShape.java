@@ -47,6 +47,7 @@ public class ProcessorShape {
             }
         });
 
+        view.setId(String.valueOf(processorVO.getId()));
         return view;
 
     }

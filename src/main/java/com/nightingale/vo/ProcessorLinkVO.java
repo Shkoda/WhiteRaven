@@ -8,8 +8,8 @@ import java.io.Serializable;
 public class ProcessorLinkVO implements Serializable {
     private int id;
     private int firstProcessorId, secondProcessorId;
-    private int translateX1, translateY1;
-    private int translateX2, translateY2;
+    private double translateX1, translateY1;
+    private double translateX2, translateY2;
     private String name;
     private boolean fullDuplexEnabled;
 
@@ -21,20 +21,20 @@ public class ProcessorLinkVO implements Serializable {
         name = "L-" + firstProcessorId + "-" + secondProcessorId;
     }
 
-    public int getTranslateX1() {
+    public double getTranslateX1() {
         return translateX1;
     }
 
-    public ProcessorLinkVO setTranslateX1(int translateX1) {
+    public ProcessorLinkVO setTranslateX1(double translateX1) {
         this.translateX1 = translateX1;
         return this;
     }
 
-    public int getTranslateY1() {
+    public double getTranslateY1() {
         return translateY1;
     }
 
-    public ProcessorLinkVO setTranslateY1(int translateY1) {
+    public ProcessorLinkVO setTranslateY1(double translateY1) {
         this.translateY1 = translateY1;
         return this;
     }
@@ -69,21 +69,36 @@ public class ProcessorLinkVO implements Serializable {
         return id;
     }
 
-    public int getTranslateX2() {
+    public double getTranslateX2() {
         return translateX2;
     }
 
-    public ProcessorLinkVO setTranslateX2(int translateX2) {
+    public ProcessorLinkVO setTranslateX2(double translateX2) {
         this.translateX2 = translateX2;
         return this;
     }
 
-    public int getTranslateY2() {
+    public double getTranslateY2() {
         return translateY2;
     }
 
-    public ProcessorLinkVO setTranslateY2(int translateY2) {
+    public ProcessorLinkVO setTranslateY2(double translateY2) {
         this.translateY2 = translateY2;
         return this;
+    }
+
+    @Override
+    public String toString() {
+        return "ProcessorLinkVO{" +
+                "id=" + id +
+                ", firstProcessorId=" + firstProcessorId +
+                ", secondProcessorId=" + secondProcessorId +
+                ", translateX1=" + translateX1 +
+                ", translateY1=" + translateY1 +
+                ", translateX2=" + translateX2 +
+                ", translateY2=" + translateY2 +
+                ", name='" + name + '\'' +
+                ", fullDuplexEnabled=" + fullDuplexEnabled +
+                '}';
     }
 }

@@ -5,6 +5,7 @@ import javafx.geometry.VPos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.GridPane;
 
 /**
@@ -20,7 +21,7 @@ public class ButtonBuilder {
         return button;
     }
 
-    public static Button createButton(String fxId, int size) {
+    public static Button createButton(String fxId, int size, String tooltipText) {
         Button button = new Button();
 
         button.setMinSize(size, size);
@@ -29,15 +30,15 @@ public class ButtonBuilder {
 
         button.setId(fxId);
         GridPane.setHalignment(button, HPos.CENTER);
+
+        if (tooltipText != null){
+
+            Tooltip tooltip = new Tooltip();
+            tooltip.setText(tooltipText);
+            button.setTooltip(tooltip);
+        }
         return button;
     }
 
-    public static ToggleButton createButton(String buttonId, ToggleGroup group, int size) {
-        ToggleButton button = new ToggleButton();
-        button.setId(buttonId);
-        button.setPrefSize(size, size);
-        button.setMinSize(size, size);
-        button.setToggleGroup(group);
-        return button;
-    }
+
 }

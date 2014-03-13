@@ -1,6 +1,9 @@
 package com.nightingale.application.guice;
 
 import com.google.inject.AbstractModule;
+import com.nightingale.command.editor.CreateLinkCommand;
+import com.nightingale.command.editor.CreateProcessorCommand;
+import com.nightingale.command.editor.DeleteProcessorCommand;
 import com.nightingale.command.menu.new_file.NewMppCommand;
 import com.nightingale.command.menu.new_file.NewProjectCommand;
 import com.nightingale.command.menu.new_file.NewTaskGraphCommand;
@@ -115,6 +118,10 @@ public class EventManagerModule extends AbstractModule {
         bind(OpenProjectCommand.class);
 
         bind(SaveCommand.class);
+
+        bind(CreateProcessorCommand.class);
+        bind(DeleteProcessorCommand.class);
+        bind(CreateLinkCommand.class);
     }
 
     private void mapServices() {

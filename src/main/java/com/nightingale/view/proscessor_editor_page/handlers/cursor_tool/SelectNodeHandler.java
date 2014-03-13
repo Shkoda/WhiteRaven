@@ -1,4 +1,4 @@
-package com.nightingale.view.proscessor_editor_page.handlers.node;
+package com.nightingale.view.proscessor_editor_page.handlers.cursor_tool;
 
 import com.nightingale.view.proscessor_editor_page.IProcessorEditorMediator;
 import javafx.event.EventHandler;
@@ -22,8 +22,8 @@ public class SelectNodeHandler implements EventHandler<MouseEvent> {
 
     public void handle(MouseEvent me) {
         if (cursorButton.isSelected()) {
-            mediator.turnOffActiveSelection();
-            mediator.turnOnActiveSelection(node);
+            mediator.turnOffAllSelection();
+            mediator.turnOnSelection(node);
         }
 
     }

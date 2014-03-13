@@ -72,10 +72,10 @@ public class ProcessorEditorView implements IProcessorEditorView {
 
     private void initEditorTools() {
         ToggleGroup toggleGroup = new ToggleGroup();
-        cursorButton = ButtonBuilder.createButton("CursorButton", toggleGroup, Config.EDITOR_BUTTON_SIZE);
-        addProcessorButton = ButtonBuilder.createButton("AddProcessorButton", toggleGroup, Config.EDITOR_BUTTON_SIZE);
-        linkButton = ButtonBuilder.createButton("LinkButton", toggleGroup, Config.EDITOR_BUTTON_SIZE);
-        checkButton = ButtonBuilder.createButton("CheckButton", Config.EDITOR_BUTTON_SIZE);
+        cursorButton = EditorComponents.createToolButton("CursorButton", toggleGroup, Config.EDITOR_BUTTON_SIZE, "Cursor");
+        addProcessorButton = EditorComponents.createToolButton("AddProcessorButton", toggleGroup, Config.EDITOR_BUTTON_SIZE, "Add Processor");
+        linkButton = EditorComponents.createToolButton("LinkButton", toggleGroup, Config.EDITOR_BUTTON_SIZE, "Link Tool");
+        checkButton = ButtonBuilder.createButton("CheckButton", Config.EDITOR_BUTTON_SIZE, "Check MPP Correctness");
 
         cursorButton.setSelected(true);
     }

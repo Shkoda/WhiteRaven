@@ -42,15 +42,17 @@ public class MppMediator implements IMppMediator {
     @Override
     public void refresh() {
         mppModel = DataManager.getMppModel();
+      //  mppView.resetView(mppModel.getProcessors(), mppModel.getLinks());
+
         if (mppCanvas == null)
             mppCanvas = mppView.getView();
         mppCanvas.getChildren().clear();
         for (ProcessorVO processorVO : mppModel.getProcessors()) {
-            editorMediator.addProcessor(processorVO);
+            editorMediator.addProcessorView(processorVO);
 
         }
       for (ProcessorLinkVO processorLinkVO : mppModel.getLinks())
-          editorMediator.addLink(processorLinkVO);
+          editorMediator.addLinkView(processorLinkVO);
     }
 
     @Override
@@ -86,10 +88,4 @@ public class MppMediator implements IMppMediator {
         });
     }
 
-
-
-    @Override
-    public Dimension2D getCanvasDimension() {
-        return mppModel.getCanvasDimension();
-    }
 }

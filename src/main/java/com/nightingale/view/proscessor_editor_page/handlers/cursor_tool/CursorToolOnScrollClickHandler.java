@@ -7,17 +7,17 @@ import javafx.scene.input.MouseEvent;
 /**
  * Created by Nightingale on 13.03.14.
  */
-public class CursorToolOnRightClickHandler implements EventHandler<MouseEvent> {
+public class CursorToolOnScrollClickHandler implements EventHandler<MouseEvent> {
 
     private ToggleButton cursorButton;
 
-    public CursorToolOnRightClickHandler(ToggleButton cursorButton) {
+    public CursorToolOnScrollClickHandler(ToggleButton cursorButton) {
         this.cursorButton = cursorButton;
     }
 
     @Override
     public void handle(MouseEvent mouseEvent) {
-        if (mouseEvent.isSecondaryButtonDown()) {
+        if (mouseEvent.isMiddleButtonDown()) {
             cursorButton.setSelected(true);
         }
     }

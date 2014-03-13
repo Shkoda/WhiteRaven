@@ -12,23 +12,22 @@ import javafx.scene.layout.Pane;
 public interface IProcessorEditorMediator {
     void initTools();
 
-    Dimension2D getCanvasDimension();
-
-    void updateCanvasDimension(Dimension2D dimension2D);
-
-    Pane getMppView();
-
     public void createProcessor(double x, double y);
 
-    Node addProcessor(ProcessorVO processorVO);
+    public void createLink(Node firstProcessorNode, Node secondProcessorNode);
 
-    Node addLink(ProcessorLinkVO linkVO);
+    Node addProcessorView(ProcessorVO processorVO);
 
-    boolean isProcessorToolSelected();
+    Node addLinkView(ProcessorLinkVO linkVO);
 
     Node getSelected();
 
-    void turnOffActiveSelection();
+    void turnOffAllSelection();
 
-    void turnOnActiveSelection(Node node);
+    void turnOnSelection(Node node);
+
+    Node getLinkStart();
+
+    void setLinkStart(Node node);
+
 }

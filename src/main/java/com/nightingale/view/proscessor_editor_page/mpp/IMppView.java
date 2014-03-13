@@ -11,10 +11,10 @@ import javafx.scene.layout.Pane;
 public interface IMppView {
     Pane getView();
 
-    void resetView(Iterable<ProcessorVO> processors, Iterable<ProcessorLinkVO> links);
+   // void resetView(Iterable<ProcessorVO> processors, Iterable<ProcessorLinkVO> links);
 
     Node addProcessorView(ProcessorVO processorVO);
 
-    void addLinkView(ProcessorLinkVO processorLinkVO);
+    Node addLinkView(ProcessorLinkVO processorLinkVO);
 
 }

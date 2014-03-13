@@ -2,12 +2,11 @@ package com.nightingale.view.proscessor_editor_page.mpp;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.nightingale.view.proscessor_editor_page.mpp.link.ILinkView;
-import com.nightingale.view.proscessor_editor_page.mpp.link.LinkView;
+import com.nightingale.view.config.Config;
+import com.nightingale.view.proscessor_editor_page.mpp.link.LinkShape;
 import com.nightingale.view.proscessor_editor_page.mpp.processor.ProcessorShape;
 import com.nightingale.vo.ProcessorLinkVO;
 import com.nightingale.vo.ProcessorVO;
-import javafx.geometry.Dimension2D;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
 import javafx.scene.Group;
@@ -36,18 +35,18 @@ public class MppView implements IMppView {
         return mppCanvas;
     }
 
-    @Override
-    public void resetView(Iterable<ProcessorVO> processors, Iterable<ProcessorLinkVO> links) {
-        mppCanvas.getChildren().clear();
-        for (ProcessorVO processor : processors) {
-            addProcessorView(processor);
-        }
-        for (ProcessorLinkVO link : links) {
-            ILinkView linkView = new LinkView();
-            linkView.update(link);
-            mppCanvas.getChildren().addAll(linkView.getView());
-        }
-    }
+//    @Override
+//    public void resetView(Iterable<ProcessorVO> processors, Iterable<ProcessorLinkVO> links) {
+//        mppCanvas.getChildren().clear();
+//        for (ProcessorVO processor : processors) {
+//            addProcessorView(processor);
+//        }
+//        for (ProcessorLinkVO link : links) {
+//            ILinkView linkView = new LinkView();
+//            linkView.update(link);
+//            mppCanvas.getChildren().addAll(linkView.getView());
+//        }
+//    }
 
     @Override
     public Node addProcessorView(ProcessorVO processorVO) {
@@ -58,17 +57,19 @@ public class MppView implements IMppView {
     }
 
     @Override
-    public void addLinkView(ProcessorLinkVO processorLinkVO) {
-        //todo
+    public Node addLinkView(ProcessorLinkVO processorLinkVO) {
+        final Group view = LinkShape.build(processorLinkVO);
+     //   mediator.setDragHandler(processorVO.getId(), view);
+        mppCanvas.getChildren().add(view);
+        return view;
     }
 
     private void initCanvas() {
-        Dimension2D d = mediator.getCanvasDimension();
         mppCanvas = PaneBuilder.create()
-                .prefHeight(d.getHeight())
-                .prefWidth(d.getWidth())
-                .maxHeight(d.getHeight())
-                .maxWidth(d.getWidth())
+                .prefHeight(Config.CANVAS_HEIGHT)
+                .prefWidth(Config.CANVAS_WIDTH)
+                .maxHeight(Config.CANVAS_HEIGHT)
+                .maxWidth(Config.CANVAS_WIDTH)
                 .build();
 
         GridPane.setHalignment(mppCanvas, HPos.CENTER);
@@ -77,4 +78,7 @@ public class MppView implements IMppView {
         mppCanvas.setStyle("-fx-background-color: #ffffff;-fx-border-color: #000000; ");
     }
 
- }
+    public IMppMediator getMediator() {
+        return mediator;
+    }
+}

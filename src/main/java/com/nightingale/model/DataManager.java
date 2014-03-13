@@ -29,6 +29,7 @@ public class DataManager {
 
     public static void resetMppModel(IMppModel mppModel) {
         DataManager.mppModel = mppModel;
+        System.out.println(mppModel);
     }
 
 

@@ -1,13 +1,22 @@
 package com.nightingale.view.utils;
 
 import com.nightingale.vo.ProcessorVO;
+import com.sun.javafx.animation.transition.Position2D;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Shape;
 import javafx.scene.text.Text;
+
+import java.util.Map;
 
 import static com.nightingale.view.config.Config.*;
 
@@ -20,11 +29,16 @@ public class EditorComponents {
     public static final GridPosition CANVAS_POSITION = new GridPosition(0, 1);
     public static final GridPosition INFO_BAR_POSITION = new GridPosition(0, 0);
     public static final DropShadow SELECTION_EFFECT;
+    public static final DropShadow START_LINK_EFFECT;
 
     static {
         SELECTION_EFFECT = new DropShadow();
         SELECTION_EFFECT.setRadius(5);
         SELECTION_EFFECT.setColor(Color.GREEN);
+
+        START_LINK_EFFECT = new DropShadow();
+        START_LINK_EFFECT.setRadius(5);
+        START_LINK_EFFECT.setColor(Color.ORANGE);
     }
 
 
@@ -105,5 +119,54 @@ public class EditorComponents {
         public ToolBar getToolBar() {
             return toolBar;
         }
+    }
+
+    public static ToggleButton createToolButton(String buttonId, ToggleGroup group, int size, String tooltipText) {
+        ToggleButton button = new ToggleButton();
+        button.setId(buttonId);
+        button.setPrefSize(size, size);
+        button.setMinSize(size, size);
+        button.setToggleGroup(group);
+
+        Tooltip tooltip = new Tooltip();
+        tooltip.setText(tooltipText);
+
+        button.setTooltip(tooltip);
+
+        return button;
+    }
+
+    public static Tuple<Position2D, Position2D> getBestLineEnds(Node firstNode, Node secondNode) {
+        double firstCenterX = firstNode.getTranslateX() + firstNode.getLayoutBounds().getWidth() / 2;
+        double firstCenterY = firstNode.getTranslateY() + firstNode.getLayoutBounds().getHeight() / 2;
+
+        double secondCenterX = secondNode.getTranslateX() + firstNode.getLayoutBounds().getWidth() / 2;
+        double secondCenterY = secondNode.getTranslateY() + firstNode.getLayoutBounds().getHeight() / 2;
+
+        Position2D firstGoodPoint = new Position2D();
+        firstGoodPoint.x = firstCenterX;
+        firstGoodPoint.y = firstCenterY;
+
+        Position2D secondGoodPoint = new Position2D();
+        secondGoodPoint.x = secondCenterX;
+        secondGoodPoint.y = secondCenterY;
+
+//        Line line = new Line(firstCenterX, firstCenterY, secondCenterX, secondCenterY);
+//
+//        Shape firstShape =  new Rectangle(firstNode.getLayoutX(), firstNode.getLayoutY(), firstNode.getLayoutBounds().getWidth(), firstNode.getLayoutBounds().getHeight());
+//        Shape secondShape =  new Rectangle(secondNode.getLayoutX(), secondNode.getLayoutY(), secondNode.getLayoutBounds().getWidth(), secondNode.getLayoutBounds().getHeight());
+//
+//        Shape firstIntersection = Shape.intersect(line, firstShape);
+//        Shape secondIntersection = Shape.intersect(line, secondShape);
+//
+//        Position2D firstGoodPoint = new Position2D();
+//        firstGoodPoint.x = firstIntersection.getLayoutX();
+//        firstGoodPoint.y = firstIntersection.getLayoutY();
+//
+//        Position2D secondGoodPoint = new Position2D();
+//        secondGoodPoint.x = secondIntersection.getLayoutX();
+//        secondGoodPoint.y = secondIntersection.getLayoutY();
+//
+        return new Tuple<>(firstGoodPoint, secondGoodPoint);
     }
 }

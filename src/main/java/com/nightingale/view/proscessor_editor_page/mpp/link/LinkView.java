@@ -12,9 +12,7 @@ import javafx.scene.text.Text;
 /**
  * Created by Nightingale on 09.03.14.
  */
-public class LinkView implements ILinkView {
-    @Inject
-    public ILinkMediator mediator;
+public class LinkView   {
 
     private  int id;
     private  int firstProcessorId, secondProcessorId;
@@ -25,22 +23,22 @@ public class LinkView implements ILinkView {
 
     protected Group view;
 
-    @Override
+
     public void update(ProcessorLinkVO processorLinkVO) {
         id = processorLinkVO.getId();
         name = processorLinkVO.getName();
 
         firstProcessorId = processorLinkVO.getFirstProcessorId();
         secondProcessorId = processorLinkVO.getSecondProcessorId();
-
-        translateX1 = processorLinkVO.getTranslateX1();
-        translateY1 = processorLinkVO.getTranslateY1();
-
-        translateX2 = processorLinkVO.getTranslateX2();
-        translateY2 = processorLinkVO.getTranslateY2();
+//
+//        translateX1 = processorLinkVO.getTranslateX1();
+//        translateY1 = processorLinkVO.getTranslateY1();
+//
+//        translateX2 = processorLinkVO.getTranslateX2();
+//        translateY2 = processorLinkVO.getTranslateY2();
     }
 
-    @Override
+
     public Group getView() {
         if (view == null) {
             Shape line = new Line(translateX1, translateY1, translateX2, translateY2);
@@ -58,7 +56,6 @@ public class LinkView implements ILinkView {
         return view;
     }
 
-    @Override
     public int getId() {
         return id;
     }

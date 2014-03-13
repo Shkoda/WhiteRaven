@@ -37,9 +37,9 @@ public class MainView implements IMainView {
     public MainView() {
         currentPage = startPageView;
 
-        previousButton = ButtonBuilder.createButton("PreviousButton", Config.PREVIOUS_NEXT_BUTTON_SIZE);
-        nextButton = ButtonBuilder.createButton("NextButton", Config.PREVIOUS_NEXT_BUTTON_SIZE);
-        backButton = ButtonBuilder.createButton("BackButton", Config.SYSTEM_MENU_BUTTON_SIZE);
+        previousButton = ButtonBuilder.createButton("PreviousButton", Config.PREVIOUS_NEXT_BUTTON_SIZE, null);
+        nextButton = ButtonBuilder.createButton("NextButton", Config.PREVIOUS_NEXT_BUTTON_SIZE, null);
+        backButton = ButtonBuilder.createButton("BackButton", Config.SYSTEM_MENU_BUTTON_SIZE, null);
     }
 
     public Pane getView() {

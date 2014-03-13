@@ -13,6 +13,5 @@ public interface IMppMediator {
 
     void setDragHandler(int processorId, Node node);
 
-    Dimension2D getCanvasDimension();
 
 }
