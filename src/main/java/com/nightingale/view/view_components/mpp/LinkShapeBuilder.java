@@ -1,29 +1,20 @@
-package com.nightingale.view.proscessor_editor_page.mpp.link;
+package com.nightingale.view.view_components.mpp;
 
 import com.nightingale.view.config.Config;
-import com.nightingale.vo.ProcessorLinkVO;
-import com.nightingale.vo.ProcessorVO;
-import javafx.beans.binding.Bindings;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
+import com.nightingale.model.mpp.elements.ProcessorLinkModel;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
-import javafx.scene.shape.Shape;
 import javafx.scene.text.Text;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by Nightingale on 13.03.14.
  */
-public class LinkShape {
+public class LinkShapeBuilder {
 
-    public static Group build(final ProcessorLinkVO linkVO, Node firstProcessorNode, Node secondProcessorNode) {
+    public static Group build(final ProcessorLinkModel linkVO, Node firstProcessorNode, Node secondProcessorNode) {
         final Line line = new Line(linkVO.getTranslateX1(), linkVO.getTranslateY1(), linkVO.getTranslateX2(), linkVO.getTranslateY2());
         Group view = new Group();
         view.setId(String.valueOf(linkVO.getId()));
@@ -99,7 +90,7 @@ public class LinkShape {
         });
     }
 
-    private static void bindLineEndsToVO(Line line, final ProcessorLinkVO linkVO) {
+    private static void bindLineEndsToVO(Line line, final ProcessorLinkModel linkVO) {
         line.startXProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observableValue, Number oldValue, Number newValue) {

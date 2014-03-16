@@ -1,6 +1,7 @@
 package com.nightingale.application.guice;
 
 import com.google.inject.AbstractModule;
+import com.nightingale.command.editor.CheckMppCommand;
 import com.nightingale.command.editor.CreateLinkCommand;
 import com.nightingale.command.editor.CreateProcessorCommand;
 import com.nightingale.command.editor.DeleteProcessorCommand;
@@ -88,7 +89,6 @@ public class EventManagerModule extends AbstractModule {
 
         bind(IMppView.class).to(MppView.class);
         bind(ITaskGraphView.class).to(TaskGraphView.class);
-        //    bind(ILinkView.class).to(LinkView.class);
     }
 
     private void mapMediators() {
@@ -103,7 +103,6 @@ public class EventManagerModule extends AbstractModule {
 
         bind(IMppMediator.class).to(MppMediator.class);
         bind(ITaskGraphMediator.class).to(TaskGraphMediator.class);
-        //   bind(ILinkMediator.class).to(LinkMediator.class);
     }
 
     private void mapCommands() {
@@ -122,6 +121,7 @@ public class EventManagerModule extends AbstractModule {
         bind(CreateProcessorCommand.class);
         bind(DeleteProcessorCommand.class);
         bind(CreateLinkCommand.class);
+        bind(CheckMppCommand.class);
     }
 
     private void mapServices() {
@@ -132,7 +132,6 @@ public class EventManagerModule extends AbstractModule {
     private void mapModels() {
         bind(IMppModel.class).to(MppModel.class).in(Singleton.class);
         bind(ITaskGraphModel.class).to(TaskGraphModel.class).in(Singleton.class);
-        //    bind(IEventSelectionModel.class).to(EventSelectionModel.class).in(Singleton.class);
     }
 
     private void mapInfrastructure() {

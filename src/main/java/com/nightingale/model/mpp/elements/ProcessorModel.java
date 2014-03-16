@@ -1,9 +1,5 @@
-package com.nightingale.vo;
+package com.nightingale.model.mpp.elements;
 
-
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.adapter.JavaBeanDoubleProperty;
 
 import java.io.Serializable;
 
@@ -11,7 +7,7 @@ import java.io.Serializable;
  * Created by Nightingale on 09.03.14.
  * Processor value object
  */
-public class ProcessorVO implements Serializable {
+public class ProcessorModel implements Serializable {
     private int id;
 
     private double translateX, translateY;
@@ -21,7 +17,7 @@ public class ProcessorVO implements Serializable {
     private double performance;
 
 
-    public ProcessorVO update(int id) {
+    public ProcessorModel update(int id) {
         this.id = id;
         name = "P" + id;
         performance = 1;
@@ -34,7 +30,7 @@ public class ProcessorVO implements Serializable {
         return translateX;
     }
 
-    public ProcessorVO setTranslateX(double translateX) {
+    public ProcessorModel setTranslateX(double translateX) {
         this.translateX = translateX;
         return this;
     }
@@ -47,7 +43,7 @@ public class ProcessorVO implements Serializable {
         return translateY;
     }
 
-    public ProcessorVO setTranslateY(double translateY) {
+    public ProcessorModel setTranslateY(double translateY) {
         this.translateY = translateY;
         return this;
     }
@@ -60,7 +56,7 @@ public class ProcessorVO implements Serializable {
         return hasIO;
     }
 
-    public ProcessorVO setHasIO(boolean hasIO) {
+    public ProcessorModel setHasIO(boolean hasIO) {
         this.hasIO = hasIO;
         return this;
     }
@@ -69,7 +65,7 @@ public class ProcessorVO implements Serializable {
         return fullDuplexEnabled;
     }
 
-    public ProcessorVO setFullDuplexEnabled(boolean fullDuplexEnabled) {
+    public ProcessorModel setFullDuplexEnabled(boolean fullDuplexEnabled) {
         this.fullDuplexEnabled = fullDuplexEnabled;
         return this;
     }
@@ -78,14 +74,14 @@ public class ProcessorVO implements Serializable {
         return performance;
     }
 
-    public ProcessorVO setPerformance(double performance) {
+    public ProcessorModel setPerformance(double performance) {
         this.performance = performance;
         return this;
     }
 
     @Override
     public String toString() {
-        return "ProcessorVO{" +
+        return "ProcessorModel{" +
                 "id=" + id +
                 ", translateX=" + translateX +
                 ", translateY=" + translateY +

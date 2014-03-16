@@ -5,7 +5,7 @@ import com.nightingale.command.editor.DeleteProcessorCommand;
 import com.nightingale.view.proscessor_editor_page.IProcessorEditorMediator;
 import com.nightingale.view.proscessor_editor_page.mpp.IMppMediator;
 import com.nightingale.view.utils.NodeType;
-import com.nightingale.view.utils.Tuple;
+import com.nightingale.utils.Tuple;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Node;

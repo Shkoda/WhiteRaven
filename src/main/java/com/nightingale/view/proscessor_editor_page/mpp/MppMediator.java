@@ -5,9 +5,9 @@ import com.google.inject.Singleton;
 import com.nightingale.model.DataManager;
 import com.nightingale.model.mpp.IMppModel;
 import com.nightingale.view.proscessor_editor_page.IProcessorEditorMediator;
-import com.nightingale.view.utils.CanvasBounds;
-import com.nightingale.vo.ProcessorLinkVO;
-import com.nightingale.vo.ProcessorVO;
+import com.nightingale.view.view_components.mpp.ProcessorShapeBuilder;
+import com.nightingale.model.mpp.elements.ProcessorLinkModel;
+import com.nightingale.model.mpp.elements.ProcessorModel;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.scene.Cursor;
@@ -49,14 +49,14 @@ public class MppMediator implements IMppMediator {
         mppCanvas.getChildren().clear();
 
         Map<Integer, Node> processors = new HashMap<>();
-        for (ProcessorVO processorVO : mppModel.getProcessors()) {
-            Node node = editorMediator.addProcessorView(processorVO);
+        for (ProcessorModel processorModel : mppModel.getProcessors()) {
+            Node node = editorMediator.addProcessorView(processorModel);
             processors.put(Integer.valueOf(node.getId()), node);
         }
-        for (ProcessorLinkVO processorLinkVO : mppModel.getLinks()) {
-            Node firstProcessor = processors.get(processorLinkVO.getFirstProcessorId());
-            Node secondProcessor = processors.get(processorLinkVO.getSecondProcessorId());
-            editorMediator.addLinkView(processorLinkVO, firstProcessor, secondProcessor);
+        for (ProcessorLinkModel processorLinkModel : mppModel.getLinks()) {
+            Node firstProcessor = processors.get(processorLinkModel.getFirstProcessorId());
+            Node secondProcessor = processors.get(processorLinkModel.getSecondProcessorId());
+            editorMediator.addLinkView(processorLinkModel, firstProcessor, secondProcessor);
         }
     }
 
@@ -75,7 +75,7 @@ public class MppMediator implements IMppMediator {
                 double dragX = me.getSceneX() - dragAnchor.getX();
                 double dragY = me.getSceneY() - dragAnchor.getY();
 
-                Point2D inBoundsCoordinate = CanvasBounds.getInBoundsCoordinate(initX + dragX, initY + dragY, node, mppView.getView());
+                Point2D inBoundsCoordinate = ProcessorShapeBuilder.getInBoundsCoordinate(initX + dragX, initY + dragY, node, mppView.getView());
                 node.setTranslateX(inBoundsCoordinate.getX());
                 node.setTranslateY(inBoundsCoordinate.getY());
 

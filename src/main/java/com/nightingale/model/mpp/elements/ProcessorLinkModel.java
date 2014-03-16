@@ -1,17 +1,18 @@
-package com.nightingale.vo;
+package com.nightingale.model.mpp.elements;
 
 import java.io.Serializable;
 
 /**
  * Created by Nightingale on 09.03.14.
  */
-public class ProcessorLinkVO implements Serializable {
+public class ProcessorLinkModel implements Serializable {
     private int id;
     private int firstProcessorId, secondProcessorId;
     private double translateX1, translateY1;
     private double translateX2, translateY2;
     private String name;
     private boolean fullDuplexEnabled;
+    private int weight;
 
 
     public void update(int id, int firstProcessorId, int secondProcessorId) {
@@ -19,13 +20,15 @@ public class ProcessorLinkVO implements Serializable {
         this.firstProcessorId = firstProcessorId;
         this.secondProcessorId = secondProcessorId;
         name = "L-" + firstProcessorId + "-" + secondProcessorId;
+        fullDuplexEnabled = true;
+        weight = 1;
     }
 
     public double getTranslateX1() {
         return translateX1;
     }
 
-    public ProcessorLinkVO setTranslateX1(double translateX1) {
+    public ProcessorLinkModel setTranslateX1(double translateX1) {
         this.translateX1 = translateX1;
         return this;
     }
@@ -34,7 +37,7 @@ public class ProcessorLinkVO implements Serializable {
         return translateY1;
     }
 
-    public ProcessorLinkVO setTranslateY1(double translateY1) {
+    public ProcessorLinkModel setTranslateY1(double translateY1) {
         this.translateY1 = translateY1;
         return this;
     }
@@ -43,7 +46,7 @@ public class ProcessorLinkVO implements Serializable {
         return name;
     }
 
-    public ProcessorLinkVO setName(String name) {
+    public ProcessorLinkModel setName(String name) {
         this.name = name;
         return this;
     }
@@ -52,7 +55,7 @@ public class ProcessorLinkVO implements Serializable {
         return fullDuplexEnabled;
     }
 
-    public ProcessorLinkVO setFullDuplexEnabled(boolean fullDuplexEnabled) {
+    public ProcessorLinkModel setFullDuplexEnabled(boolean fullDuplexEnabled) {
         this.fullDuplexEnabled = fullDuplexEnabled;
         return this;
     }
@@ -73,7 +76,7 @@ public class ProcessorLinkVO implements Serializable {
         return translateX2;
     }
 
-    public ProcessorLinkVO setTranslateX2(double translateX2) {
+    public ProcessorLinkModel setTranslateX2(double translateX2) {
         this.translateX2 = translateX2;
         return this;
     }
@@ -82,8 +85,17 @@ public class ProcessorLinkVO implements Serializable {
         return translateY2;
     }
 
-    public ProcessorLinkVO setTranslateY2(double translateY2) {
+    public ProcessorLinkModel setTranslateY2(double translateY2) {
         this.translateY2 = translateY2;
+        return this;
+    }
+
+    public int getWeight() {
+        return weight;
+    }
+
+    public ProcessorLinkModel setWeight(int weight) {
+        this.weight = weight;
         return this;
     }
 
@@ -92,7 +104,7 @@ public class ProcessorLinkVO implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        ProcessorLinkVO linkVO = (ProcessorLinkVO) o;
+        ProcessorLinkModel linkVO = (ProcessorLinkModel) o;
 
         if (firstProcessorId != linkVO.firstProcessorId) return false;
         if (id != linkVO.id) return false;
@@ -111,7 +123,7 @@ public class ProcessorLinkVO implements Serializable {
 
     @Override
     public String toString() {
-        return "ProcessorLinkVO{" +
+        return "ProcessorLinkModel{" +
                 "id=" + id +
                 ", firstProcessorId=" + firstProcessorId +
                 ", secondProcessorId=" + secondProcessorId +

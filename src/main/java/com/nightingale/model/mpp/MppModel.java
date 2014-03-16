@@ -1,8 +1,8 @@
 package com.nightingale.model.mpp;
 
 import com.google.inject.Singleton;
-import com.nightingale.vo.ProcessorLinkVO;
-import com.nightingale.vo.ProcessorVO;
+import com.nightingale.model.mpp.elements.ProcessorLinkModel;
+import com.nightingale.model.mpp.elements.ProcessorModel;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -15,8 +15,8 @@ public class MppModel implements IMppModel {
     private AtomicInteger processorIdGenerator = new AtomicInteger(0);
     private AtomicInteger linkIdGenerator = new AtomicInteger(0);
 
-    private Map<Integer, ProcessorVO> processors;
-    private Map<Integer, ProcessorLinkVO> links;
+    private Map<Integer, ProcessorModel> processors;
+    private Map<Integer, ProcessorLinkModel> links;
 
 
     public MppModel() {
@@ -24,25 +24,10 @@ public class MppModel implements IMppModel {
         links = new HashMap<>();
     }
 
-//    @Override
-//    public void reset(IMppModel other) {
-//
-//        processors.clear();
-//        for (ProcessorVO processorVO : other.getProcessors())
-//            processors.put(processorVO.getId(), processorVO);
-//        links.clear();
-//        for (ProcessorLinkVO linkVO : other.getLinks())
-//            links.put(linkVO.getId(), linkVO);
-//
-//        MppModel otherMpp = ((MppModel) other);
-//        processorIdGenerator = otherMpp.processorIdGenerator;
-//        linkIdGenerator = otherMpp.linkIdGenerator;
-//    }
-
     @Override
-    public ProcessorVO addProcessor() {
+    public ProcessorModel addProcessor() {
         int id = processorIdGenerator.incrementAndGet();
-        ProcessorVO processor = new ProcessorVO();
+        ProcessorModel processor = new ProcessorModel();
         processor.update(id);
         processors.put(id, processor);
         return processor;
@@ -52,8 +37,8 @@ public class MppModel implements IMppModel {
     public void removeProcessor(int processorId) {
         processors.remove(processorId);
         List<Integer> connectedLinks = new ArrayList<>();
-        for (Map.Entry<Integer, ProcessorLinkVO> kv : links.entrySet()) {
-            ProcessorLinkVO linkVO = kv.getValue();
+        for (Map.Entry<Integer, ProcessorLinkModel> kv : links.entrySet()) {
+            ProcessorLinkModel linkVO = kv.getValue();
             if (linkVO.getFirstProcessorId() == processorId || linkVO.getSecondProcessorId() == processorId)
                 connectedLinks.add(kv.getKey());
         }
@@ -62,9 +47,9 @@ public class MppModel implements IMppModel {
 
 
     @Override
-    public ProcessorLinkVO linkProcessors(int firstProcessorId, int secondProcessorId) {
+    public ProcessorLinkModel linkProcessors(int firstProcessorId, int secondProcessorId) {
         int id = linkIdGenerator.incrementAndGet();
-        ProcessorLinkVO link = new ProcessorLinkVO();
+        ProcessorLinkModel link = new ProcessorLinkModel();
         link.update(id, firstProcessorId, secondProcessorId);
         links.put(id, link);
 
@@ -73,7 +58,7 @@ public class MppModel implements IMppModel {
 
     @Override
     public boolean areConnected(int firstProcessorId, int secondProcessorId) {
-        for (ProcessorLinkVO linkVO : links.values())
+        for (ProcessorLinkModel linkVO : links.values())
             if (linkVO.getFirstProcessorId() == firstProcessorId && linkVO.getSecondProcessorId() == secondProcessorId ||
                     linkVO.getSecondProcessorId() == firstProcessorId && linkVO.getFirstProcessorId() == secondProcessorId)
                 return true;
@@ -87,15 +72,19 @@ public class MppModel implements IMppModel {
 
 
     @Override
-    public Collection<ProcessorVO> getProcessors() {
+    public Collection<ProcessorModel> getProcessors() {
         return processors.values();
     }
 
     @Override
-    public Collection<ProcessorLinkVO> getLinks() {
+    public Collection<ProcessorLinkModel> getLinks() {
         return links.values();
     }
 
+    @Override
+    public int getMaxProcessorId() {
+        return processorIdGenerator.get();
+    }
 
     @Override
     public String toString() {

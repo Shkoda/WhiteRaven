@@ -4,6 +4,7 @@ import com.nightingale.model.mpp.IMppModel;
 import com.nightingale.model.mpp.MppModel;
 import com.nightingale.model.tasks.ITaskGraphModel;
 import com.nightingale.model.tasks.TaskGraphModel;
+import com.nightingale.utils.Loggers;
 
 import java.io.Serializable;
 
@@ -29,7 +30,7 @@ public class DataManager {
 
     public static void resetMppModel(IMppModel mppModel) {
         DataManager.mppModel = mppModel;
-        System.out.println(mppModel);
+        Loggers.debugLogger.debug(mppModel);
     }
 
 

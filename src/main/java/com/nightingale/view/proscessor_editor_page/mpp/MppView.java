@@ -3,10 +3,10 @@ package com.nightingale.view.proscessor_editor_page.mpp;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.nightingale.view.config.Config;
-import com.nightingale.view.proscessor_editor_page.mpp.link.LinkShape;
-import com.nightingale.view.proscessor_editor_page.mpp.processor.ProcessorShape;
-import com.nightingale.vo.ProcessorLinkVO;
-import com.nightingale.vo.ProcessorVO;
+import com.nightingale.view.view_components.mpp.LinkShapeBuilder;
+import com.nightingale.view.view_components.mpp.ProcessorShapeBuilder;
+import com.nightingale.model.mpp.elements.ProcessorLinkModel;
+import com.nightingale.model.mpp.elements.ProcessorModel;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
 import javafx.scene.Group;
@@ -34,16 +34,16 @@ public class MppView implements IMppView {
     }
 
     @Override
-    public Node addProcessorView(ProcessorVO processorVO) {
-        final Group view = ProcessorShape.build(processorVO);
+    public Node addProcessorView(ProcessorModel processorModel) {
+        final Group view = ProcessorShapeBuilder.build(processorModel);
         mediator.setDragHandler(view);
         mppCanvas.getChildren().add(view);
         return view;
     }
 
     @Override
-    public Node addLinkView(ProcessorLinkVO processorLinkVO, final Node firstProcessorNode, final Node secondProcessorNode) {
-        final Group view = LinkShape.build(processorLinkVO, firstProcessorNode,secondProcessorNode);
+    public Node addLinkView(ProcessorLinkModel processorLinkModel, final Node firstProcessorNode, final Node secondProcessorNode) {
+        final Group view = LinkShapeBuilder.build(processorLinkModel, firstProcessorNode, secondProcessorNode);
         mppCanvas.getChildren().add(view);
         return view;
     }

@@ -1,6 +1,6 @@
 package com.nightingale.view.proscessor_editor_page.listeners;
 
-import com.nightingale.vo.ProcessorVO;
+import com.nightingale.model.mpp.elements.ProcessorModel;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 
@@ -9,14 +9,14 @@ import javafx.beans.value.ObservableValue;
  */
 public class ProcessorDuplexPropertyListener  implements ChangeListener<Boolean> {
 
-    private final ProcessorVO processorVO;
+    private final ProcessorModel processorModel;
 
-    public ProcessorDuplexPropertyListener(ProcessorVO processorVO) {
-        this.processorVO = processorVO;
+    public ProcessorDuplexPropertyListener(ProcessorModel processorModel) {
+        this.processorModel = processorModel;
     }
 
     @Override
     public void changed(ObservableValue<? extends Boolean> observableValue, Boolean oldValue, Boolean newValue) {
-        processorVO.setFullDuplexEnabled(newValue);
+        processorModel.setFullDuplexEnabled(newValue);
     }
 }

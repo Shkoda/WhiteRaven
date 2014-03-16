@@ -1,4 +1,4 @@
-package com.nightingale.view.utils;
+package com.nightingale.view.view_components.common;
 
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;

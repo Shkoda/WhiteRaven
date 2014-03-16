@@ -1,8 +1,7 @@
 package com.nightingale.model.mpp;
 
-import com.nightingale.vo.ProcessorLinkVO;
-import com.nightingale.vo.ProcessorVO;
-import javafx.geometry.Dimension2D;
+import com.nightingale.model.mpp.elements.ProcessorLinkModel;
+import com.nightingale.model.mpp.elements.ProcessorModel;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -12,17 +11,19 @@ import java.util.Collection;
  */
 public interface IMppModel extends Serializable {
 
-    ProcessorVO addProcessor();
+    ProcessorModel addProcessor();
+
+    int getMaxProcessorId();
 
     void removeProcessor(int processorId);
 
-    Collection<ProcessorVO> getProcessors();
+    Collection<ProcessorModel> getProcessors();
 
-    ProcessorLinkVO linkProcessors(int firstProcessorId, int secondProcessorId);
+    ProcessorLinkModel linkProcessors(int firstProcessorId, int secondProcessorId);
 
     void removeLink(int linkId);
 
-    Collection<ProcessorLinkVO> getLinks();
+    Collection<ProcessorLinkModel> getLinks();
 
     boolean areConnected(int firstProcessorId, int secondProcessorId);
 }

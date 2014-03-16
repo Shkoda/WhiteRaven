@@ -6,15 +6,19 @@ import com.nightingale.view.ViewablePage;
 import com.nightingale.view.config.Config;
 import com.nightingale.view.proscessor_editor_page.mpp.MppView;
 import com.nightingale.view.tasks_editor_page.TasksEditorView;
-import com.nightingale.view.utils.ButtonBuilder;
-import com.nightingale.view.utils.EditorComponents;
-import com.nightingale.vo.ProcessorLinkVO;
-import com.nightingale.vo.ProcessorVO;
+import com.nightingale.view.view_components.editor.*;
+import com.nightingale.model.mpp.elements.ProcessorLinkModel;
+import com.nightingale.model.mpp.elements.ProcessorModel;
+import javafx.animation.FadeTransition;
+import javafx.animation.FadeTransitionBuilder;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.text.Text;
+import javafx.util.Duration;
 
-import static com.nightingale.view.utils.EditorComponents.*;
+import static com.nightingale.view.view_components.editor.EditorConstants.*;
 
 /**
  * Created by Nightingale on 09.03.14.
@@ -31,7 +35,12 @@ public class ProcessorEditorView implements IProcessorEditorView {
     private GridPane view;
     private ToggleButton cursorButton, addProcessorButton, linkButton;
     private Button checkButton;
-    private ProcessorInfoPane infoPane;
+    private ProcessorInfoPane processorInfoPane;
+    private ProcessorLinkInfoPane linkInfoPane;
+
+    private Pane infoContainer;
+
+    private FadeTransition hideInfoMessageTransition;
 
     @Override
     public Pane getView() {
@@ -40,21 +49,41 @@ public class ProcessorEditorView implements IProcessorEditorView {
 
 
     @Override
-    public void showProcessorInfoPane(ProcessorVO processorVO) {
-        infoPane.setParams(processorVO);
-        infoPane.bindParams(processorVO);
-        infoPane.getToolBar().setVisible(true);
+    public void showProcessorInfoPane(ProcessorModel processorModel) {
+        infoContainer.getChildren().setAll(processorInfoPane.getToolBar());
+        processorInfoPane.setParams(processorModel);
+        processorInfoPane.bindParams(processorModel);
+        processorInfoPane.getToolBar().setVisible(true);
     }
 
     @Override
-    public void showLinkInfoPane(ProcessorLinkVO linkVO) {
+    public void showMppInfoPane(boolean isMppOk) {
+        Text message = CheckInfoBuilder.build(isMppOk);
+        message.setX(infoContainer.getTranslateX());
+        message.setY(infoContainer.getTranslateY() + 22);
+        message.setVisible(true);
 
+        hideInfoMessageTransition.setNode(message);
+        hideInfoMessageTransition.play();
+
+        infoContainer.getChildren().setAll(message);
+    }
+
+    @Override
+    public void showLinkInfoPane(ProcessorLinkModel linkVO) {
+        infoContainer.getChildren().setAll(processorInfoPane.getToolBar());
+        linkInfoPane.setParams(linkVO);
+        linkInfoPane.bindParams(linkVO);
+        linkInfoPane.getToolBar().setVisible(true);
+        infoContainer.getChildren().setAll(linkInfoPane.getToolBar());
     }
 
     @Override
     public void hideInfoPane() {
-        infoPane.unbindParams();
-        infoPane.getToolBar().setVisible(false);
+        processorInfoPane.unbindParams();
+   //     processorInfoPane.getToolBar().setVisible(false);
+        for (Node node : infoContainer.getChildren())
+            node.setVisible(false);
     }
 
     @Override
@@ -102,42 +131,52 @@ public class ProcessorEditorView implements IProcessorEditorView {
     //----------------------------------------------------------
 
     private GridPane initView() {
-        view = EditorComponents.buildTemplateGrid();
+        view = EditorGridBuilder.build();
         initToolBar();
         initCanvas();
         initStatusBar();
+
+        hideInfoMessageTransition = FadeTransitionBuilder.create()
+                .fromValue(1)
+                .toValue(0)
+                .duration(new Duration(3000))
+                .build();
+
         return view;
     }
 
     private void initStatusBar() {
-        infoPane = new ProcessorInfoPane();
-        infoPane.getToolBar().setVisible(false);
-        //   infoPane.getToolBar().setStyle("-fx-opacity: 0.5");
-        Pane pane = new Pane();
-        pane.setStyle("-fx-background-color:  #f7f7f7; -fx-border-color: #bababa");
-        pane.getChildren().addAll(infoPane.getToolBar());
-        view.add(pane, INFO_BAR_POSITION.columnNumber, INFO_BAR_POSITION.rowNumber);
+        processorInfoPane = new ProcessorInfoPane();
+        processorInfoPane.getToolBar().setVisible(false);
+
+        linkInfoPane = new ProcessorLinkInfoPane();
+        linkInfoPane.getToolBar().setVisible(false);
+
+        infoContainer = new Pane();
+        infoContainer.setStyle("-fx-background-color:  #f7f7f7; -fx-border-color: #bababa");
+
+        view.add(infoContainer, INFO_BAR_POSITION.columnNumber, INFO_BAR_POSITION.rowNumber);
     }
 
     private void initToolBar() {
         initEditorTools();
-        Pane toolBar = EditorComponents.buildToolBar(cursorButton, addProcessorButton, linkButton, checkButton);
+        Pane toolBar = EditorToolbarBuilder.build(cursorButton, addProcessorButton, linkButton, checkButton);
         view.add(toolBar, TOOLBAR_POSITION.columnNumber, TOOLBAR_POSITION.rowNumber);
         mediator.initTools();
     }
 
     private void initCanvas() {
-        ScrollPane canvasContainer = EditorComponents.buildCanvasContainer();
+        ScrollPane canvasContainer = EditorCanvasContainerBuilder.build();
         canvasContainer.setContent(mppView.getView());
         view.add(canvasContainer, CANVAS_POSITION.columnNumber, CANVAS_POSITION.rowNumber);
     }
 
     private void initEditorTools() {
         ToggleGroup toggleGroup = new ToggleGroup();
-        cursorButton = EditorComponents.createToolButton("CursorButton", toggleGroup, Config.EDITOR_BUTTON_SIZE, "Cursor");
-        addProcessorButton = EditorComponents.createToolButton("AddProcessorButton", toggleGroup, Config.EDITOR_BUTTON_SIZE, "Add Processor");
-        linkButton = EditorComponents.createToolButton("LinkButton", toggleGroup, Config.EDITOR_BUTTON_SIZE, "Link Tool");
-        checkButton = ButtonBuilder.createButton("CheckButton", Config.EDITOR_BUTTON_SIZE, "Check MPP Correctness");
+        cursorButton = EditorToolBuilder.build("CursorButton", toggleGroup, Config.EDITOR_BUTTON_SIZE, "Cursor");
+        addProcessorButton = EditorToolBuilder.build("AddProcessorButton", toggleGroup, Config.EDITOR_BUTTON_SIZE, "Add Processor");
+        linkButton = EditorToolBuilder.build("LinkButton", toggleGroup, Config.EDITOR_BUTTON_SIZE, "Link Tool");
+        checkButton = EditorToolBuilder.build("CheckButton", Config.EDITOR_BUTTON_SIZE, "Check MPP Correctness");
 
         cursorButton.setSelected(true);
     }

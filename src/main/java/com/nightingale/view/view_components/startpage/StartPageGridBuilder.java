@@ -1,4 +1,4 @@
-package com.nightingale.view.utils;
+package com.nightingale.view.view_components.startpage;
 
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
@@ -8,7 +8,7 @@ import javafx.scene.layout.RowConstraints;
  * Created by Nightingale on 09.03.14.
  */
 public class StartPageGridBuilder {
-    public static GridPane get() {
+    public static GridPane build() {
         GridPane gridForLinks = new GridPane();
         ColumnConstraints firstColumn = new ColumnConstraints();
         firstColumn.setPercentWidth(50);
@@ -23,8 +23,6 @@ public class StartPageGridBuilder {
         gridForLinks.getColumnConstraints().addAll(firstColumn, secondColumn);
         gridForLinks.getRowConstraints().addAll(firstRow, secondRow);
 
-//        gridForLinks.setStyle("-fx-background-color: #daf4cd;-fx-border-color: #b03c5d; ");
-//        gridForLinks.setGridLinesVisible(true);
 
         gridForLinks.setHgap(30);
         gridForLinks.setVgap(30);

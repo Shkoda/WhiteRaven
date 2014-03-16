@@ -6,14 +6,14 @@ import com.nightingale.view.ViewablePage;
 import com.nightingale.view.config.Config;
 import com.nightingale.view.main_page.settings.ISettingsView;
 import com.nightingale.view.start_page.StartPageView;
-import com.nightingale.view.utils.*;
-import com.nightingale.view.utils.ButtonBuilder;
+import com.nightingale.view.view_components.common.ButtonBuilder;
+import com.nightingale.view.view_components.common.PageGridBuilder;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.PaneBuilder;
 
-import static com.nightingale.view.utils.PageGridBuilder.*;
+import static com.nightingale.view.view_components.common.PageGridBuilder.*;
 
 /**
  * Created by Nightingale on 09.03.14.
@@ -54,7 +54,6 @@ public class MainView implements IMainView {
             gridRootTemplate.add(nextButton, NEXT_BUTTON_POSITION.columnNumber, NEXT_BUTTON_POSITION.rowNumber);
 
             gridRootTemplate.add(settings.getView(), SETTINGS_BUTTON_POSITION.columnNumber, SETTINGS_BUTTON_POSITION.rowNumber);
-            //       setNavigation(currentPage.isNavigationVisible(), currentPage.getPreviousPage(), currentPage.getNextPage());
 
             view = PaneBuilder.create()
                     .padding(new javafx.geometry.Insets(5))
@@ -68,7 +67,6 @@ public class MainView implements IMainView {
 
             mediator.init();
             mediator.updateNavigation();
-            //   gridRootTemplate.add(currentViewPane = currentPage.getView(), 1, 1);
         }
         return view;
     }

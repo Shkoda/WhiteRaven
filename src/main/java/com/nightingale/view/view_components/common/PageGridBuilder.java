@@ -1,10 +1,9 @@
-package com.nightingale.view.utils;
+package com.nightingale.view.view_components.common;
 
 
 import com.nightingale.view.config.Config;
-import javafx.geometry.HPos;
+import com.nightingale.view.utils.GridPosition;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.ColumnConstraints;
@@ -33,8 +32,6 @@ public class PageGridBuilder {
         setConstraints(gridPane);
         setPageName(gridPane, name);
 
-      //  gridPane.setGridLinesVisible(true);
-
         return gridPane;
     }
 
@@ -55,10 +52,10 @@ public class PageGridBuilder {
 
     private static void setConstraints(GridPane template) {
         ColumnConstraints leftConstraint = new ColumnConstraints();
-        Utils.setConstantWidth(leftConstraint, Config.SYSTEM_MENU_BUTTON_SIZE * 2);
+        ConstantSizeSetter.setConstantWidth(leftConstraint, Config.SYSTEM_MENU_BUTTON_SIZE * 2);
 
         ColumnConstraints rightConstraint = new ColumnConstraints();
-        Utils.setConstantWidth(rightConstraint, SYSTEM_MENU_BUTTON_SIZE * 2);
+        ConstantSizeSetter.setConstantWidth(rightConstraint, SYSTEM_MENU_BUTTON_SIZE * 2);
 
         ColumnConstraints contentColumn = new ColumnConstraints();
         contentColumn.prefWidthProperty().bind(template.widthProperty());
@@ -66,7 +63,7 @@ public class PageGridBuilder {
         template.getColumnConstraints().setAll(leftConstraint, contentColumn, rightConstraint);
 
         RowConstraints headerRow = new RowConstraints();
-        Utils.setConstantHeight(headerRow, SYSTEM_MENU_BUTTON_SIZE * 2);
+        ConstantSizeSetter.setConstantHeight(headerRow, SYSTEM_MENU_BUTTON_SIZE * 2);
 
         RowConstraints contentRow = new RowConstraints();
         contentRow.prefHeightProperty().bind(template.heightProperty());
@@ -78,25 +75,11 @@ public class PageGridBuilder {
         template.add(new Label(name), NAME_POSITION.columnNumber, NAME_POSITION.rowNumber);
     }
 
-
-    public static Button createButton(String fxId, int size) {
-        Button button = new Button();
-
-        button.setMinSize(size, size);
-        button.setPrefSize(size, size);
-        button.setMaxSize(size, size);
-
-        button.setId(fxId);
-        GridPane.setHalignment(button, HPos.CENTER);
-        return button;
-    }
-
     private static void setAnchors(GridPane gridPane) {
         AnchorPane.setTopAnchor(gridPane, ANCHOR_OFFSET_WORK_AREA);
         AnchorPane.setRightAnchor(gridPane, ANCHOR_OFFSET_WORK_AREA);
         AnchorPane.setBottomAnchor(gridPane, ANCHOR_OFFSET_WORK_AREA);
         AnchorPane.setLeftAnchor(gridPane, ANCHOR_OFFSET_WORK_AREA);
     }
-
 
 }

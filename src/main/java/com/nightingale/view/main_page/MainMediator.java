@@ -23,9 +23,6 @@ public class MainMediator implements IMainMediator {
         resetHandler(mainView.getBackButton(), startPageView);
     }
 
-
-
-
     @Override
     public void updateNavigation() {
         ViewablePage currentPage = mainView.getCurrentPage();

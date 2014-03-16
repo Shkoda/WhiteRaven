@@ -1,4 +1,4 @@
-package com.nightingale.view.utils;
+package com.nightingale.utils;
 
 /**
  * Created by Artem

@@ -1,7 +1,7 @@
 package com.nightingale.view.proscessor_editor_page.mpp;
 
-import com.nightingale.vo.ProcessorLinkVO;
-import com.nightingale.vo.ProcessorVO;
+import com.nightingale.model.mpp.elements.ProcessorLinkModel;
+import com.nightingale.model.mpp.elements.ProcessorModel;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 
@@ -11,10 +11,10 @@ import javafx.scene.layout.Pane;
 public interface IMppView {
     Pane getView();
 
-   // void resetView(Iterable<ProcessorVO> processors, Iterable<ProcessorLinkVO> links);
+   // void resetView(Iterable<ProcessorModel> processors, Iterable<ProcessorLinkModel> links);
 
-    Node addProcessorView(ProcessorVO processorVO);
+    Node addProcessorView(ProcessorModel processorModel);
 
-    Node addLinkView(ProcessorLinkVO processorLinkVO, final Node firstProcessorNode, final Node secondProcessorNode);
+    Node addLinkView(ProcessorLinkModel processorLinkModel, final Node firstProcessorNode, final Node secondProcessorNode);
 
 }

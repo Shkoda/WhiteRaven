@@ -28,7 +28,7 @@
 }
 
 .item-title {
-    -fx-font-size: 11pt;
+    -fx-font-size: 9pt;
     -fx-font-family: "Segoe UI Semibold";
     -fx-text-fill: black;
     -fx-opacity: 0.6;
@@ -165,13 +165,13 @@
     -fx-padding: 1;
 }
 
-.check-box .mark {
-    -fx-background-color: transparent;
-    -fx-background-insets: 0;
+/*.check-box .mark {*/
+    /*-fx-background-color: transparent;*/
+    /*-fx-background-insets: 0;*/
 
-    -fx-padding: 7px;
-    -fx-shape: "M1,10L3,8L7,12L14,5L16,7L7,16Z"
-}
+    /*-fx-padding: 7px;*/
+    /*-fx-shape: "M1,10L3,8L7,12L14,5L16,7L7,16Z"*/
+/*}*/
 
 .check-box:focused .box {
     -fx-background-color: white;

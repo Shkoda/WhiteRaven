@@ -1,9 +1,9 @@
 package com.nightingale.view.proscessor_editor_page;
 
 import com.nightingale.view.utils.NodeType;
-import com.nightingale.view.utils.Tuple;
-import com.nightingale.vo.ProcessorLinkVO;
-import com.nightingale.vo.ProcessorVO;
+import com.nightingale.utils.Tuple;
+import com.nightingale.model.mpp.elements.ProcessorLinkModel;
+import com.nightingale.model.mpp.elements.ProcessorModel;
 import javafx.scene.Node;
 
 /**
@@ -16,9 +16,9 @@ public interface IProcessorEditorMediator {
 
     public void tryLinking(Node firstProcessorNode, Node secondProcessorNode);
 
-    Node addProcessorView(ProcessorVO processorVO);
+    Node addProcessorView(ProcessorModel processorModel);
 
-    Node addLinkView(ProcessorLinkVO linkVO, final Node firstProcessorNode, final Node secondProcessorNode);
+    Node addLinkView(ProcessorLinkModel linkVO, final Node firstProcessorNode, final Node secondProcessorNode);
 
     Tuple<Node, NodeType> getSelected();
 

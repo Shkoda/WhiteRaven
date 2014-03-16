@@ -3,6 +3,7 @@ package com.nightingale.command.menu.save;
 import com.google.inject.Inject;
 import com.nightingale.model.DataManager;
 import com.nightingale.service.IDataService;
+import com.nightingale.utils.Loggers;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 
@@ -24,8 +25,7 @@ public class SaveCommand extends Service<Void> {
         return new Task<Void>() {
             @Override
             protected Void call() throws Exception {
-                System.out.println(DataManager.toStringValue());
-                //     System.out.println(mppModel);
+               Loggers.debugLogger.debug(DataManager.toStringValue());
                 switch (type) {
                     case SAVE_MPP:
                         dataService.save(DataManager.getMppModel(), path);

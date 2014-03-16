@@ -4,8 +4,8 @@ package com.nightingale.view.start_page;
 import com.google.inject.Inject;
 import com.nightingale.view.ViewablePage;
 import com.nightingale.view.config.Config;
-import com.nightingale.view.utils.StartPageGridBuilder;
-import com.nightingale.view.utils.ButtonBuilder;
+import com.nightingale.view.view_components.startpage.StartPageGridBuilder;
+import com.nightingale.view.view_components.common.ButtonBuilder;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
 import javafx.scene.control.Button;
@@ -40,7 +40,7 @@ public class StartPageView implements IStartPageView {
         root = new AnchorPane();
         AnchorPane.setBottomAnchor(root, ANCHOR_OFFSET_WORK_AREA);
 
-        gridForLinks = StartPageGridBuilder.get();
+        gridForLinks = StartPageGridBuilder.build();
         gridForLinks.prefHeightProperty().bind(root.heightProperty());
         gridForLinks.prefWidthProperty().bind(root.widthProperty());
 
