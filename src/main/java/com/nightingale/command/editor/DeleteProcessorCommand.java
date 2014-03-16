@@ -22,10 +22,10 @@ public class DeleteProcessorCommand extends Service<Void> {
 
                 switch (nodeType){
                     case VERTEX:
-                        DataManager.getMppModel().removeProcessor(deleteId);
+                        DataManager.getMppModel().removeVertex(deleteId);
                         break;
                     case LINK:
-                        DataManager.getMppModel().removeLink(deleteId);
+                        DataManager.getMppModel().removeConnection(deleteId);
                         break;
                 }
 

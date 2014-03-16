@@ -25,7 +25,7 @@ public class SaveCommand extends Service<Void> {
         return new Task<Void>() {
             @Override
             protected Void call() throws Exception {
-               Loggers.debugLogger.debug(DataManager.toStringValue());
+                Loggers.debugLogger.debug(DataManager.toStringValue());
                 switch (type) {
                     case SAVE_MPP:
                         dataService.save(DataManager.getMppModel(), path);
@@ -34,7 +34,7 @@ public class SaveCommand extends Service<Void> {
                         dataService.save(DataManager.getTaskGraphModel(), path);
                         break;
                     case SAVE_PROJECT:
-                        dataService.save(new DataManager.DataObject(DataManager.getMppModel(), DataManager.getTaskGraphModel()), path);
+                        dataService.save(new DataManager.DataObject(DataManager.getTaskGraphModel(), DataManager.getMppModel()), path);
                         break;
                     default:
                         throw new IllegalArgumentException();

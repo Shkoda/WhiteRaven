@@ -21,7 +21,7 @@ public class CheckMppCommand extends Service<Boolean> {
         return new Task<Boolean>() {
             @Override
             protected Boolean call() throws Exception {
-           List<ProcessorModel> processors = new ArrayList<>(DataManager.getMppModel().getProcessors());
+           List<ProcessorModel> processors = new ArrayList<>(DataManager.getMppModel().getVertexes());
                 if (processors.size() == 0)
                     return false;
                 if (processors.size() == 1)
@@ -29,12 +29,12 @@ public class CheckMppCommand extends Service<Boolean> {
 
                 int processorModelId = processors.get(0).getId();
 
-                int maxProcessorId = DataManager.getMppModel().getMaxProcessorId();
+                int maxProcessorId = DataManager.getMppModel().getMaxVertexId();
                 WeightedQuickUnionUF unionUF = new WeightedQuickUnionUF(maxProcessorId+1);
 
-                Collection<ProcessorLinkModel> links = DataManager.getMppModel().getLinks();
+                Collection<ProcessorLinkModel> links = DataManager.getMppModel().getConnections();
                 for (ProcessorLinkModel linkModel : links)
-                    unionUF.union(linkModel.getFirstProcessorId(), linkModel.getSecondProcessorId());
+                    unionUF.union(linkModel.getFirstVertexId(), linkModel.getSecondVertexId());
 
                 for (int i = processors.size() - 1; i > 0; i--)
                     if (!unionUF.connected(processorModelId, processors.get(i).getId()))

@@ -14,7 +14,7 @@ public class CreateProcessorCommand extends Service<ProcessorModel> {
         return new Task<ProcessorModel>() {
             @Override
             protected ProcessorModel call() throws Exception {
-                return DataManager.getMppModel().addProcessor();
+                return DataManager.getMppModel().addVertex();
 
             }
         };

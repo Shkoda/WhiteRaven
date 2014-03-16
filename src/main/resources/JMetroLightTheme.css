@@ -714,9 +714,21 @@
 }
 
 #AddProcessorButton {
+    -fx-background-image: url("image/redactor/add-proc.png");
+    -fx-background-size: 40 40;
+}
+
+#AddTaskButton {
     -fx-background-image: url("image/redactor/add.png");
     -fx-background-size: 40 40;
 }
+
+#ConnectTaskButton {
+    -fx-background-image: url("image/redactor/connect.png");
+    -fx-background-size: 40 40;
+}
+
+
 
 
 #SettingsButton {

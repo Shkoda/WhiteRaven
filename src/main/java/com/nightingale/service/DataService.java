@@ -1,10 +1,15 @@
 package com.nightingale.service;
 
 import com.nightingale.model.DataManager;
+import com.nightingale.model.common.Graph;
 import com.nightingale.model.mpp.IMppModel;
 import com.nightingale.model.mpp.MppModel;
+import com.nightingale.model.mpp.elements.ProcessorLinkModel;
+import com.nightingale.model.mpp.elements.ProcessorModel;
 import com.nightingale.model.tasks.ITaskGraphModel;
 import com.nightingale.model.tasks.TaskGraphModel;
+import com.nightingale.model.tasks.elements.TaskLinkModel;
+import com.nightingale.model.tasks.elements.TaskModel;
 import org.apache.commons.lang3.SerializationUtils;
 
 
@@ -19,19 +24,19 @@ import java.nio.file.Path;
 public class DataService implements IDataService {
     @Override
     public DataManager.DataObject createNewDataModel() {
-        IMppModel mpp = new MppModel();
-        ITaskGraphModel graphModel = new TaskGraphModel();
-        return new DataManager.DataObject(mpp, graphModel);
+        Graph<ProcessorModel, ProcessorLinkModel> mpp = new Graph<>(ProcessorModel.class, ProcessorLinkModel.class);
+        Graph<TaskModel, TaskLinkModel> graphModel = new Graph<>(TaskModel.class, TaskLinkModel.class);
+        return new DataManager.DataObject(graphModel, mpp);
     }
 
     @Override
-    public IMppModel createNewMppModel() {
-        return new MppModel();
+    public Graph<ProcessorModel, ProcessorLinkModel> createNewMppModel() {
+        return new Graph<>(ProcessorModel.class, ProcessorLinkModel.class);
     }
 
     @Override
-    public ITaskGraphModel createNewTaskGraph() {
-        return new TaskGraphModel();
+    public Graph<TaskModel, TaskLinkModel> createNewTaskGraph() {
+        return new Graph<>(TaskModel.class, TaskLinkModel.class);
     }
 
     @Override
@@ -40,13 +45,13 @@ public class DataService implements IDataService {
     }
 
     @Override
-    public IMppModel readMppModel(Path path) throws IOException {
-        return (IMppModel) SerializationUtils.deserialize(Files.readAllBytes(path));
+    public Graph<ProcessorModel, ProcessorLinkModel> readMppModel(Path path) throws IOException {
+        return (Graph<ProcessorModel, ProcessorLinkModel>) SerializationUtils.deserialize(Files.readAllBytes(path));
     }
 
     @Override
-    public ITaskGraphModel readTaskGraph(Path path) throws IOException {
-        return (ITaskGraphModel) SerializationUtils.deserialize(Files.readAllBytes(path));
+    public Graph<TaskModel, TaskLinkModel> readTaskGraph(Path path) throws IOException {
+        return (Graph<TaskModel, TaskLinkModel>) SerializationUtils.deserialize(Files.readAllBytes(path));
     }
 
     @Override

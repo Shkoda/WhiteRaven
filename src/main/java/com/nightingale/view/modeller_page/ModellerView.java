@@ -4,7 +4,7 @@ import com.google.inject.Inject;
 import com.nightingale.view.ViewablePage;
 import com.nightingale.view.config.Config;
 import com.nightingale.view.statistics_page.StatisticsView;
-import com.nightingale.view.tasks_editor_page.TasksEditorView;
+import com.nightingale.view.editor.tasks_editor_page.TasksEditorView;
 import javafx.scene.layout.Pane;
 
 /**

@@ -1,9 +1,11 @@
 package com.nightingale.model;
 
-import com.nightingale.model.mpp.IMppModel;
-import com.nightingale.model.mpp.MppModel;
-import com.nightingale.model.tasks.ITaskGraphModel;
-import com.nightingale.model.tasks.TaskGraphModel;
+import com.nightingale.model.common.Graph;
+
+import com.nightingale.model.mpp.elements.ProcessorLinkModel;
+import com.nightingale.model.mpp.elements.ProcessorModel;
+import com.nightingale.model.tasks.elements.TaskLinkModel;
+import com.nightingale.model.tasks.elements.TaskModel;
 import com.nightingale.utils.Loggers;
 
 import java.io.Serializable;
@@ -13,55 +15,56 @@ import java.io.Serializable;
  */
 
 public class DataManager {
-    private static ITaskGraphModel taskGraphModel = new TaskGraphModel();
-    private static IMppModel mppModel = new MppModel();
+    private static Graph<ProcessorModel, ProcessorLinkModel> mpp = new Graph<>(ProcessorModel.class, ProcessorLinkModel.class);
+    private static Graph<TaskModel, TaskLinkModel> taskGraph = new Graph<>(TaskModel.class, TaskLinkModel.class);
 
-    public static ITaskGraphModel getTaskGraphModel() {
-        return taskGraphModel;
+
+    public static Graph<TaskModel, TaskLinkModel> getTaskGraphModel() {
+        return taskGraph;
     }
 
-    public static void resetTaskGraphModel(ITaskGraphModel taskGraphModel) {
-        DataManager.taskGraphModel.reset(taskGraphModel);
+    public static void resetTaskGraphModel(Graph<TaskModel, TaskLinkModel> taskGraphModel) {
+        // DataManager.taskGraph.reset(taskGraph);
     }
 
-    public static IMppModel getMppModel() {
-        return mppModel;
+    public static Graph<ProcessorModel, ProcessorLinkModel> getMppModel() {
+        return mpp;
     }
 
-    public static void resetMppModel(IMppModel mppModel) {
-        DataManager.mppModel = mppModel;
-        Loggers.debugLogger.debug(mppModel);
+    public static void resetMppModel(Graph<ProcessorModel, ProcessorLinkModel> mpp) {
+        DataManager.mpp = mpp;
+        Loggers.debugLogger.debug(DataManager.mpp);
     }
 
 
     public static void reset(DataObject dataObject) {
-        DataManager.taskGraphModel = dataObject.taskGraphModel;
-        DataManager.mppModel = dataObject.mppModel;
+        DataManager.taskGraph = dataObject.taskGraph;
+        DataManager.mpp = dataObject.mpp;
     }
 
-    public static class DataObject implements Serializable{
-        public final IMppModel mppModel ;
+    public static class DataObject implements Serializable {
+        public final Graph<ProcessorModel, ProcessorLinkModel> mpp;
 
-        public final ITaskGraphModel taskGraphModel;
+        public final Graph<TaskModel, TaskLinkModel> taskGraph;
 
-        public DataObject(IMppModel mppModel, ITaskGraphModel taskGraphModel) {
-            this.taskGraphModel = taskGraphModel;
-            this.mppModel = mppModel;
+        public DataObject(Graph<TaskModel, TaskLinkModel> taskGraph, Graph<ProcessorModel, ProcessorLinkModel> mpp) {
+            this.taskGraph = taskGraph;
+            this.mpp = mpp;
         }
 
         @Override
         public String toString() {
             return "DataObject{" +
-                    "mppModel=" + mppModel +
-                    ", taskGraphModel=" + taskGraphModel +
+                    "mpp=" + mpp +
+                    ", taskGraph=" + taskGraph +
                     '}';
         }
     }
 
     public static String toStringValue() {
         return "DataManager{" +
-                "taskGraphModel=" + taskGraphModel +
-                ", mppModel=" + mppModel +
+                "taskGraph=" + taskGraph +
+                ", mpp=" + mpp +
                 '}';
     }
 }

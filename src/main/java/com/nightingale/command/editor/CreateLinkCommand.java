@@ -24,7 +24,7 @@ public class CreateLinkCommand extends Service<ProcessorLinkModel> {
 
                 if (firstId == secondId || DataManager.getMppModel().areConnected(firstId, secondId))
                     return null;
-                ProcessorLinkModel linkVO = DataManager.getMppModel().linkProcessors(firstId, secondId);
+                ProcessorLinkModel linkVO = DataManager.getMppModel().linkVertexes(firstId, secondId);
 
                 Point2D firstCenter = ProcessorShapeBuilder.getCentralPoint(firstProcessor);
                 Point2D secondCenter = ProcessorShapeBuilder.getCentralPoint(secondProcessor);

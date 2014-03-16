@@ -39,7 +39,7 @@ public class MppModel implements IMppModel {
         List<Integer> connectedLinks = new ArrayList<>();
         for (Map.Entry<Integer, ProcessorLinkModel> kv : links.entrySet()) {
             ProcessorLinkModel linkVO = kv.getValue();
-            if (linkVO.getFirstProcessorId() == processorId || linkVO.getSecondProcessorId() == processorId)
+            if (linkVO.getFirstVertexId() == processorId || linkVO.getSecondVertexId() == processorId)
                 connectedLinks.add(kv.getKey());
         }
         links.keySet().removeAll(connectedLinks);
@@ -59,8 +59,8 @@ public class MppModel implements IMppModel {
     @Override
     public boolean areConnected(int firstProcessorId, int secondProcessorId) {
         for (ProcessorLinkModel linkVO : links.values())
-            if (linkVO.getFirstProcessorId() == firstProcessorId && linkVO.getSecondProcessorId() == secondProcessorId ||
-                    linkVO.getSecondProcessorId() == firstProcessorId && linkVO.getFirstProcessorId() == secondProcessorId)
+            if (linkVO.getFirstVertexId() == firstProcessorId && linkVO.getSecondVertexId() == secondProcessorId ||
+                    linkVO.getSecondVertexId() == firstProcessorId && linkVO.getFirstVertexId() == secondProcessorId)
                 return true;
         return false;
     }
