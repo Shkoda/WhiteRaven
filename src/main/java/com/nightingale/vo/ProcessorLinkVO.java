@@ -88,6 +88,28 @@ public class ProcessorLinkVO implements Serializable {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ProcessorLinkVO linkVO = (ProcessorLinkVO) o;
+
+        if (firstProcessorId != linkVO.firstProcessorId) return false;
+        if (id != linkVO.id) return false;
+        if (secondProcessorId != linkVO.secondProcessorId) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id;
+        result = 31 * result + firstProcessorId;
+        result = 31 * result + secondProcessorId;
+        return result;
+    }
+
+    @Override
     public String toString() {
         return "ProcessorLinkVO{" +
                 "id=" + id +

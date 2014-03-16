@@ -11,7 +11,5 @@ public interface IMppMediator {
 
     void refresh();
 
-    void setDragHandler(int processorId, Node node);
-
-
+    void setDragHandler(Node node);
 }

@@ -1,10 +1,10 @@
 package com.nightingale.view.proscessor_editor_page;
 
+import com.nightingale.view.utils.NodeType;
+import com.nightingale.view.utils.Tuple;
 import com.nightingale.vo.ProcessorLinkVO;
 import com.nightingale.vo.ProcessorVO;
-import javafx.geometry.Dimension2D;
 import javafx.scene.Node;
-import javafx.scene.layout.Pane;
 
 /**
  * Created by Nightingale on 09.03.14.
@@ -14,17 +14,17 @@ public interface IProcessorEditorMediator {
 
     public void createProcessor(double x, double y);
 
-    public void createLink(Node firstProcessorNode, Node secondProcessorNode);
+    public void tryLinking(Node firstProcessorNode, Node secondProcessorNode);
 
     Node addProcessorView(ProcessorVO processorVO);
 
-    Node addLinkView(ProcessorLinkVO linkVO);
+    Node addLinkView(ProcessorLinkVO linkVO, final Node firstProcessorNode, final Node secondProcessorNode);
 
-    Node getSelected();
+    Tuple<Node, NodeType> getSelected();
 
     void turnOffAllSelection();
 
-    void turnOnSelection(Node node);
+    void turnOnSelection(Node node, NodeType nodeType);
 
     Node getLinkStart();
 

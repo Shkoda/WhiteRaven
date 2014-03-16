@@ -4,6 +4,8 @@ import com.nightingale.application.guice.ICommandProvider;
 import com.nightingale.command.editor.DeleteProcessorCommand;
 import com.nightingale.view.proscessor_editor_page.IProcessorEditorMediator;
 import com.nightingale.view.proscessor_editor_page.mpp.IMppMediator;
+import com.nightingale.view.utils.NodeType;
+import com.nightingale.view.utils.Tuple;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
@@ -32,12 +34,13 @@ public class DeleteSelectedProcessorHandler implements EventHandler<KeyEvent> {
     @Override
     public void handle(KeyEvent keyEvent) {
         if (cursorButton.isSelected() && keyEvent.getCode() == KeyCode.DELETE) {
-            Node selected = processorEditorMediator.getSelected();
-            if (selected == null)
+            Tuple<Node,NodeType> selected = processorEditorMediator.getSelected();
+            if (selected._1 == null)
                 return;
             processorEditorMediator.turnOffAllSelection();
             DeleteProcessorCommand command = commandProvider.get(DeleteProcessorCommand.class);
-            command.deleteId = Integer.valueOf(selected.getId());
+            command.deleteId = Integer.valueOf(selected._1.getId());
+            command.nodeType = selected._2;
             command.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
                 @Override
                 public void handle(WorkerStateEvent workerStateEvent) {

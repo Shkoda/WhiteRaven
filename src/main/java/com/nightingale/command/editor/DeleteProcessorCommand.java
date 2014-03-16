@@ -1,7 +1,7 @@
 package com.nightingale.command.editor;
 
 import com.nightingale.model.DataManager;
-import com.nightingale.vo.ProcessorVO;
+import com.nightingale.view.utils.NodeType;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 
@@ -10,13 +10,25 @@ import javafx.concurrent.Task;
  */
 public class DeleteProcessorCommand extends Service<Void> {
     public int deleteId;
+    public NodeType nodeType;
 
     @Override
     protected Task<Void> createTask() {
         return new Task<Void>() {
             @Override
             protected Void call() throws Exception {
-                DataManager.getMppModel().removeProcessor(deleteId);
+                if (nodeType == null)
+                    return null;
+
+                switch (nodeType){
+                    case VERTEX:
+                        DataManager.getMppModel().removeProcessor(deleteId);
+                        break;
+                    case LINK:
+                        DataManager.getMppModel().removeLink(deleteId);
+                        break;
+                }
+
                 return null;
             }
         };

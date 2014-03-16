@@ -22,9 +22,7 @@ import javafx.scene.layout.PaneBuilder;
 public class MppView implements IMppView {
     @Inject
     public IMppMediator mediator;
-
     private Pane mppCanvas;
-
 
     @Override
     public Pane getView() {
@@ -35,31 +33,17 @@ public class MppView implements IMppView {
         return mppCanvas;
     }
 
-//    @Override
-//    public void resetView(Iterable<ProcessorVO> processors, Iterable<ProcessorLinkVO> links) {
-//        mppCanvas.getChildren().clear();
-//        for (ProcessorVO processor : processors) {
-//            addProcessorView(processor);
-//        }
-//        for (ProcessorLinkVO link : links) {
-//            ILinkView linkView = new LinkView();
-//            linkView.update(link);
-//            mppCanvas.getChildren().addAll(linkView.getView());
-//        }
-//    }
-
     @Override
     public Node addProcessorView(ProcessorVO processorVO) {
         final Group view = ProcessorShape.build(processorVO);
-        mediator.setDragHandler(processorVO.getId(), view);
+        mediator.setDragHandler(view);
         mppCanvas.getChildren().add(view);
         return view;
     }
 
     @Override
-    public Node addLinkView(ProcessorLinkVO processorLinkVO) {
-        final Group view = LinkShape.build(processorLinkVO);
-     //   mediator.setDragHandler(processorVO.getId(), view);
+    public Node addLinkView(ProcessorLinkVO processorLinkVO, final Node firstProcessorNode, final Node secondProcessorNode) {
+        final Group view = LinkShape.build(processorLinkVO, firstProcessorNode,secondProcessorNode);
         mppCanvas.getChildren().add(view);
         return view;
     }

@@ -1,22 +1,24 @@
 package com.nightingale.view.utils;
 
+import com.nightingale.view.proscessor_editor_page.listeners.ProcessorDuplexPropertyListener;
+import com.nightingale.view.proscessor_editor_page.listeners.ProcessorIOPropertyChangeListener;
+import com.nightingale.view.proscessor_editor_page.listeners.ProcessorPerformanceChangeListener;
 import com.nightingale.vo.ProcessorVO;
-import com.sun.javafx.animation.transition.Position2D;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.DropShadow;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Line;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.shape.Shape;
 import javafx.scene.text.Text;
 
-import java.util.Map;
+import java.util.regex.Pattern;
 
 import static com.nightingale.view.config.Config.*;
 
@@ -93,27 +95,74 @@ public class EditorComponents {
     }
 
     public static class ProcessorInfoPane {
+        private static final Pattern INPUT_PATTERN = Pattern.compile("\\d+\\.\\d+");
+
         private ToolBar toolBar;
-        private TextField nameTextArea;
+        private TextField performanceTextField;
         private CheckBox isIOProcessor, fullDuplexEnabled;
 
-        public ProcessorInfoPane() {
-            nameTextArea = new TextField();
-            //    nameTextArea.setPrefWidth(30);
+        private ProcessorPerformanceChangeListener performanceChangeListener;
+        private ProcessorIOPropertyChangeListener ioPropertyChangeListener;
+        private ProcessorDuplexPropertyListener duplexPropertyListener;
 
-            isIOProcessor = new CheckBox("has IO:");
-            fullDuplexEnabled = new CheckBox("Fullduplex enabled: ");
+        public ProcessorInfoPane() {
+            performanceTextField = new TextField();
+            performanceTextField.setPrefWidth(50);
+//            performanceTextField.textProperty().addListener(new ChangeListener<String>() {
+//                @Override
+//                public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+//                    if (! INPUT_PATTERN.matcher(newValue).matches()) {
+//                       performanceTextField. setText(oldValue);
+//                    }
+//                }
+//            });
+
+            performanceTextField.addEventFilter(KeyEvent.KEY_TYPED, new EventHandler<KeyEvent>() {
+                @Override
+                public void handle(KeyEvent keyEvent) {
+                    try {
+                        Double.valueOf(performanceTextField.getText());
+                    } catch (Exception e) {
+                        keyEvent.consume();
+                    }
+                }
+            });
+
+            //    performanceTextField.setPrefWidth(30);
+
+            isIOProcessor = new CheckBox("has IO");
+            fullDuplexEnabled = new CheckBox("Fullduplex enabled");
 
             toolBar = new ToolBar();
-            toolBar.getItems().addAll(new Text("Processor name: "), nameTextArea, isIOProcessor, fullDuplexEnabled);
+            toolBar.getItems().addAll(new Text("Processor performance: "), performanceTextField, isIOProcessor, fullDuplexEnabled);
             toolBar.setStyle("-fx-border-color:transparent;-fx-background-color: transparent ");
         }
 
 
         public void setParams(ProcessorVO processorVO) {
-            nameTextArea.setText(processorVO.getName());
+            performanceTextField.setText(String.valueOf(processorVO.getPerformance()));
             isIOProcessor.setSelected(processorVO.isHasIO());
             fullDuplexEnabled.setSelected(processorVO.isFullDuplexEnabled());
+        }
+
+        public void bindParams(final ProcessorVO processorVO) {
+            performanceChangeListener = new ProcessorPerformanceChangeListener(processorVO);
+            ioPropertyChangeListener = new ProcessorIOPropertyChangeListener(processorVO);
+            duplexPropertyListener = new ProcessorDuplexPropertyListener(processorVO);
+
+            performanceTextField.textProperty().addListener(performanceChangeListener);
+            isIOProcessor.selectedProperty().addListener(ioPropertyChangeListener);
+            fullDuplexEnabled.selectedProperty().addListener(duplexPropertyListener);
+        }
+
+        public void unbindParams() {
+            if (performanceChangeListener == null || ioPropertyChangeListener == null || fullDuplexEnabled == null) {
+                return;
+            }
+
+            //    performanceTextField.textProperty().removeListener(performanceChangeListener);
+            isIOProcessor.selectedProperty().removeListener(ioPropertyChangeListener);
+            fullDuplexEnabled.selectedProperty().removeListener(duplexPropertyListener);
         }
 
         public ToolBar getToolBar() {
@@ -136,37 +185,13 @@ public class EditorComponents {
         return button;
     }
 
-    public static Tuple<Position2D, Position2D> getBestLineEnds(Node firstNode, Node secondNode) {
+    public static Tuple<Point2D, Point2D> getBestLineEnds(Node firstNode, Node secondNode) {
         double firstCenterX = firstNode.getTranslateX() + firstNode.getLayoutBounds().getWidth() / 2;
         double firstCenterY = firstNode.getTranslateY() + firstNode.getLayoutBounds().getHeight() / 2;
 
         double secondCenterX = secondNode.getTranslateX() + firstNode.getLayoutBounds().getWidth() / 2;
         double secondCenterY = secondNode.getTranslateY() + firstNode.getLayoutBounds().getHeight() / 2;
 
-        Position2D firstGoodPoint = new Position2D();
-        firstGoodPoint.x = firstCenterX;
-        firstGoodPoint.y = firstCenterY;
-
-        Position2D secondGoodPoint = new Position2D();
-        secondGoodPoint.x = secondCenterX;
-        secondGoodPoint.y = secondCenterY;
-
-//        Line line = new Line(firstCenterX, firstCenterY, secondCenterX, secondCenterY);
-//
-//        Shape firstShape =  new Rectangle(firstNode.getLayoutX(), firstNode.getLayoutY(), firstNode.getLayoutBounds().getWidth(), firstNode.getLayoutBounds().getHeight());
-//        Shape secondShape =  new Rectangle(secondNode.getLayoutX(), secondNode.getLayoutY(), secondNode.getLayoutBounds().getWidth(), secondNode.getLayoutBounds().getHeight());
-//
-//        Shape firstIntersection = Shape.intersect(line, firstShape);
-//        Shape secondIntersection = Shape.intersect(line, secondShape);
-//
-//        Position2D firstGoodPoint = new Position2D();
-//        firstGoodPoint.x = firstIntersection.getLayoutX();
-//        firstGoodPoint.y = firstIntersection.getLayoutY();
-//
-//        Position2D secondGoodPoint = new Position2D();
-//        secondGoodPoint.x = secondIntersection.getLayoutX();
-//        secondGoodPoint.y = secondIntersection.getLayoutY();
-//
-        return new Tuple<>(firstGoodPoint, secondGoodPoint);
+        return new Tuple<>(new Point2D(firstCenterX, firstCenterY), new Point2D(secondCenterX, secondCenterY));
     }
 }

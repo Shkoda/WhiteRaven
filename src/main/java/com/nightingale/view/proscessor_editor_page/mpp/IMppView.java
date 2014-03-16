@@ -15,6 +15,6 @@ public interface IMppView {
 
     Node addProcessorView(ProcessorVO processorVO);
 
-    Node addLinkView(ProcessorLinkVO processorLinkVO);
+    Node addLinkView(ProcessorLinkVO processorLinkVO, final Node firstProcessorNode, final Node secondProcessorNode);
 
 }

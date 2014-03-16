@@ -1,14 +1,10 @@
 package com.nightingale.model.mpp;
 
 import com.google.inject.Singleton;
-import com.nightingale.view.config.Config;
 import com.nightingale.vo.ProcessorLinkVO;
 import com.nightingale.vo.ProcessorVO;
-import javafx.geometry.Dimension2D;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -16,37 +12,36 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 @Singleton
 public class MppModel implements IMppModel {
-    private AtomicInteger processorId = new AtomicInteger(0);
-    private AtomicInteger linkId = new AtomicInteger(0);
+    private AtomicInteger processorIdGenerator = new AtomicInteger(0);
+    private AtomicInteger linkIdGenerator = new AtomicInteger(0);
 
     private Map<Integer, ProcessorVO> processors;
     private Map<Integer, ProcessorLinkVO> links;
 
-    private int canvasHeight, canvasWidth;
 
     public MppModel() {
-        canvasHeight = Config.CANVAS_HEIGHT;
-        canvasWidth = Config.CANVAS_WIDTH;
-
         processors = new HashMap<>();
         links = new HashMap<>();
     }
 
-    @Override
-    public void reset(IMppModel other) {
-        processors.clear();
-        for (ProcessorVO processorVO : other.getProcessors())
-            processors.put(processorVO.getId(), processorVO);
-        links.clear();
-        for (ProcessorLinkVO linkVO : other.getLinks())
-            links.put(linkVO.getId(), linkVO);
-        processorId = ((MppModel) other).processorId;
-        linkId = ((MppModel) other).linkId;
-    }
+//    @Override
+//    public void reset(IMppModel other) {
+//
+//        processors.clear();
+//        for (ProcessorVO processorVO : other.getProcessors())
+//            processors.put(processorVO.getId(), processorVO);
+//        links.clear();
+//        for (ProcessorLinkVO linkVO : other.getLinks())
+//            links.put(linkVO.getId(), linkVO);
+//
+//        MppModel otherMpp = ((MppModel) other);
+//        processorIdGenerator = otherMpp.processorIdGenerator;
+//        linkIdGenerator = otherMpp.linkIdGenerator;
+//    }
 
     @Override
     public ProcessorVO addProcessor() {
-        int id = processorId.incrementAndGet();
+        int id = processorIdGenerator.incrementAndGet();
         ProcessorVO processor = new ProcessorVO();
         processor.update(id);
         processors.put(id, processor);
@@ -56,31 +51,40 @@ public class MppModel implements IMppModel {
     @Override
     public void removeProcessor(int processorId) {
         processors.remove(processorId);
+        List<Integer> connectedLinks = new ArrayList<>();
+        for (Map.Entry<Integer, ProcessorLinkVO> kv : links.entrySet()) {
+            ProcessorLinkVO linkVO = kv.getValue();
+            if (linkVO.getFirstProcessorId() == processorId || linkVO.getSecondProcessorId() == processorId)
+                connectedLinks.add(kv.getKey());
+        }
+        links.keySet().removeAll(connectedLinks);
     }
 
-    @Override
-    public ProcessorVO getProcessor(int processorId) {
-        return processors.get(processorId);
-    }
 
     @Override
     public ProcessorLinkVO linkProcessors(int firstProcessorId, int secondProcessorId) {
-        int id = linkId.incrementAndGet();
+        int id = linkIdGenerator.incrementAndGet();
         ProcessorLinkVO link = new ProcessorLinkVO();
         link.update(id, firstProcessorId, secondProcessorId);
         links.put(id, link);
+
         return link;
     }
 
     @Override
-    public void deleteLink(int linkId) {
-        links.remove(linkId);
+    public boolean areConnected(int firstProcessorId, int secondProcessorId) {
+        for (ProcessorLinkVO linkVO : links.values())
+            if (linkVO.getFirstProcessorId() == firstProcessorId && linkVO.getSecondProcessorId() == secondProcessorId ||
+                    linkVO.getSecondProcessorId() == firstProcessorId && linkVO.getFirstProcessorId() == secondProcessorId)
+                return true;
+        return false;
     }
 
     @Override
-    public ProcessorLinkVO getLink(int linkId) {
-        return links.get(linkId);
+    public void removeLink(int linkId) {
+        links.remove(linkId);
     }
+
 
     @Override
     public Collection<ProcessorVO> getProcessors() {
@@ -92,24 +96,12 @@ public class MppModel implements IMppModel {
         return links.values();
     }
 
-    @Override
-    public void setCanvasDimension(Dimension2D dimension) {
-        canvasHeight = (int) dimension.getHeight();
-        canvasWidth = (int) dimension.getWidth();
-    }
-
-    @Override
-    public Dimension2D getCanvasDimension() {
-        return new Dimension2D(canvasWidth, canvasHeight);
-    }
 
     @Override
     public String toString() {
         return "MppModel{" +
                 "processors=" + processors +
                 ", links=" + links +
-                ", canvasHeight=" + canvasHeight +
-                ", canvasWidth=" + canvasWidth +
                 '}';
     }
 }

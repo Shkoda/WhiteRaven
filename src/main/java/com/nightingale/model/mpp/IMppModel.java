@@ -11,25 +11,18 @@ import java.util.Collection;
  * Created by Nightingale on 09.03.14.
  */
 public interface IMppModel extends Serializable {
-    void reset(IMppModel other);
 
     ProcessorVO addProcessor();
 
     void removeProcessor(int processorId);
 
-    ProcessorVO getProcessor(int processorId);
-
     Collection<ProcessorVO> getProcessors();
 
     ProcessorLinkVO linkProcessors(int firstProcessorId, int secondProcessorId);
 
-    void deleteLink(int linkId);
-
-    ProcessorLinkVO getLink(int linkId);
+    void removeLink(int linkId);
 
     Collection<ProcessorLinkVO> getLinks();
 
-    void setCanvasDimension(Dimension2D dimension);
-
-    Dimension2D getCanvasDimension();
+    boolean areConnected(int firstProcessorId, int secondProcessorId);
 }

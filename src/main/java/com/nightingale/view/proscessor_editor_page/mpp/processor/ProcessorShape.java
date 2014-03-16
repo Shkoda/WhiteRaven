@@ -3,6 +3,10 @@ package com.nightingale.view.proscessor_editor_page.mpp.processor;
 import com.nightingale.Main;
 import com.nightingale.view.config.Config;
 import com.nightingale.vo.ProcessorVO;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.scene.Cursor;
 import javafx.scene.Group;
@@ -24,11 +28,12 @@ public class ProcessorShape {
     public final static ImagePattern BAD_IMAGE = new ImagePattern(new Image(Main.class.getResourceAsStream("/image/elements/processor-bad.png")));
 
 
-    public static Group build(ProcessorVO processorVO) {
+    public static Group build(final ProcessorVO processorVO) {
         final Shape rectangle = new Rectangle(0, 0, Config.PROCESSOR_ELEMENT_WIDTH, Config.PROCESSOR_ELEMENT_WIDTH);
         rectangle.setFill(DEFAULT_IMAGE);
 
         final Group view = new Group();
+
         view.setTranslateX(processorVO.getTranslateX());
         view.setTranslateY(processorVO.getTranslateY());
 
@@ -40,7 +45,6 @@ public class ProcessorShape {
             }
         });
 
-
         view.setOnMouseExited(new EventHandler<MouseEvent>() {
             public void handle(MouseEvent me) {
                 ((Node) me.getSource()).setCursor(Cursor.DEFAULT);
@@ -48,7 +52,24 @@ public class ProcessorShape {
         });
 
         view.setId(String.valueOf(processorVO.getId()));
-        return view;
 
+        view.translateXProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observableValue, Number oldValue, Number newValue) {
+                processorVO.setTranslateX(newValue.doubleValue());
+            }
+        });
+
+        view.translateYProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observableValue, Number oldValue, Number newValue) {
+                processorVO.setTranslateY(newValue.doubleValue());
+            }
+        });
+        return view;
+    }
+
+    private static double central(double topCoordinate, double length) {
+        return topCoordinate + length / 2;
     }
 }

@@ -6,24 +6,20 @@ import com.nightingale.application.guice.ICommandProvider;
 import com.nightingale.command.editor.CreateLinkCommand;
 import com.nightingale.command.editor.CreateProcessorCommand;
 import com.nightingale.view.proscessor_editor_page.handlers.add_processor_tool.AddProcessorHandler;
-import com.nightingale.view.proscessor_editor_page.handlers.cursor_tool.CursorToolOnScrollClickHandler;
-import com.nightingale.view.proscessor_editor_page.handlers.cursor_tool.DeleteSelectedProcessorHandler;
-import com.nightingale.view.proscessor_editor_page.handlers.cursor_tool.RemoveSelectionHandler;
-import com.nightingale.view.proscessor_editor_page.handlers.cursor_tool.SelectNodeHandler;
+import com.nightingale.view.proscessor_editor_page.handlers.cursor_tool.*;
 import com.nightingale.view.proscessor_editor_page.handlers.link_tool.LinkToolOnNodeHandler;
 import com.nightingale.view.proscessor_editor_page.handlers.link_tool.StopLinkingHandler;
 import com.nightingale.view.proscessor_editor_page.mpp.IMppMediator;
 import com.nightingale.view.proscessor_editor_page.mpp.MppView;
+import com.nightingale.view.utils.NodeType;
 import com.nightingale.view.utils.CanvasBounds;
 import com.nightingale.view.utils.EditorComponents;
 import com.nightingale.view.utils.Tuple;
 import com.nightingale.vo.ProcessorLinkVO;
 import com.nightingale.vo.ProcessorVO;
-import com.sun.javafx.animation.transition.Position2D;
-import com.sun.swing.internal.plaf.metal.resources.metal;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.Dimension2D;
+import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.input.KeyEvent;
@@ -39,25 +35,20 @@ public class ProcessorEditorMediator implements IProcessorEditorMediator {
     public ICommandProvider commandProvider;
     @Inject
     public IProcessorEditorView processorEditorView;
-    // @Inject
-    public IMppMediator mppMediator;
     @Inject
     public MppView mppView;
 
     private Pane mppCanvas;
-
     private ToggleButton cursorButton, addProcessorButton, linkButton;
 
     private Node selected;
+    private NodeType selectedNodeType;
 
     private Node linkStart;
-
 
     @Override
     public void initTools() {
         mppCanvas = mppView.getView();
-        mppMediator = mppView.getMediator();
-
         initCursorTool();
         initAddProcessorTool();
         initLinkTool();
@@ -65,38 +56,34 @@ public class ProcessorEditorMediator implements IProcessorEditorMediator {
 
     private void initCursorTool() {
         cursorButton = processorEditorView.getCursorButton();
-
-        mppCanvas.addEventHandler(MouseEvent.MOUSE_PRESSED, new CursorToolOnScrollClickHandler(cursorButton));
-        mppCanvas.addEventFilter(MouseEvent.MOUSE_PRESSED, new RemoveSelectionHandler(cursorButton, this));
-        Main.scene.addEventHandler(KeyEvent.KEY_PRESSED, new DeleteSelectedProcessorHandler(commandProvider, cursorButton, mppMediator, this));
+        mppCanvas.addEventHandler(MouseEvent.MOUSE_PRESSED, new CursorToolOnScrollClickHandler(this, cursorButton));
+        mppCanvas.addEventFilter(MouseEvent.MOUSE_PRESSED, new RemoveSelectionHandler(cursorButton, this, processorEditorView));
+        Main.scene.addEventHandler(KeyEvent.KEY_PRESSED, new DeleteSelectedProcessorHandler(commandProvider, cursorButton, mppView.getMediator(), this));
     }
-
 
     private void initAddProcessorTool() {
         addProcessorButton = processorEditorView.getAddProcessorButton();
         mppCanvas.addEventHandler(MouseEvent.MOUSE_PRESSED, new AddProcessorHandler(addProcessorButton, this));
-
     }
 
     private void initLinkTool() {
         linkButton = processorEditorView.getLinkButton();
         mppCanvas.addEventFilter(MouseEvent.MOUSE_PRESSED, new StopLinkingHandler(linkButton, this));
-
     }
 
     @Override
     public Node addProcessorView(ProcessorVO processorVO) {
         final Node node = mppView.addProcessorView(processorVO);
-        node.addEventHandler(MouseEvent.MOUSE_PRESSED, new SelectNodeHandler(cursorButton, this, node));
+        node.addEventHandler(MouseEvent.MOUSE_PRESSED, new SelectNodeHandler(cursorButton, this, node, NodeType.VERTEX));
         node.addEventHandler(MouseEvent.MOUSE_PRESSED, new LinkToolOnNodeHandler(commandProvider, linkButton, this, node));
-
+        node.addEventHandler(MouseEvent.MOUSE_PRESSED, new ShowProcessorInfoHandler(processorEditorView, processorVO));
         return node;
     }
 
-
     @Override
-    public Node addLinkView(ProcessorLinkVO linkVO) {
-        final Node node = mppView.addLinkView(linkVO);
+    public Node addLinkView(ProcessorLinkVO linkVO, final Node firstProcessorNode, final Node secondProcessorNode) {
+        final Node node = mppView.addLinkView(linkVO, firstProcessorNode, secondProcessorNode);
+        node.addEventHandler(MouseEvent.MOUSE_PRESSED, new SelectNodeHandler(cursorButton, this, node, NodeType.LINK));
         return node;
     }
 
@@ -108,11 +95,12 @@ public class ProcessorEditorMediator implements IProcessorEditorMediator {
             public void handle(WorkerStateEvent workerStateEvent) {
                 ProcessorVO processorVO = (ProcessorVO) workerStateEvent.getSource().getValue();
                 final Node node = addProcessorView(processorVO);
-                Position2D inBoundsCoordinate = CanvasBounds.getInBoundsCoordinate(x, y, node, mppCanvas);
-                node.setTranslateX(inBoundsCoordinate.x);
-                node.setTranslateY(inBoundsCoordinate.y);
-                processorVO.setTranslateX(inBoundsCoordinate.x)
-                        .setTranslateY(inBoundsCoordinate.y);
+                Point2D inBoundsCoordinate = CanvasBounds.getInBoundsCoordinate(x, y, node, mppCanvas);
+                processorVO
+                        .setTranslateX(inBoundsCoordinate.getX())
+                        .setTranslateY(inBoundsCoordinate.getY());
+                node.setTranslateX(inBoundsCoordinate.getX());
+                node.setTranslateY(inBoundsCoordinate.getY());
             }
         }
         );
@@ -120,29 +108,18 @@ public class ProcessorEditorMediator implements IProcessorEditorMediator {
     }
 
     @Override
-    public void createLink(final Node firstProcessorNode, final Node secondProcessorNode) {
+    public void tryLinking(final Node firstProcessorNode, final Node secondProcessorNode) {
         CreateLinkCommand command = commandProvider.get(CreateLinkCommand.class);
         command.firstProcessor = firstProcessorNode;
         command.secondProcessor = secondProcessorNode;
         command.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
             @Override
             public void handle(WorkerStateEvent workerStateEvent) {
+                if (workerStateEvent.getSource().getValue() == null)
+                    return;
                 ProcessorLinkVO linkVO = (ProcessorLinkVO) workerStateEvent.getSource().getValue();
                 turnOffAllSelection();
-                Tuple<Position2D, Position2D> lineEnds = EditorComponents.getBestLineEnds(firstProcessorNode, secondProcessorNode);
-
-                linkVO.setTranslateX1(lineEnds._1.x)
-                        .setTranslateX2(lineEnds._2.x)
-                        .setTranslateY1(lineEnds._1.y)
-                        .setTranslateY2(lineEnds._2.y);
-                System.out.println(linkVO);
-                final Node node = addLinkView(linkVO);
-
-                //  Position2D inBoundsCoordinate = CanvasBounds.getInBoundsCoordinate(x, y, node, mppCanvas);
-                //     node.setTranslateX(inBoundsCoordinate.x);
-                //      node.setTranslateY(inBoundsCoordinate.y);
-                //       linkVO.setTranslateX(inBoundsCoordinate.x)
-                //             .setTranslateY(inBoundsCoordinate.y);
+                addLinkView(linkVO, firstProcessorNode, secondProcessorNode);
             }
         }
         );
@@ -150,8 +127,9 @@ public class ProcessorEditorMediator implements IProcessorEditorMediator {
     }
 
     @Override
-    public void turnOnSelection(Node node) {
+    public void turnOnSelection(Node node, NodeType nodeType) {
         selected = node;
+        selectedNodeType = nodeType;
         selected.setEffect(EditorComponents.SELECTION_EFFECT);
     }
 
@@ -166,17 +144,19 @@ public class ProcessorEditorMediator implements IProcessorEditorMediator {
             linkStart.setEffect(null);
             linkStart = null;
         }
+        selectedNodeType = null;
     }
 
     @Override
-    public Node getSelected() {
-        return selected;
+    public Tuple<Node, NodeType> getSelected() {
+        return new Tuple<>(selected, selectedNodeType);
     }
 
     @Override
     public Node getLinkStart() {
         return linkStart;
     }
+
 
     @Override
     public void setLinkStart(Node linkStart) {

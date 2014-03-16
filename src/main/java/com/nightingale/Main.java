@@ -41,8 +41,11 @@ public class Main extends Application {
 
         scene.getStylesheets().add(Main.class.getResource("/JMetroLightTheme.css").toExternalForm());
 
+
         mainPagePane.prefWidthProperty().bind(scene.widthProperty());
         mainPagePane.prefHeightProperty().bind(scene.heightProperty());
+
+        mainPagePane.setStyle("-fx-background-color: #ffffff");
 
         stage.setScene(scene);
         stage.show();
