@@ -1,6 +1,7 @@
 package com.nightingale.view.editor.tasks_editor_page.task_graph;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import com.nightingale.model.entities.GraphType;
 import com.nightingale.model.tasks.TaskLinkModel;
 import com.nightingale.model.tasks.TaskModel;
@@ -15,6 +16,7 @@ import javafx.scene.layout.Pane;
 /**
  * Created by Nightingale on 10.03.14.
  */
+@Singleton
 public class TaskGraphView implements ITaskGraphView {
     @Inject
     public ITaskGraphMediator mediator;
@@ -23,9 +25,10 @@ public class TaskGraphView implements ITaskGraphView {
     @Override
     public Pane getView() {
         if (graphCanvas == null) {
-            mediator = new TaskGraphMediator();
+      //      mediator = new TaskGraphMediator();
             mediator.init();
             graphCanvas = CanvasPaneBuilder.build();
+
         }
         return graphCanvas;
     }

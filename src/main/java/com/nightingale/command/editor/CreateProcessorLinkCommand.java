@@ -11,7 +11,7 @@ import javafx.scene.Node;
 /**
  * Created by Nightingale on 13.03.14.
  */
-public class CreateLinkCommand extends Service<ProcessorLinkModel> {
+public class CreateProcessorLinkCommand extends Service<ProcessorLinkModel> {
     public Node firstProcessor, secondProcessor;
 
     @Override

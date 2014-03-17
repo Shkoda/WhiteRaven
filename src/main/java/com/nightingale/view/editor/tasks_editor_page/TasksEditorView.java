@@ -6,25 +6,20 @@ import com.nightingale.model.tasks.TaskModel;
 import com.nightingale.view.ViewablePage;
 import com.nightingale.view.config.Config;
 import com.nightingale.view.editor.proscessor_editor_page.IProcessorEditorView;
-import com.nightingale.view.editor.proscessor_editor_page.ProcessorEditorMediator;
-import com.nightingale.view.editor.proscessor_editor_page.mpp.MppView;
+import com.nightingale.view.editor.proscessor_editor_page.ProcessorEditorView;
+import com.nightingale.view.editor.tasks_editor_page.task_graph.ITaskGraphView;
+import com.nightingale.view.modeller_page.IModellerView;
 import com.nightingale.view.modeller_page.ModellerView;
 import com.nightingale.view.view_components.editor.EditorCanvasContainerBuilder;
 import com.nightingale.view.view_components.editor.EditorGridBuilder;
 import com.nightingale.view.view_components.editor.EditorToolBuilder;
 import com.nightingale.view.view_components.editor.EditorToolbarBuilder;
-import com.nightingale.view.view_components.editor.mpp_editor.ProcessorInfoPane;
-import com.nightingale.view.view_components.editor.mpp_editor.ProcessorLinkInfoPane;
-import javafx.animation.FadeTransition;
-import javafx.animation.FadeTransitionBuilder;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
-import javafx.util.Duration;
 
 import static com.nightingale.view.view_components.editor.EditorConstants.CANVAS_POSITION;
 import static com.nightingale.view.view_components.editor.EditorConstants.INFO_BAR_POSITION;
@@ -36,38 +31,85 @@ import static com.nightingale.view.view_components.editor.EditorConstants.TOOLBA
 public class TasksEditorView implements ITasksEditorView {
 
     @Inject
-    public ITasksEditorMediator mediator;
+    public TasksEditorMediator mediator;
     @Inject
-    public ModellerView nextPage;
+    public IModellerView nextPage;
     @Inject
     public IProcessorEditorView previousPage;
 
     @Inject
-    public MppView mppView;
+    public ITaskGraphView taskGraphView;
 
     private GridPane view;
-    private ToggleButton cursorButton, addProcessorButton, linkButton;
-    private Button checkButton;
-    private ProcessorInfoPane processorInfoPane;
-    private ProcessorLinkInfoPane linkInfoPane;
+    private ToggleButton cursorButton, addTaskButton, linkButton;
+
+    // private ProcessorInfoPane processorInfoPane;
+    //   private ProcessorLinkInfoPane linkInfoPane;
 
     private Pane infoContainer;
 
-    private FadeTransition hideInfoMessageTransition;
+
+
+    @Override
+    public Pane getView() {
+        return view == null ? initView() : view;
+    }
+
+    private GridPane initView() {
+        view = EditorGridBuilder.build();
+        initToolBar();
+        initCanvas();
+        initStatusBar();
+        return view;
+    }
+
+    private void initStatusBar() {
+//        processorInfoPane = new ProcessorInfoPane();
+//        processorInfoPane.getToolBar().setVisible(false);
+//
+//        linkInfoPane = new ProcessorLinkInfoPane();
+//        linkInfoPane.getToolBar().setVisible(false);
+
+        infoContainer = new Pane();
+        infoContainer.setStyle("-fx-background-color:  #f7f7f7; -fx-border-color: #bababa");
+
+        view.add(infoContainer, INFO_BAR_POSITION.columnNumber, INFO_BAR_POSITION.rowNumber);
+    }
+
+    private void initToolBar() {
+        initEditorTools();
+        Pane toolBar = EditorToolbarBuilder.build(cursorButton, addTaskButton, linkButton);
+        view.add(toolBar, TOOLBAR_POSITION.columnNumber, TOOLBAR_POSITION.rowNumber);
+        mediator.initTools();
+    }
+
+    private void initCanvas() {
+        ScrollPane canvasContainer = EditorCanvasContainerBuilder.build();
+        canvasContainer.setContent(taskGraphView.getView());
+        view.add(canvasContainer, CANVAS_POSITION.columnNumber, CANVAS_POSITION.rowNumber);
+    }
+
+    private void initEditorTools() {
+        ToggleGroup toggleGroup = new ToggleGroup();
+        cursorButton = EditorToolBuilder.build("CursorButton", toggleGroup, Config.EDITOR_BUTTON_SIZE, "Cursor");
+        addTaskButton = EditorToolBuilder.build("AddProcessorButton", toggleGroup, Config.EDITOR_BUTTON_SIZE, "Add Task");
+        linkButton = EditorToolBuilder.build("LinkButton", toggleGroup, Config.EDITOR_BUTTON_SIZE, "Link Tool");
+        cursorButton.setSelected(true);
+    }
 
     @Override
     public ToggleButton getCursorButton() {
-        return null;
+        return cursorButton;
     }
 
     @Override
     public ToggleButton getAddVertexButton() {
-        return null;
+        return addTaskButton;
     }
 
     @Override
     public ToggleButton getLinkButton() {
-        return null;
+        return linkButton;
     }
 
     @Override
@@ -82,7 +124,7 @@ public class TasksEditorView implements ITasksEditorView {
 
     @Override
     public void hideInfoPane() {
-        processorInfoPane.unbindParams();
+        // processorInfoPane.unbindParams();
         for (Node node : infoContainer.getChildren())
             node.setVisible(false);
     }
@@ -107,59 +149,4 @@ public class TasksEditorView implements ITasksEditorView {
         return nextPage;
     }
 
-    @Override
-    public Pane getView() {
-        return view == null ? initView() : view;
-    }
-
-    private GridPane initView() {
-        view = EditorGridBuilder.build();
-        initToolBar();
-        initCanvas();
-        initStatusBar();
-
-        hideInfoMessageTransition = FadeTransitionBuilder.create()
-                .fromValue(1)
-                .toValue(0)
-                .duration(new Duration(3000))
-                .build();
-
-        return view;
-    }
-
-    private void initStatusBar() {
-        processorInfoPane = new ProcessorInfoPane();
-        processorInfoPane.getToolBar().setVisible(false);
-
-        linkInfoPane = new ProcessorLinkInfoPane();
-        linkInfoPane.getToolBar().setVisible(false);
-
-        infoContainer = new Pane();
-        infoContainer.setStyle("-fx-background-color:  #f7f7f7; -fx-border-color: #bababa");
-
-        view.add(infoContainer, INFO_BAR_POSITION.columnNumber, INFO_BAR_POSITION.rowNumber);
-    }
-
-    private void initToolBar() {
-        initEditorTools();
-        Pane toolBar = EditorToolbarBuilder.build(cursorButton, addProcessorButton, linkButton, checkButton);
-        view.add(toolBar, TOOLBAR_POSITION.columnNumber, TOOLBAR_POSITION.rowNumber);
-        mediator.initTools();
-    }
-
-    private void initCanvas() {
-        ScrollPane canvasContainer = EditorCanvasContainerBuilder.build();
-        canvasContainer.setContent(mppView.getView());
-        view.add(canvasContainer, CANVAS_POSITION.columnNumber, CANVAS_POSITION.rowNumber);
-    }
-
-    private void initEditorTools() {
-        ToggleGroup toggleGroup = new ToggleGroup();
-        cursorButton = EditorToolBuilder.build("CursorButton", toggleGroup, Config.EDITOR_BUTTON_SIZE, "Cursor");
-        addProcessorButton = EditorToolBuilder.build("AddProcessorButton", toggleGroup, Config.EDITOR_BUTTON_SIZE, "Add Processor");
-        linkButton = EditorToolBuilder.build("LinkButton", toggleGroup, Config.EDITOR_BUTTON_SIZE, "Link Tool");
-      //  checkButton = EditorToolBuilder.build("CheckButton", Config.EDITOR_BUTTON_SIZE, "Check MPP Correctness");
-
-        cursorButton.setSelected(true);
-    }
 }

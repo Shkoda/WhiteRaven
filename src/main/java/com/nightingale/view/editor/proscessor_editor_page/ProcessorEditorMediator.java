@@ -3,7 +3,7 @@ package com.nightingale.view.editor.proscessor_editor_page;
 import com.google.inject.Inject;
 import com.nightingale.Main;
 import com.nightingale.application.guice.ICommandProvider;
-import com.nightingale.command.editor.CreateLinkCommand;
+import com.nightingale.command.editor.CreateProcessorLinkCommand;
 import com.nightingale.command.editor.CreateProcessorCommand;
 import com.nightingale.model.entities.GraphType;
 import com.nightingale.view.editor.common.handlers.add_tool.AddVertexHandler;
@@ -118,7 +118,7 @@ public class ProcessorEditorMediator implements IProcessorEditorMediator {
 
     @Override
     public void tryLinking(final Node firstProcessorNode, final Node secondProcessorNode) {
-        CreateLinkCommand command = commandProvider.get(CreateLinkCommand.class);
+        CreateProcessorLinkCommand command = commandProvider.get(CreateProcessorLinkCommand.class);
         command.firstProcessor = firstProcessorNode;
         command.secondProcessor = secondProcessorNode;
         command.setOnSucceeded(new EventHandler<WorkerStateEvent>() {

@@ -2,7 +2,7 @@ package com.nightingale.application.guice;
 
 import com.google.inject.AbstractModule;
 import com.nightingale.command.editor.CheckMppCommand;
-import com.nightingale.command.editor.CreateLinkCommand;
+import com.nightingale.command.editor.CreateProcessorLinkCommand;
 import com.nightingale.command.editor.CreateProcessorCommand;
 import com.nightingale.command.editor.DeleteCommand;
 import com.nightingale.command.menu.new_file.NewMppCommand;
@@ -17,6 +17,8 @@ import com.nightingale.service.DataService;
 import com.nightingale.service.IDataService;
 import com.nightingale.view.editor.proscessor_editor_page.IProcessorEditorMediator;
 import com.nightingale.view.editor.proscessor_editor_page.ProcessorEditorMediator;
+import com.nightingale.view.editor.tasks_editor_page.ITasksEditorView;
+import com.nightingale.view.editor.tasks_editor_page.TasksEditorView;
 import com.nightingale.view.main_page.IMainMediator;
 import com.nightingale.view.main_page.IMainView;
 import com.nightingale.view.main_page.MainMediator;
@@ -44,9 +46,7 @@ import com.nightingale.view.statistics_page.IStatisticsView;
 import com.nightingale.view.statistics_page.StatisticsMediator;
 import com.nightingale.view.statistics_page.StatisticsView;
 import com.nightingale.view.editor.tasks_editor_page.ITasksEditorMediator;
-import com.nightingale.view.editor.tasks_editor_page.ITasksEditorView;
 import com.nightingale.view.editor.tasks_editor_page.TasksEditorMediator;
-import com.nightingale.view.editor.tasks_editor_page.TasksEditorView;
 import com.nightingale.view.editor.tasks_editor_page.task_graph.ITaskGraphMediator;
 import com.nightingale.view.editor.tasks_editor_page.task_graph.ITaskGraphView;
 import com.nightingale.view.editor.tasks_editor_page.task_graph.TaskGraphMediator;
@@ -79,7 +79,7 @@ public class EventManagerModule extends AbstractModule {
 
         bind(IStartPageView.class).to(StartPageView.class);
         bind(IProcessorEditorView.class).to(ProcessorEditorView.class);
-     //   bind(ITasksEditorView.class).to(TasksEditorView.class);
+        bind(ITasksEditorView.class).to(TasksEditorView.class);
         bind(IModellerView.class).to(ModellerView.class);
         bind(IStatisticsView.class).to(StatisticsView.class);
 
@@ -116,7 +116,7 @@ public class EventManagerModule extends AbstractModule {
 
         bind(CreateProcessorCommand.class);
         bind(DeleteCommand.class);
-        bind(CreateLinkCommand.class);
+        bind(CreateProcessorLinkCommand.class);
         bind(CheckMppCommand.class);
     }
 

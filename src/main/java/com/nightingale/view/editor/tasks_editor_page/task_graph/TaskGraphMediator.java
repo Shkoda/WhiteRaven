@@ -5,6 +5,7 @@ import com.nightingale.model.DataManager;
 import com.nightingale.model.entities.Graph;
 import com.nightingale.model.tasks.TaskLinkModel;
 import com.nightingale.model.tasks.TaskModel;
+import com.nightingale.view.editor.tasks_editor_page.ITasksEditorMediator;
 import com.nightingale.view.editor.tasks_editor_page.TasksEditorMediator;
 import com.nightingale.view.view_components.mpp.VertexShapeBuilder;
 import javafx.event.EventHandler;
@@ -24,7 +25,7 @@ public class TaskGraphMediator implements ITaskGraphMediator {
     @Inject
     public ITaskGraphView taskGraphView;
     @Inject
-    public TasksEditorMediator editorMediator;
+    public ITasksEditorMediator editorMediator;
 
     private double initX;
     private double initY;

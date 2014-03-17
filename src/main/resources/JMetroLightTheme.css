@@ -749,7 +749,7 @@
 }
 
 #AddProcessorButton {
-    -fx-background-image: url("image/redactor/add-proc.png");
+    -fx-background-image: url("image/redactor/add.png");
     -fx-background-size: 40 40;
 }
 
