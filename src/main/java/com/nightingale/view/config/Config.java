@@ -26,13 +26,16 @@ public class Config {
     public static final int PROCESSOR_ELEMENT_WIDTH = 40;
     public static final int PROCESSOR_ELEMENT_HEIGHT = 40;
 
+    public static final int TASK_ELEMENT_WIDTH = 40;
+    public static final int TASK_ELEMENT_HEIGHT = 40;
+
     public static final String MPP_EXTENSION = "mpp";
-    public static final String  MPP_EXTENSION_DESCRIPTION = "project file (*." + MPP_EXTENSION + ")";
-    public static final FileChooser.ExtensionFilter  MPP_EXTENSION_FILTER = new FileChooser.ExtensionFilter(MPP_EXTENSION_DESCRIPTION, "*." + MPP_EXTENSION);
+    public static final String MPP_EXTENSION_DESCRIPTION = "project file (*." + MPP_EXTENSION + ")";
+    public static final FileChooser.ExtensionFilter MPP_EXTENSION_FILTER = new FileChooser.ExtensionFilter(MPP_EXTENSION_DESCRIPTION, "*." + MPP_EXTENSION);
 
     public static final String TASK_GRAPH_EXTENSION = "graph";
-    public static final String  TASK_GRAPH_EXTENSION_DESCRIPTION = "project file (*." + TASK_GRAPH_EXTENSION + ")";
-    public static final FileChooser.ExtensionFilter  TASK_GRAPH_EXTENSION_FILTER = new FileChooser.ExtensionFilter(TASK_GRAPH_EXTENSION_DESCRIPTION, "*." + TASK_GRAPH_EXTENSION);
+    public static final String TASK_GRAPH_EXTENSION_DESCRIPTION = "project file (*." + TASK_GRAPH_EXTENSION + ")";
+    public static final FileChooser.ExtensionFilter TASK_GRAPH_EXTENSION_FILTER = new FileChooser.ExtensionFilter(TASK_GRAPH_EXTENSION_DESCRIPTION, "*." + TASK_GRAPH_EXTENSION);
 
     public static final String PROJECT_EXTENSION = "project";
     public static final String PROJECT_EXTENSION_DESCRIPTION = "project file (*." + PROJECT_EXTENSION + ")";

@@ -4,7 +4,7 @@ import com.google.inject.AbstractModule;
 import com.nightingale.command.editor.CheckMppCommand;
 import com.nightingale.command.editor.CreateLinkCommand;
 import com.nightingale.command.editor.CreateProcessorCommand;
-import com.nightingale.command.editor.DeleteProcessorCommand;
+import com.nightingale.command.editor.DeleteCommand;
 import com.nightingale.command.menu.new_file.NewMppCommand;
 import com.nightingale.command.menu.new_file.NewProjectCommand;
 import com.nightingale.command.menu.new_file.NewTaskGraphCommand;
@@ -13,12 +13,10 @@ import com.nightingale.command.menu.open.OpenProjectCommand;
 import com.nightingale.command.menu.open.OpenTaskGraphCommand;
 import com.nightingale.command.menu.save.SaveCommand;
 import com.nightingale.model.DataManager;
-import com.nightingale.model.mpp.IMppModel;
-import com.nightingale.model.mpp.MppModel;
-import com.nightingale.model.tasks.ITaskGraphModel;
-import com.nightingale.model.tasks.TaskGraphModel;
 import com.nightingale.service.DataService;
 import com.nightingale.service.IDataService;
+import com.nightingale.view.editor.proscessor_editor_page.IProcessorEditorMediator;
+import com.nightingale.view.editor.proscessor_editor_page.ProcessorEditorMediator;
 import com.nightingale.view.main_page.IMainMediator;
 import com.nightingale.view.main_page.IMainView;
 import com.nightingale.view.main_page.MainMediator;
@@ -31,9 +29,7 @@ import com.nightingale.view.modeller_page.IModellerMediator;
 import com.nightingale.view.modeller_page.IModellerView;
 import com.nightingale.view.modeller_page.ModellerMediator;
 import com.nightingale.view.modeller_page.ModellerView;
-import com.nightingale.view.editor.proscessor_editor_page.IProcessorEditorMediator;
 import com.nightingale.view.editor.proscessor_editor_page.IProcessorEditorView;
-import com.nightingale.view.editor.proscessor_editor_page.ProcessorEditorMediator;
 import com.nightingale.view.editor.proscessor_editor_page.ProcessorEditorView;
 import com.nightingale.view.editor.proscessor_editor_page.mpp.IMppMediator;
 import com.nightingale.view.editor.proscessor_editor_page.mpp.IMppView;
@@ -83,7 +79,7 @@ public class EventManagerModule extends AbstractModule {
 
         bind(IStartPageView.class).to(StartPageView.class);
         bind(IProcessorEditorView.class).to(ProcessorEditorView.class);
-        bind(ITasksEditorView.class).to(TasksEditorView.class);
+     //   bind(ITasksEditorView.class).to(TasksEditorView.class);
         bind(IModellerView.class).to(ModellerView.class);
         bind(IStatisticsView.class).to(StatisticsView.class);
 
@@ -119,7 +115,7 @@ public class EventManagerModule extends AbstractModule {
         bind(SaveCommand.class);
 
         bind(CreateProcessorCommand.class);
-        bind(DeleteProcessorCommand.class);
+        bind(DeleteCommand.class);
         bind(CreateLinkCommand.class);
         bind(CheckMppCommand.class);
     }
@@ -130,8 +126,8 @@ public class EventManagerModule extends AbstractModule {
     }
 
     private void mapModels() {
-        bind(IMppModel.class).to(MppModel.class).in(Singleton.class);
-        bind(ITaskGraphModel.class).to(TaskGraphModel.class).in(Singleton.class);
+    //    bind(IMppModel.class).to(MppModel.class).in(Singleton.class);
+  //      bind(ITaskGraphModel.class).to(TaskGraphModel.class).in(Singleton.class);
     }
 
     private void mapInfrastructure() {

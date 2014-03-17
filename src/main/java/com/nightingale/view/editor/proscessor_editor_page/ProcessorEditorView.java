@@ -7,8 +7,8 @@ import com.nightingale.view.config.Config;
 import com.nightingale.view.editor.proscessor_editor_page.mpp.MppView;
 import com.nightingale.view.editor.tasks_editor_page.TasksEditorView;
 import com.nightingale.view.view_components.editor.*;
-import com.nightingale.model.mpp.elements.ProcessorLinkModel;
-import com.nightingale.model.mpp.elements.ProcessorModel;
+import com.nightingale.model.mpp.ProcessorLinkModel;
+import com.nightingale.model.mpp.ProcessorModel;
 import com.nightingale.view.view_components.editor.mpp_editor.ProcessorInfoPane;
 import com.nightingale.view.view_components.editor.mpp_editor.ProcessorLinkInfoPane;
 import javafx.animation.FadeTransition;
@@ -51,7 +51,7 @@ public class ProcessorEditorView implements IProcessorEditorView {
 
 
     @Override
-    public void showProcessorInfoPane(ProcessorModel processorModel) {
+    public void showVertexInfoPane(ProcessorModel processorModel) {
         infoContainer.getChildren().setAll(processorInfoPane.getToolBar());
         processorInfoPane.setParams(processorModel);
         processorInfoPane.bindParams(processorModel);
@@ -72,7 +72,7 @@ public class ProcessorEditorView implements IProcessorEditorView {
     }
 
     @Override
-    public void showLinkInfoPane(ProcessorLinkModel linkVO) {
+    public void showConnectionInfoPane(ProcessorLinkModel linkVO) {
         infoContainer.getChildren().setAll(processorInfoPane.getToolBar());
         linkInfoPane.setParams(linkVO);
         linkInfoPane.bindParams(linkVO);
@@ -94,7 +94,7 @@ public class ProcessorEditorView implements IProcessorEditorView {
     }
 
     @Override
-    public ToggleButton getAddProcessorButton() {
+    public ToggleButton getAddVertexButton() {
         return addProcessorButton;
     }
 

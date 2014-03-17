@@ -1,29 +1,12 @@
 package com.nightingale.view.editor.tasks_editor_page;
 
-import com.nightingale.model.mpp.elements.ProcessorLinkModel;
-import com.nightingale.model.mpp.elements.ProcessorModel;
-import com.nightingale.view.ViewablePage;
-import javafx.scene.control.Button;
-import javafx.scene.control.ToggleButton;
+import com.nightingale.model.tasks.TaskLinkModel;
+import com.nightingale.model.tasks.TaskModel;
+import com.nightingale.view.editor.common.IEditorView;
 
 /**
  * Created by Nightingale on 09.03.14.
  */
-public interface ITasksEditorView extends ViewablePage {
-    ToggleButton getCursorButton();
-
-    ToggleButton getAddTaskButton();
-
-    ToggleButton getLinkButton();
-
-    Button getCheckButton();
-
-    void showTaskInfoPane(ProcessorModel processorModel);
-
-    void showLinkInfoPane(ProcessorLinkModel linkVO);
-
-    void showGraphInfoPane(boolean isMppOk);
-
-    void hideInfoPane();
+public interface ITasksEditorView  extends IEditorView<TaskModel, TaskLinkModel> {
 
 }

@@ -1,7 +1,7 @@
 package com.nightingale.command.editor;
 
 import com.nightingale.model.DataManager;
-import com.nightingale.model.mpp.elements.ProcessorModel;
+import com.nightingale.model.mpp.ProcessorModel;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 

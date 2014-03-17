@@ -1,13 +1,11 @@
 package com.nightingale.service;
 
 import com.nightingale.model.DataManager;
-import com.nightingale.model.common.Graph;
-import com.nightingale.model.mpp.IMppModel;
-import com.nightingale.model.mpp.elements.ProcessorLinkModel;
-import com.nightingale.model.mpp.elements.ProcessorModel;
-import com.nightingale.model.tasks.ITaskGraphModel;
-import com.nightingale.model.tasks.elements.TaskLinkModel;
-import com.nightingale.model.tasks.elements.TaskModel;
+import com.nightingale.model.entities.Graph;
+import com.nightingale.model.mpp.ProcessorLinkModel;
+import com.nightingale.model.mpp.ProcessorModel;
+import com.nightingale.model.tasks.TaskLinkModel;
+import com.nightingale.model.tasks.TaskModel;
 
 import java.io.IOException;
 import java.io.Serializable;

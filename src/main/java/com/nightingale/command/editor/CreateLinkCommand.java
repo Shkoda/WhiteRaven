@@ -1,8 +1,8 @@
 package com.nightingale.command.editor;
 
 import com.nightingale.model.DataManager;
-import com.nightingale.view.view_components.mpp.ProcessorShapeBuilder;
-import com.nightingale.model.mpp.elements.ProcessorLinkModel;
+import com.nightingale.view.view_components.mpp.VertexShapeBuilder;
+import com.nightingale.model.mpp.ProcessorLinkModel;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.geometry.Point2D;
@@ -26,8 +26,8 @@ public class CreateLinkCommand extends Service<ProcessorLinkModel> {
                     return null;
                 ProcessorLinkModel linkVO = DataManager.getMppModel().linkVertexes(firstId, secondId);
 
-                Point2D firstCenter = ProcessorShapeBuilder.getCentralPoint(firstProcessor);
-                Point2D secondCenter = ProcessorShapeBuilder.getCentralPoint(secondProcessor);
+                Point2D firstCenter = VertexShapeBuilder.getCentralPoint(firstProcessor);
+                Point2D secondCenter = VertexShapeBuilder.getCentralPoint(secondProcessor);
 
                 linkVO
                         .setTranslateX1(firstCenter.getX())

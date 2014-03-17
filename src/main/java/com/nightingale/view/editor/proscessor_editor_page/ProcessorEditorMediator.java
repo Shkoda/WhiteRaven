@@ -3,21 +3,21 @@ package com.nightingale.view.editor.proscessor_editor_page;
 import com.google.inject.Inject;
 import com.nightingale.Main;
 import com.nightingale.application.guice.ICommandProvider;
-import com.nightingale.command.editor.CheckMppCommand;
 import com.nightingale.command.editor.CreateLinkCommand;
 import com.nightingale.command.editor.CreateProcessorCommand;
-import com.nightingale.utils.Loggers;
-import com.nightingale.view.editor.proscessor_editor_page.handlers.add_processor_tool.AddProcessorHandler;
-import com.nightingale.view.editor.proscessor_editor_page.handlers.cursor_tool.*;
-import com.nightingale.view.editor.proscessor_editor_page.handlers.link_tool.LinkToolOnNodeHandler;
-import com.nightingale.view.editor.proscessor_editor_page.handlers.link_tool.StopLinkingHandler;
+import com.nightingale.model.entities.GraphType;
+import com.nightingale.view.editor.common.handlers.add_tool.AddVertexHandler;
+import com.nightingale.view.editor.common.handlers.cursor_tool.*;
+import com.nightingale.view.editor.proscessor_editor_page.handlers.ShowMppCorrectnessInfoHandler;
+import com.nightingale.view.editor.common.handlers.connection_tool.LinkToolOnNodeHandler;
+import com.nightingale.view.editor.common.handlers.connection_tool.StopLinkingHandler;
 import com.nightingale.view.editor.proscessor_editor_page.mpp.MppView;
 import com.nightingale.view.utils.NodeType;
 import com.nightingale.view.view_components.editor.EditorConstants;
 import com.nightingale.utils.Tuple;
-import com.nightingale.view.view_components.mpp.ProcessorShapeBuilder;
-import com.nightingale.model.mpp.elements.ProcessorLinkModel;
-import com.nightingale.model.mpp.elements.ProcessorModel;
+import com.nightingale.view.view_components.mpp.VertexShapeBuilder;
+import com.nightingale.model.mpp.ProcessorLinkModel;
+import com.nightingale.model.mpp.ProcessorModel;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
@@ -59,34 +59,19 @@ public class ProcessorEditorMediator implements IProcessorEditorMediator {
 
     private void initCheckTool(){
         checkButton = processorEditorView.getCheckButton();
-        checkButton.addEventHandler(MouseEvent.MOUSE_PRESSED, new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                CheckMppCommand command = commandProvider.get(CheckMppCommand.class);
-                command.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
-                    @Override
-                    public void handle(WorkerStateEvent workerStateEvent) {
-                        Boolean mppIsOk = (Boolean) workerStateEvent.getSource().getValue();
-                        Loggers.debugLogger.debug("mpp ok: "+mppIsOk);
-                        processorEditorView.showMppInfoPane(mppIsOk);
-                    }
-                }
-                );
-                command.start();
-            }
-        });
+        checkButton.addEventHandler(MouseEvent.MOUSE_PRESSED, new ShowMppCorrectnessInfoHandler(commandProvider, processorEditorView));
     }
 
     private void initCursorTool() {
         cursorButton = processorEditorView.getCursorButton();
         mppCanvas.addEventHandler(MouseEvent.MOUSE_PRESSED, new CursorToolOnScrollClickHandler(this, cursorButton));
-        mppCanvas.addEventFilter(MouseEvent.MOUSE_PRESSED, new RemoveSelectionHandler(cursorButton, this, processorEditorView));
-        Main.scene.addEventHandler(KeyEvent.KEY_PRESSED, new DeleteSelectedProcessorHandler(commandProvider, cursorButton, mppView.getMediator(), this));
+        mppCanvas.addEventFilter(MouseEvent.MOUSE_PRESSED, new TurnOffSelectionHandler(cursorButton, this, processorEditorView));
+        Main.scene.addEventHandler(KeyEvent.KEY_PRESSED, new DeleteSelectedHandler(commandProvider, cursorButton, mppView.getMediator(), this, GraphType.MPP));
     }
 
     private void initAddProcessorTool() {
-        addProcessorButton = processorEditorView.getAddProcessorButton();
-        mppCanvas.addEventHandler(MouseEvent.MOUSE_PRESSED, new AddProcessorHandler(addProcessorButton, this));
+        addProcessorButton = processorEditorView.getAddVertexButton();
+        mppCanvas.addEventHandler(MouseEvent.MOUSE_PRESSED, new AddVertexHandler(addProcessorButton, this));
     }
 
     private void initLinkTool() {
@@ -95,31 +80,31 @@ public class ProcessorEditorMediator implements IProcessorEditorMediator {
     }
 
     @Override
-    public Node addProcessorView(ProcessorModel processorModel) {
-        final Node node = mppView.addProcessorView(processorModel);
+    public Node addVertexView(ProcessorModel processorModel) {
+        final Node node = mppView.addVertexView(processorModel);
         node.addEventHandler(MouseEvent.MOUSE_PRESSED, new SelectNodeHandler(cursorButton, this, node, NodeType.VERTEX));
-        node.addEventHandler(MouseEvent.MOUSE_PRESSED, new LinkToolOnNodeHandler(commandProvider, linkButton, this, node));
-        node.addEventHandler(MouseEvent.MOUSE_PRESSED, new ShowProcessorInfoHandler(processorEditorView, processorModel));
+        node.addEventHandler(MouseEvent.MOUSE_PRESSED, new LinkToolOnNodeHandler(linkButton, this, node));
+        node.addEventHandler(MouseEvent.MOUSE_PRESSED, new ShowVertexInfoHandler(processorEditorView, processorModel));
         return node;
     }
 
     @Override
-    public Node addLinkView(ProcessorLinkModel linkModel, final Node firstProcessorNode, final Node secondProcessorNode) {
-        final Node node = mppView.addLinkView(linkModel, firstProcessorNode, secondProcessorNode);
+    public Node addConnectionView(ProcessorLinkModel linkModel, final Node firstProcessorNode, final Node secondProcessorNode) {
+        final Node node = mppView.addConnectionView(linkModel, firstProcessorNode, secondProcessorNode);
         node.addEventHandler(MouseEvent.MOUSE_PRESSED, new SelectNodeHandler(cursorButton, this, node, NodeType.LINK));
-        node.addEventHandler(MouseEvent.MOUSE_PRESSED, new ShowLinkInfoHandler(processorEditorView, linkModel));
+        node.addEventHandler(MouseEvent.MOUSE_PRESSED, new ShowConnectionInfoHandler(processorEditorView, linkModel));
         return node;
     }
 
     @Override
-    public void createProcessor(final double x, final double y) {
+    public void createVertex(final double x, final double y) {
         CreateProcessorCommand command = commandProvider.get(CreateProcessorCommand.class);
         command.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
             @Override
             public void handle(WorkerStateEvent workerStateEvent) {
                 ProcessorModel processorModel = (ProcessorModel) workerStateEvent.getSource().getValue();
-                final Node node = addProcessorView(processorModel);
-                Point2D inBoundsCoordinate = ProcessorShapeBuilder.getInBoundsCoordinate(x, y, node, mppCanvas);
+                final Node node = addVertexView(processorModel);
+                Point2D inBoundsCoordinate = VertexShapeBuilder.getInBoundsCoordinate(x, y, node, mppCanvas);
                 processorModel
                         .setTranslateX(inBoundsCoordinate.getX())
                         .setTranslateY(inBoundsCoordinate.getY());
@@ -143,7 +128,7 @@ public class ProcessorEditorMediator implements IProcessorEditorMediator {
                     return;
                 ProcessorLinkModel linkVO = (ProcessorLinkModel) workerStateEvent.getSource().getValue();
                 turnOffAllSelection();
-                addLinkView(linkVO, firstProcessorNode, secondProcessorNode);
+                addConnectionView(linkVO, firstProcessorNode, secondProcessorNode);
             }
         }
         );

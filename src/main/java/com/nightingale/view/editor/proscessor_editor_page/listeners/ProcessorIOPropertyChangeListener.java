@@ -1,6 +1,6 @@
 package com.nightingale.view.editor.proscessor_editor_page.listeners;
 
-import com.nightingale.model.mpp.elements.ProcessorModel;
+import com.nightingale.model.mpp.ProcessorModel;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 

@@ -1,11 +1,11 @@
 package com.nightingale.model;
 
-import com.nightingale.model.common.Graph;
+import com.nightingale.model.entities.Graph;
 
-import com.nightingale.model.mpp.elements.ProcessorLinkModel;
-import com.nightingale.model.mpp.elements.ProcessorModel;
-import com.nightingale.model.tasks.elements.TaskLinkModel;
-import com.nightingale.model.tasks.elements.TaskModel;
+import com.nightingale.model.mpp.ProcessorLinkModel;
+import com.nightingale.model.mpp.ProcessorModel;
+import com.nightingale.model.tasks.TaskLinkModel;
+import com.nightingale.model.tasks.TaskModel;
 import com.nightingale.utils.Loggers;
 
 import java.io.Serializable;
@@ -23,8 +23,9 @@ public class DataManager {
         return taskGraph;
     }
 
-    public static void resetTaskGraphModel(Graph<TaskModel, TaskLinkModel> taskGraphModel) {
-        // DataManager.taskGraph.reset(taskGraph);
+    public static void resetTaskGraphModel(Graph<TaskModel, TaskLinkModel> taskGraph) {
+        DataManager.taskGraph = taskGraph;
+        Loggers.debugLogger.debug(DataManager.taskGraph);
     }
 
     public static Graph<ProcessorModel, ProcessorLinkModel> getMppModel() {

@@ -21,8 +21,9 @@ public class EditorToolbarBuilder {
         box.setAlignment(Pos.CENTER);
         box.setSpacing(40);
 
-
-        box.getChildren().setAll(buttons);
+        for (ButtonBase buttonBase : buttons)
+            if (buttonBase != null)
+                box.getChildren().add(buttonBase);
         toolBar.getItems().addAll(box);
         borderPane.setCenter(box);
 

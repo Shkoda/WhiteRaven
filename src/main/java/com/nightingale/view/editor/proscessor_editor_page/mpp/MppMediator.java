@@ -3,12 +3,11 @@ package com.nightingale.view.editor.proscessor_editor_page.mpp;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.nightingale.model.DataManager;
-import com.nightingale.model.common.Graph;
-import com.nightingale.model.mpp.IMppModel;
+import com.nightingale.model.entities.Graph;
 import com.nightingale.view.editor.proscessor_editor_page.IProcessorEditorMediator;
-import com.nightingale.view.view_components.mpp.ProcessorShapeBuilder;
-import com.nightingale.model.mpp.elements.ProcessorLinkModel;
-import com.nightingale.model.mpp.elements.ProcessorModel;
+import com.nightingale.view.view_components.mpp.VertexShapeBuilder;
+import com.nightingale.model.mpp.ProcessorLinkModel;
+import com.nightingale.model.mpp.ProcessorModel;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.scene.Cursor;
@@ -26,7 +25,7 @@ import java.util.Map;
 @Singleton
 public class MppMediator implements IMppMediator {
     @Inject
-    public MppView mppView;
+    public IMppView mppView;
     @Inject
     public IProcessorEditorMediator editorMediator;
 
@@ -51,13 +50,13 @@ public class MppMediator implements IMppMediator {
 
         Map<Integer, Node> processors = new HashMap<>();
         for (ProcessorModel processorModel : mppModel.getVertexes()) {
-            Node node = editorMediator.addProcessorView(processorModel);
+            Node node = editorMediator.addVertexView(processorModel);
             processors.put(Integer.valueOf(node.getId()), node);
         }
         for (ProcessorLinkModel processorLinkModel : mppModel.getConnections()) {
             Node firstProcessor = processors.get(processorLinkModel.getFirstVertexId());
             Node secondProcessor = processors.get(processorLinkModel.getSecondVertexId());
-            editorMediator.addLinkView(processorLinkModel, firstProcessor, secondProcessor);
+            editorMediator.addConnectionView(processorLinkModel, firstProcessor, secondProcessor);
         }
     }
 
@@ -76,7 +75,7 @@ public class MppMediator implements IMppMediator {
                 double dragX = me.getSceneX() - dragAnchor.getX();
                 double dragY = me.getSceneY() - dragAnchor.getY();
 
-                Point2D inBoundsCoordinate = ProcessorShapeBuilder.getInBoundsCoordinate(initX + dragX, initY + dragY, node, mppView.getView());
+                Point2D inBoundsCoordinate = VertexShapeBuilder.getInBoundsCoordinate(initX + dragX, initY + dragY, node, mppView.getView());
                 node.setTranslateX(inBoundsCoordinate.getX());
                 node.setTranslateY(inBoundsCoordinate.getY());
 

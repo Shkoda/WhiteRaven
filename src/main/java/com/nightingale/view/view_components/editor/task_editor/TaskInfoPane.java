@@ -1,9 +1,9 @@
 package com.nightingale.view.view_components.editor.task_editor;
 
-import com.nightingale.model.mpp.elements.ProcessorModel;
+import com.nightingale.model.mpp.ProcessorModel;
 import com.nightingale.view.editor.proscessor_editor_page.listeners.ProcessorDuplexPropertyListener;
 import com.nightingale.view.editor.proscessor_editor_page.listeners.ProcessorIOPropertyChangeListener;
-import com.nightingale.view.editor.proscessor_editor_page.listeners.ProcessorPerformanceChangeListener;
+import com.nightingale.view.editor.common.listeners.VertexWeightChangeListener;
 import javafx.event.EventHandler;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
@@ -22,7 +22,7 @@ public class TaskInfoPane {
     private TextField performanceTextField, nameField;
     private CheckBox isIOProcessor, fullDuplexEnabled;
 
-    private ProcessorPerformanceChangeListener performanceChangeListener;
+    private VertexWeightChangeListener performanceChangeListener;
     private ProcessorIOPropertyChangeListener ioPropertyChangeListener;
     private ProcessorDuplexPropertyListener duplexPropertyListener;
 
@@ -64,7 +64,7 @@ public class TaskInfoPane {
     }
 
     public void bindParams(final ProcessorModel processorModel) {
-        performanceChangeListener = new ProcessorPerformanceChangeListener(processorModel);
+        performanceChangeListener = new VertexWeightChangeListener(processorModel);
         ioPropertyChangeListener = new ProcessorIOPropertyChangeListener(processorModel);
         duplexPropertyListener = new ProcessorDuplexPropertyListener(processorModel);
 

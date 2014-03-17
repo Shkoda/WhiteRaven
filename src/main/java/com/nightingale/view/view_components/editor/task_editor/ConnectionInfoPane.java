@@ -1,7 +1,7 @@
 package com.nightingale.view.view_components.editor.task_editor;
 
-import com.nightingale.model.tasks.elements.TaskModel;
-import com.nightingale.view.editor.proscessor_editor_page.listeners.ProcessorLinkWeightListener;
+import com.nightingale.model.tasks.TaskModel;
+import com.nightingale.view.editor.common.listeners.ConnectionWeightListener;
 import javafx.event.EventHandler;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToolBar;
@@ -15,7 +15,7 @@ public class ConnectionInfoPane {
     private ToolBar toolBar;
     private TextField weightField, nameField;
 
-    private ProcessorLinkWeightListener weightListener;
+    private ConnectionWeightListener weightListener;
 
 
     public ConnectionInfoPane() {
@@ -51,7 +51,7 @@ public class ConnectionInfoPane {
     }
 
     public void bindParams(final TaskModel taskModel) {
-//        weightListener = new ProcessorLinkWeightListener(taskModel);
+//        weightListener = new ConnectionWeightListener(taskModel);
 //        weightField.textProperty().addListener(weightListener);
     }
 

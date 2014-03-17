@@ -1,7 +1,7 @@
 package com.nightingale.view.view_components.editor.mpp_editor;
 
-import com.nightingale.model.mpp.elements.ProcessorLinkModel;
-import com.nightingale.view.editor.proscessor_editor_page.listeners.ProcessorLinkWeightListener;
+import com.nightingale.model.mpp.ProcessorLinkModel;
+import com.nightingale.view.editor.common.listeners.ConnectionWeightListener;
 import javafx.event.EventHandler;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
@@ -17,7 +17,7 @@ public class ProcessorLinkInfoPane {
     private TextField weightField, nameField;
     private CheckBox fullDuplex;
 
-    private ProcessorLinkWeightListener weightListener;
+    private ConnectionWeightListener weightListener;
 
 
     public ProcessorLinkInfoPane() {
@@ -57,7 +57,7 @@ public class ProcessorLinkInfoPane {
     }
 
     public void bindParams(final ProcessorLinkModel linkModel) {
-        weightListener = new ProcessorLinkWeightListener(linkModel);
+        weightListener = new ConnectionWeightListener(linkModel);
         weightField.textProperty().addListener(weightListener);
     }
 

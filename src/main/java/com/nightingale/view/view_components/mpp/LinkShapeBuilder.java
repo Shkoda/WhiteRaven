@@ -1,7 +1,9 @@
 package com.nightingale.view.view_components.mpp;
 
+import com.nightingale.model.entities.Connection;
+import com.nightingale.model.entities.GraphType;
 import com.nightingale.view.config.Config;
-import com.nightingale.model.mpp.elements.ProcessorLinkModel;
+import com.nightingale.model.mpp.ProcessorLinkModel;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.Group;
@@ -14,16 +16,16 @@ import javafx.scene.text.Text;
  */
 public class LinkShapeBuilder {
 
-    public static Group build(final ProcessorLinkModel linkVO, Node firstProcessorNode, Node secondProcessorNode) {
-        final Line line = new Line(linkVO.getTranslateX1(), linkVO.getTranslateY1(), linkVO.getTranslateX2(), linkVO.getTranslateY2());
+    public static Group build(final Connection connection, Node firstNode, Node secondNode, GraphType graphType) {
+        final Line line = new Line(connection.getTranslateX1(), connection.getTranslateY1(), connection.getTranslateX2(), connection.getTranslateY2());
         Group view = new Group();
-        view.setId(String.valueOf(linkVO.getId()));
-        final Text name = new Text(average(line.getStartX(), line.getEndX()), average(line.getStartY(), line.getEndY()), linkVO.getName());
+        view.setId(String.valueOf(connection.getId()));
+        final Text name = new Text(average(line.getStartX(), line.getEndX()), average(line.getStartY(), line.getEndY()), connection.getName());
         name.setStyle("-fx-opacity: 0.5");
 
         bindLinkName(line, name);
-        bindLineEndsToVO(line, linkVO);
-        bindLineEndsToNodes(line, firstProcessorNode, secondProcessorNode);
+        bindLineEndsToVO(line, connection);
+        bindLineEndsToNodes(line, firstNode, secondNode);
 
         view.getChildren().addAll(line, name);
         return view;
@@ -90,11 +92,11 @@ public class LinkShapeBuilder {
         });
     }
 
-    private static void bindLineEndsToVO(Line line, final ProcessorLinkModel linkVO) {
+    private static void bindLineEndsToVO(Line line, final Connection connection) {
         line.startXProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observableValue, Number oldValue, Number newValue) {
-                linkVO.setTranslateX1(newValue.doubleValue());
+                connection.setTranslateX1(newValue.doubleValue());
 
             }
         });
@@ -102,7 +104,7 @@ public class LinkShapeBuilder {
         line.startYProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observableValue, Number oldValue, Number newValue) {
-                linkVO.setTranslateY1(newValue.doubleValue());
+                connection.setTranslateY1(newValue.doubleValue());
 
             }
         });
@@ -111,7 +113,7 @@ public class LinkShapeBuilder {
         line.endXProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observableValue, Number oldValue, Number newValue) {
-                linkVO.setTranslateX2(newValue.doubleValue());
+                connection.setTranslateX2(newValue.doubleValue());
 
             }
         });
@@ -119,7 +121,7 @@ public class LinkShapeBuilder {
         line.endYProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observableValue, Number oldValue, Number newValue) {
-                linkVO.setTranslateY2(newValue.doubleValue());
+                connection.setTranslateY2(newValue.doubleValue());
 
             }
         });

@@ -1,37 +1,44 @@
 package com.nightingale.view.editor.tasks_editor_page;
 
-import com.nightingale.model.mpp.elements.ProcessorLinkModel;
-import com.nightingale.model.mpp.elements.ProcessorModel;
+import com.nightingale.model.tasks.TaskLinkModel;
+import com.nightingale.model.tasks.TaskModel;
 import com.nightingale.utils.Tuple;
+import com.nightingale.view.editor.common.handlers.connection_tool.LinkToolOnNodeHandler;
+import com.nightingale.view.editor.common.handlers.cursor_tool.SelectNodeHandler;
+import com.nightingale.view.editor.common.handlers.cursor_tool.ShowVertexInfoHandler;
+
 import com.nightingale.view.utils.NodeType;
 import javafx.scene.Node;
+import javafx.scene.input.MouseEvent;
 
 /**
  * Created by Nightingale on 09.03.14.
  */
-public class TasksEditorMediator implements ITasksEditorMediator {
+public class TasksEditorMediator implements ITasksEditorMediator{
+
+
     @Override
     public void initTools() {
 
     }
 
     @Override
-    public void createTask(double x, double y) {
+    public void createVertex(double x, double y) {
 
     }
 
     @Override
-    public void tryLinking(Node firstProcessorNode, Node secondProcessorNode) {
+    public void tryLinking(Node firstNode, Node secondNode) {
 
     }
 
     @Override
-    public Node addTaskView(ProcessorModel processorModel) {
+    public Node addVertexView(TaskModel vertex) {
         return null;
     }
 
     @Override
-    public Node addLinkView(ProcessorLinkModel linkVO, Node firstProcessorNode, Node secondProcessorNode) {
+    public Node addConnectionView(TaskLinkModel connection, Node firstNode, Node secondNode) {
         return null;
     }
 

@@ -1,17 +1,13 @@
 package com.nightingale.view.editor.tasks_editor_page.task_graph;
 
-import com.nightingale.model.tasks.elements.TaskLinkModel;
-import com.nightingale.model.tasks.elements.TaskModel;
+import com.nightingale.model.tasks.TaskLinkModel;
+import com.nightingale.model.tasks.TaskModel;
+import com.nightingale.view.editor.common.GraphView;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 
 /**
  * Created by Nightingale on 10.03.14.
  */
-public interface ITaskGraphView {
-    Pane getView();
-
-    Node addTaskView(TaskModel taskModel);
-
-    Node addConnectionView(TaskLinkModel taskLinkModel, final Node parentProcessorNode, final Node childProcessorNode);
+public interface ITaskGraphView extends GraphView<TaskModel, TaskLinkModel>{
 }

@@ -2,18 +2,16 @@ package com.nightingale.view.editor.proscessor_editor_page.mpp;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.nightingale.view.config.Config;
+import com.nightingale.model.entities.GraphType;
+import com.nightingale.view.editor.common.GraphMediator;
+import com.nightingale.view.view_components.editor.CanvasPaneBuilder;
 import com.nightingale.view.view_components.mpp.LinkShapeBuilder;
-import com.nightingale.view.view_components.mpp.ProcessorShapeBuilder;
-import com.nightingale.model.mpp.elements.ProcessorLinkModel;
-import com.nightingale.model.mpp.elements.ProcessorModel;
-import javafx.geometry.HPos;
-import javafx.geometry.VPos;
+import com.nightingale.view.view_components.mpp.VertexShapeBuilder;
+import com.nightingale.model.mpp.ProcessorLinkModel;
+import com.nightingale.model.mpp.ProcessorModel;
 import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.PaneBuilder;
 
 /**
  * Created by Nightingale on 09.03.14.
@@ -28,39 +26,31 @@ public class MppView implements IMppView {
     public Pane getView() {
         if (mppCanvas == null) {
             mediator.init();
-            initCanvas();
+            mppCanvas = CanvasPaneBuilder.build();
         }
         return mppCanvas;
     }
 
     @Override
-    public Node addProcessorView(ProcessorModel processorModel) {
-        final Group view = ProcessorShapeBuilder.build(processorModel);
+    public GraphMediator getGraphMediator() {
+        return mediator;
+    }
+
+    @Override
+    public Node addVertexView(ProcessorModel processorModel) {
+        final Group view = VertexShapeBuilder.build(processorModel, GraphType.MPP);
         mediator.setDragHandler(view);
         mppCanvas.getChildren().add(view);
         return view;
     }
 
     @Override
-    public Node addLinkView(ProcessorLinkModel processorLinkModel, final Node firstProcessorNode, final Node secondProcessorNode) {
-        final Group view = LinkShapeBuilder.build(processorLinkModel, firstProcessorNode, secondProcessorNode);
+    public Node addConnectionView(ProcessorLinkModel processorLinkModel, final Node firstProcessorNode, final Node secondProcessorNode) {
+        final Group view = LinkShapeBuilder.build(processorLinkModel, firstProcessorNode, secondProcessorNode, GraphType.MPP);
         mppCanvas.getChildren().add(view);
         return view;
     }
 
-    private void initCanvas() {
-        mppCanvas = PaneBuilder.create()
-                .prefHeight(Config.CANVAS_HEIGHT)
-                .prefWidth(Config.CANVAS_WIDTH)
-                .maxHeight(Config.CANVAS_HEIGHT)
-                .maxWidth(Config.CANVAS_WIDTH)
-                .build();
-
-        GridPane.setHalignment(mppCanvas, HPos.CENTER);
-        GridPane.setValignment(mppCanvas, VPos.CENTER);
-
-        mppCanvas.setStyle("-fx-background-color: #ffffff;-fx-border-color: #000000; ");
-    }
 
     public IMppMediator getMediator() {
         return mediator;
