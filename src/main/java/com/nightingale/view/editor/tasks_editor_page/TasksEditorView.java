@@ -1,8 +1,10 @@
 package com.nightingale.view.editor.tasks_editor_page;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import com.nightingale.model.tasks.TaskLinkModel;
 import com.nightingale.model.tasks.TaskModel;
+import com.nightingale.utils.Loggers;
 import com.nightingale.view.ViewablePage;
 import com.nightingale.view.config.Config;
 import com.nightingale.view.editor.proscessor_editor_page.IProcessorEditorView;
@@ -28,6 +30,7 @@ import static com.nightingale.view.view_components.editor.EditorConstants.TOOLBA
 /**
  * Created by Nightingale on 09.03.14.
  */
+@Singleton
 public class TasksEditorView implements ITasksEditorView {
 
     @Inject
@@ -48,7 +51,9 @@ public class TasksEditorView implements ITasksEditorView {
 
     private Pane infoContainer;
 
-
+    public TasksEditorView() {
+        Loggers.debugLogger.debug("new TasksEditorView");
+    }
 
     @Override
     public Pane getView() {

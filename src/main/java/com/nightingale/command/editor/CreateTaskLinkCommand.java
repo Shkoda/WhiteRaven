@@ -1,9 +1,8 @@
 package com.nightingale.command.editor;
 
 import com.nightingale.model.DataManager;
-import com.nightingale.model.mpp.ProcessorLinkModel;
 import com.nightingale.model.tasks.TaskLinkModel;
-import com.nightingale.view.view_components.mpp.VertexShapeBuilder;
+import com.nightingale.view.view_components.VertexShapeBuilder;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.geometry.Point2D;

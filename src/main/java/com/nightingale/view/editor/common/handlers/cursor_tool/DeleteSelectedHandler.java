@@ -3,6 +3,7 @@ package com.nightingale.view.editor.common.handlers.cursor_tool;
 import com.nightingale.application.guice.ICommandProvider;
 import com.nightingale.command.editor.DeleteCommand;
 import com.nightingale.model.entities.GraphType;
+import com.nightingale.utils.Loggers;
 import com.nightingale.view.editor.common.GraphMediator;
 import com.nightingale.view.editor.common.IEditorMediator;
 import com.nightingale.view.utils.NodeType;
@@ -28,6 +29,7 @@ public class DeleteSelectedHandler implements EventHandler<KeyEvent> {
 
     public DeleteSelectedHandler(ICommandProvider commandProvider, ToggleButton cursorButton,
                                  GraphMediator graphMediator, IEditorMediator editorMediator, GraphType graphType) {
+        Loggers.debugLogger.debug("new DeleteSelectedHandler");
         this.commandProvider = commandProvider;
         this.cursorButton = cursorButton;
         this.graphMediator = graphMediator;
@@ -37,7 +39,9 @@ public class DeleteSelectedHandler implements EventHandler<KeyEvent> {
 
     @Override
     public void handle(KeyEvent keyEvent) {
+        Loggers.debugLogger.debug("Key event detected");
         if (cursorButton.isSelected() && keyEvent.getCode() == KeyCode.DELETE) {
+            Loggers.debugLogger.debug("Delete event");
             Tuple<Node, NodeType> selected = editorMediator.getSelected();
             if (selected._1 == null)
                 return;
@@ -46,6 +50,7 @@ public class DeleteSelectedHandler implements EventHandler<KeyEvent> {
             command.deleteId = Integer.valueOf(selected._1.getId());
             command.nodeType = selected._2;
             command.graphType = graphType;
+            Loggers.debugLogger.debug("Removing from " + graphType + " " + command.nodeType + " " + command.deleteId);
             command.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
                 @Override
                 public void handle(WorkerStateEvent workerStateEvent) {

@@ -2,6 +2,7 @@ package com.nightingale.view.start_page;
 
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import com.nightingale.view.ViewablePage;
 import com.nightingale.view.config.Config;
 import com.nightingale.view.view_components.startpage.StartPageGridBuilder;
@@ -18,6 +19,7 @@ import static com.nightingale.view.config.Config.*;
 /**
  * Created by Nightingale on 09.03.14.
  */
+@Singleton
 public class StartPageView implements IStartPageView {
     @Inject
     public IStartPageMediator mediator;

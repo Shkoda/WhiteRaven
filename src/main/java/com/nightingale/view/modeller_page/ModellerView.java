@@ -1,6 +1,7 @@
 package com.nightingale.view.modeller_page;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import com.nightingale.view.ViewablePage;
 import com.nightingale.view.config.Config;
 import com.nightingale.view.statistics_page.StatisticsView;
@@ -10,6 +11,7 @@ import javafx.scene.layout.Pane;
 /**
  * Created by Nightingale on 09.03.14.
  */
+@Singleton
 public class ModellerView implements IModellerView {
     @Inject
     public TasksEditorView tasksEditorView;

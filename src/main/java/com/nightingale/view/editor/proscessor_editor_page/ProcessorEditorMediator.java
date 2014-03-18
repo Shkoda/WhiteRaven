@@ -1,11 +1,13 @@
 package com.nightingale.view.editor.proscessor_editor_page;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import com.nightingale.Main;
 import com.nightingale.application.guice.ICommandProvider;
 import com.nightingale.command.editor.CreateProcessorLinkCommand;
 import com.nightingale.command.editor.CreateProcessorCommand;
 import com.nightingale.model.entities.GraphType;
+import com.nightingale.utils.Loggers;
 import com.nightingale.view.editor.common.handlers.add_tool.AddVertexHandler;
 import com.nightingale.view.editor.common.handlers.cursor_tool.*;
 import com.nightingale.view.editor.proscessor_editor_page.handlers.ShowMppCorrectnessInfoHandler;
@@ -15,7 +17,7 @@ import com.nightingale.view.editor.proscessor_editor_page.mpp.MppView;
 import com.nightingale.view.utils.NodeType;
 import com.nightingale.view.view_components.editor.EditorConstants;
 import com.nightingale.utils.Tuple;
-import com.nightingale.view.view_components.mpp.VertexShapeBuilder;
+import com.nightingale.view.view_components.VertexShapeBuilder;
 import com.nightingale.model.mpp.ProcessorLinkModel;
 import com.nightingale.model.mpp.ProcessorModel;
 import javafx.concurrent.WorkerStateEvent;
@@ -31,6 +33,7 @@ import javafx.scene.layout.Pane;
 /**
  * Created by Nightingale on 09.03.14.
  */
+@Singleton
 public class ProcessorEditorMediator implements IProcessorEditorMediator {
     @Inject
     public ICommandProvider commandProvider;
@@ -47,6 +50,10 @@ public class ProcessorEditorMediator implements IProcessorEditorMediator {
     private NodeType selectedNodeType;
 
     private Node linkStart;
+
+    public ProcessorEditorMediator() {
+        Loggers.debugLogger.debug("new ProcessorEditorMediator");
+    }
 
     @Override
     public void initTools() {

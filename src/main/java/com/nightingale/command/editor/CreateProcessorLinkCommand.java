@@ -1,7 +1,7 @@
 package com.nightingale.command.editor;
 
 import com.nightingale.model.DataManager;
-import com.nightingale.view.view_components.mpp.VertexShapeBuilder;
+import com.nightingale.view.view_components.VertexShapeBuilder;
 import com.nightingale.model.mpp.ProcessorLinkModel;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;

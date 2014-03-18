@@ -4,33 +4,26 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.nightingale.Main;
 import com.nightingale.application.guice.ICommandProvider;
-import com.nightingale.command.editor.CreateProcessorCommand;
-import com.nightingale.command.editor.CreateProcessorLinkCommand;
 import com.nightingale.command.editor.CreateTaskCommand;
 import com.nightingale.command.editor.CreateTaskLinkCommand;
 import com.nightingale.model.entities.GraphType;
-import com.nightingale.model.mpp.ProcessorLinkModel;
-import com.nightingale.model.mpp.ProcessorModel;
 import com.nightingale.model.tasks.TaskLinkModel;
 import com.nightingale.model.tasks.TaskModel;
+import com.nightingale.utils.Loggers;
 import com.nightingale.utils.Tuple;
 import com.nightingale.view.editor.common.handlers.add_tool.AddVertexHandler;
 import com.nightingale.view.editor.common.handlers.connection_tool.LinkToolOnNodeHandler;
 import com.nightingale.view.editor.common.handlers.connection_tool.StopLinkingHandler;
 import com.nightingale.view.editor.common.handlers.cursor_tool.*;
 
-import com.nightingale.view.editor.proscessor_editor_page.IProcessorEditorView;
-import com.nightingale.view.editor.proscessor_editor_page.mpp.MppView;
-import com.nightingale.view.editor.tasks_editor_page.task_graph.ITaskGraphView;
 import com.nightingale.view.editor.tasks_editor_page.task_graph.TaskGraphView;
 import com.nightingale.view.utils.NodeType;
 import com.nightingale.view.view_components.editor.EditorConstants;
-import com.nightingale.view.view_components.mpp.VertexShapeBuilder;
+import com.nightingale.view.view_components.VertexShapeBuilder;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -41,6 +34,10 @@ import javafx.scene.layout.Pane;
  */
 @Singleton
 public class TasksEditorMediator implements ITasksEditorMediator {
+
+    public TasksEditorMediator() {
+        Loggers.debugLogger.debug("new TasksEditorMediator");
+    }
 
     @Inject
     public ICommandProvider commandProvider;
@@ -162,7 +159,7 @@ public class TasksEditorMediator implements ITasksEditorMediator {
         cursorButton = taskEditorView.getCursorButton();
         taskCanvas.addEventHandler(MouseEvent.MOUSE_PRESSED, new CursorToolOnScrollClickHandler(this, cursorButton));
         taskCanvas.addEventFilter(MouseEvent.MOUSE_PRESSED, new TurnOffSelectionHandler(cursorButton, this, taskEditorView));
-        Main.scene.addEventHandler(KeyEvent.KEY_PRESSED, new DeleteSelectedHandler(commandProvider, cursorButton, taskGraphView.getGraphMediator(), this, GraphType.MPP));
+        Main.scene.addEventHandler(KeyEvent.KEY_PRESSED, new DeleteSelectedHandler(commandProvider, cursorButton, taskGraphView.getGraphMediator(), this, GraphType.TASK));
     }
 
     private void initAddProcessorTool() {

@@ -5,10 +5,11 @@ import com.google.inject.Singleton;
 import com.nightingale.model.entities.GraphType;
 import com.nightingale.model.tasks.TaskLinkModel;
 import com.nightingale.model.tasks.TaskModel;
+import com.nightingale.utils.Loggers;
 import com.nightingale.view.editor.common.GraphMediator;
 import com.nightingale.view.view_components.editor.CanvasPaneBuilder;
-import com.nightingale.view.view_components.mpp.LinkShapeBuilder;
-import com.nightingale.view.view_components.mpp.VertexShapeBuilder;
+import com.nightingale.view.view_components.LinkShapeBuilder;
+import com.nightingale.view.view_components.VertexShapeBuilder;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
@@ -21,6 +22,10 @@ public class TaskGraphView implements ITaskGraphView {
     @Inject
     public ITaskGraphMediator mediator;
     private Pane graphCanvas;
+
+    public TaskGraphView() {
+        Loggers.debugLogger.debug("new TaskGraphView");
+    }
 
     @Override
     public Pane getView() {

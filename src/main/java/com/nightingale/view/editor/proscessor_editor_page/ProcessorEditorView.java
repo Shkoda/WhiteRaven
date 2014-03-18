@@ -2,6 +2,7 @@ package com.nightingale.view.editor.proscessor_editor_page;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.nightingale.utils.Loggers;
 import com.nightingale.view.ViewablePage;
 import com.nightingale.view.config.Config;
 import com.nightingale.view.editor.proscessor_editor_page.mpp.MppView;
@@ -43,6 +44,10 @@ public class ProcessorEditorView implements IProcessorEditorView {
     private Pane infoContainer;
 
     private FadeTransition hideInfoMessageTransition;
+
+    public ProcessorEditorView() {
+        Loggers.debugLogger.debug("new ProcessorEditorView");
+    }
 
     @Override
     public Pane getView() {

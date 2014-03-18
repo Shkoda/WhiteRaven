@@ -3,10 +3,11 @@ package com.nightingale.view.editor.proscessor_editor_page.mpp;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.nightingale.model.entities.GraphType;
+import com.nightingale.utils.Loggers;
 import com.nightingale.view.editor.common.GraphMediator;
 import com.nightingale.view.view_components.editor.CanvasPaneBuilder;
-import com.nightingale.view.view_components.mpp.LinkShapeBuilder;
-import com.nightingale.view.view_components.mpp.VertexShapeBuilder;
+import com.nightingale.view.view_components.LinkShapeBuilder;
+import com.nightingale.view.view_components.VertexShapeBuilder;
 import com.nightingale.model.mpp.ProcessorLinkModel;
 import com.nightingale.model.mpp.ProcessorModel;
 import javafx.scene.Group;
@@ -21,6 +22,11 @@ public class MppView implements IMppView {
     @Inject
     public IMppMediator mediator;
     private Pane mppCanvas;
+
+    public MppView() {
+        Loggers.debugLogger.debug("new MppView");
+    }
+
 
     @Override
     public Pane getView() {

@@ -1,13 +1,14 @@
 package com.nightingale.view.editor.tasks_editor_page.task_graph;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import com.nightingale.model.DataManager;
 import com.nightingale.model.entities.Graph;
 import com.nightingale.model.tasks.TaskLinkModel;
 import com.nightingale.model.tasks.TaskModel;
+import com.nightingale.utils.Loggers;
 import com.nightingale.view.editor.tasks_editor_page.ITasksEditorMediator;
-import com.nightingale.view.editor.tasks_editor_page.TasksEditorMediator;
-import com.nightingale.view.view_components.mpp.VertexShapeBuilder;
+import com.nightingale.view.view_components.VertexShapeBuilder;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.scene.Cursor;
@@ -21,6 +22,7 @@ import java.util.Map;
 /**
  * Created by Nightingale on 10.03.14.
  */
+@Singleton
 public class TaskGraphMediator implements ITaskGraphMediator {
     @Inject
     public ITaskGraphView taskGraphView;
@@ -32,6 +34,10 @@ public class TaskGraphMediator implements ITaskGraphMediator {
     private Point2D dragAnchor;
     private Pane taskCanvas;
     private Graph<TaskModel, TaskLinkModel> taskGraphModel;
+
+    public TaskGraphMediator() {
+        Loggers.debugLogger.debug("new TaskGraphMediator");
+    }
 
     @Override
     public void init() {

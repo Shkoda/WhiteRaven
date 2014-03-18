@@ -1,4 +1,4 @@
-package com.nightingale.view.view_components.mpp;
+package com.nightingale.view.view_components;
 
 import com.nightingale.model.entities.Connection;
 import com.nightingale.model.entities.GraphType;

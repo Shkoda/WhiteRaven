@@ -4,8 +4,9 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.nightingale.model.DataManager;
 import com.nightingale.model.entities.Graph;
+import com.nightingale.utils.Loggers;
 import com.nightingale.view.editor.proscessor_editor_page.IProcessorEditorMediator;
-import com.nightingale.view.view_components.mpp.VertexShapeBuilder;
+import com.nightingale.view.view_components.VertexShapeBuilder;
 import com.nightingale.model.mpp.ProcessorLinkModel;
 import com.nightingale.model.mpp.ProcessorModel;
 import javafx.event.EventHandler;
@@ -34,6 +35,11 @@ public class MppMediator implements IMppMediator {
     private Point2D dragAnchor;
     private Pane mppCanvas;
     private Graph<ProcessorModel, ProcessorLinkModel>  mppModel;
+
+
+    public MppMediator() {
+        Loggers.debugLogger.debug("new MppMediator");
+    }
 
     @Override
     public void init() {

@@ -1,8 +1,9 @@
-package com.nightingale.view.view_components.mpp;
+package com.nightingale.view.view_components;
 
 import com.nightingale.Main;
 import com.nightingale.model.entities.GraphType;
 import com.nightingale.model.entities.Vertex;
+import com.nightingale.utils.Loggers;
 import com.nightingale.view.config.Config;
 import com.nightingale.model.mpp.ProcessorModel;
 import javafx.beans.value.ChangeListener;
@@ -34,7 +35,7 @@ public class VertexShapeBuilder {
         double width, height;
         ImagePattern imagePattern;
 
-        switch (graphType){
+        switch (graphType) {
             case MPP:
                 width = Config.PROCESSOR_ELEMENT_WIDTH;
                 height = Config.PROCESSOR_ELEMENT_HEIGHT;
@@ -89,15 +90,15 @@ public class VertexShapeBuilder {
         return view;
     }
 
-    public static Point2D getCentralPoint(Node processorNode){
+    public static Point2D getCentralPoint(Node processorNode) {
         double centerX = processorNode.getTranslateX() + Config.PROCESSOR_ELEMENT_WIDTH / 2;
         double centerY = processorNode.getTranslateY() + Config.PROCESSOR_ELEMENT_HEIGHT / 2;
         return new Point2D(centerX, centerY);
     }
 
-    public static Point2D getInBoundsCoordinate(double x, double y, Node processorShape, Pane container) {
-        double newX = toBounds(x, 0, container.widthProperty().get() - processorShape.getLayoutBounds().getWidth());
-        double newY = toBounds(y, 0, container.heightProperty().get() - processorShape.getLayoutBounds().getHeight());
+    public static Point2D getInBoundsCoordinate(double x, double y, Node shape, Pane container) {
+        double newX = toBounds(x, 0, container.widthProperty().get() - shape.getLayoutBounds().getWidth());
+        double newY = toBounds(y, 0, container.heightProperty().get() - shape.getLayoutBounds().getHeight());
         return new Point2D(newX, newY);
     }
 
