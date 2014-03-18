@@ -1,5 +1,6 @@
 package com.nightingale.view.editor.common.handlers.add_tool;
 
+import com.nightingale.utils.Loggers;
 import com.nightingale.view.editor.common.IEditorMediator;
 import javafx.event.EventHandler;
 import javafx.scene.control.ToggleButton;

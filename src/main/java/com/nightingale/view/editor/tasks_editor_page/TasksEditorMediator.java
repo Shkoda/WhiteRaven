@@ -56,7 +56,7 @@ public class TasksEditorMediator implements ITasksEditorMediator {
 
     @Override
     public void initTools() {
-        taskCanvas = taskEditorView.getView();
+        taskCanvas = taskGraphView.getView();
         initCursorTool();
         initAddProcessorTool();
         initLinkTool();

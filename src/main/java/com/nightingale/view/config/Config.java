@@ -22,6 +22,9 @@ public class Config {
     public static final int CANVAS_WIDTH = 500;
     public static final int CANVAS_HEIGHT = 250;
 
+    public static final int PROCESSOR_CONNECTION_POINTS_PER_SIDE = 5;
+    public static final int TASK_CONNECTION_POINTS_NUMBER = 20;
+
 
     public static final int PROCESSOR_ELEMENT_WIDTH = 40;
     public static final int PROCESSOR_ELEMENT_HEIGHT = 40;
