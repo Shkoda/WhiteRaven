@@ -3,12 +3,12 @@ package com.nightingale.view.view_components.common;
 
 import com.nightingale.view.config.Config;
 import com.nightingale.view.utils.GridPosition;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.Node;
+import javafx.scene.control.Control;
 import javafx.scene.control.Label;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.RowConstraints;
+import javafx.scene.layout.*;
 
 import java.util.List;
 
@@ -28,8 +28,8 @@ public class PageGridBuilder {
 
     public static GridPane getTemplate(String name) {
         GridPane gridPane = new GridPane();
-        setAnchors(gridPane);
         setConstraints(gridPane);
+        setAnchors(gridPane);
         setPageName(gridPane, name);
 
         return gridPane;
@@ -51,16 +51,16 @@ public class PageGridBuilder {
 
 
     private static void setConstraints(GridPane template) {
-        ColumnConstraints leftConstraint = new ColumnConstraints();
-        ConstantSizeSetter.setConstantWidth(leftConstraint, Config.SYSTEM_MENU_BUTTON_SIZE * 2);
+        ColumnConstraints leftColumn = new ColumnConstraints();
+        ConstantSizeSetter.setConstantWidth(leftColumn, Config.SYSTEM_MENU_BUTTON_SIZE * 2);
 
-        ColumnConstraints rightConstraint = new ColumnConstraints();
-        ConstantSizeSetter.setConstantWidth(rightConstraint, SYSTEM_MENU_BUTTON_SIZE * 2);
+        ColumnConstraints rightColumn = new ColumnConstraints();
+        ConstantSizeSetter.setConstantWidth(rightColumn, SYSTEM_MENU_BUTTON_SIZE * 2);
 
-        ColumnConstraints contentColumn = new ColumnConstraints();
+        final ColumnConstraints contentColumn = new ColumnConstraints();
         contentColumn.prefWidthProperty().bind(template.widthProperty());
 
-        template.getColumnConstraints().setAll(leftConstraint, contentColumn, rightConstraint);
+        template.getColumnConstraints().setAll(leftColumn, contentColumn, rightColumn);
 
         RowConstraints headerRow = new RowConstraints();
         ConstantSizeSetter.setConstantHeight(headerRow, SYSTEM_MENU_BUTTON_SIZE * 2);

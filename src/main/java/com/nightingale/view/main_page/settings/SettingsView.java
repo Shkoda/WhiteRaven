@@ -36,6 +36,7 @@ public class SettingsView implements ISettingsView {
         settingsButton.setPrefSize(Config.SYSTEM_MENU_BUTTON_SIZE, Config.SYSTEM_MENU_BUTTON_SIZE);
         GridPane.setHalignment(settingsButton, HPos.CENTER);
 
+
         newProject = new MenuItem("New Project");
         newMPP = new MenuItem("New MPP");
         newTasks = new MenuItem("New Task Graph");
@@ -50,6 +51,8 @@ public class SettingsView implements ISettingsView {
         saveTasks = new MenuItem("Save Task Graph");
 
         exit = new MenuItem("Exit");
+
+     //   exit.setStyle("-fx-font-size: 6; -fx-text-fill: antiquewhite");
 
         settingsButton.getItems().addAll(newProject, newMPP, newTasks, new SeparatorMenuItem(),
                 generateTasks, new SeparatorMenuItem(),

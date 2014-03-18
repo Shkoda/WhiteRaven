@@ -10,9 +10,9 @@ import com.nightingale.view.view_components.common.ButtonBuilder;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
 import javafx.scene.control.Button;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.*;
+
+import javax.naming.ldap.Control;
 
 import static com.nightingale.view.config.Config.*;
 
@@ -24,7 +24,7 @@ public class StartPageView implements IStartPageView {
     @Inject
     public IStartPageMediator mediator;
 
-    private AnchorPane root;
+    private BorderPane root;
     private GridPane gridForLinks;
     private Button processorEditorLink, taskEditorLink, modellerLink, statisticsLink;
 
@@ -39,13 +39,11 @@ public class StartPageView implements IStartPageView {
     }
 
     private void initView(){
-        root = new AnchorPane();
+        root = new BorderPane();
+
         AnchorPane.setBottomAnchor(root, ANCHOR_OFFSET_WORK_AREA);
 
         gridForLinks = StartPageGridBuilder.build();
-        gridForLinks.prefHeightProperty().bind(root.heightProperty());
-        gridForLinks.prefWidthProperty().bind(root.widthProperty());
-
 
         processorEditorLink = ButtonBuilder.createButton("EditProcessorLinkButton", HPos.RIGHT, VPos.BOTTOM);
         taskEditorLink = ButtonBuilder.createButton("EditTasksLinkButton", HPos.LEFT, VPos.BOTTOM);
@@ -56,9 +54,9 @@ public class StartPageView implements IStartPageView {
         gridForLinks.add(taskEditorLink, 1, 0);
         gridForLinks.add(modellerLink, 0, 1);
         gridForLinks.add(statisticsLink, 1, 1);
-        root.getChildren().setAll(gridForLinks);
-    }
 
+        root.setCenter(gridForLinks);
+    }
 
 
     @Override
