@@ -76,6 +76,7 @@ public class VertexShapeBuilder {
             }
         });
 
+
         view.setId(String.valueOf(vertex.getId()));
 
         view.translateXProperty().addListener(new ChangeListener<Number>() {
@@ -175,7 +176,7 @@ public class VertexShapeBuilder {
         double degrees = 360.0 / Config.TASK_CONNECTION_POINTS_NUMBER;
         double radius = Config.TASK_ELEMENT_HEIGHT / 2;
         for (int i = 0; i < Config.TASK_CONNECTION_POINTS_NUMBER; i++) {
-            TASK_CONNECTION_POINTS.add(new Point2D(radius * Math.sin(degrees * i)+radius, radius * Math.cos(degrees * i)+radius));
+            TASK_CONNECTION_POINTS.add(new Point2D(radius * Math.sin(degrees * i) + radius, radius * Math.cos(degrees * i) + radius));
         }
 
     }
