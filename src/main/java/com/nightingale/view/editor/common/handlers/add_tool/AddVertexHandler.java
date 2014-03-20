@@ -1,7 +1,8 @@
 package com.nightingale.view.editor.common.handlers.add_tool;
 
-import com.nightingale.utils.Loggers;
+import com.google.inject.Inject;
 import com.nightingale.view.editor.common.IEditorMediator;
+import com.nightingale.view.modeller_page.IModellerView;
 import javafx.event.EventHandler;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.input.MouseEvent;
@@ -11,16 +12,17 @@ import javafx.scene.input.MouseEvent;
  */
 public class AddVertexHandler implements EventHandler<MouseEvent> {
 
-    private ToggleButton addProcessorButton;
+    private ToggleButton addVertexButton;
     private IEditorMediator editorMediator;
 
-    public AddVertexHandler(ToggleButton addProcessorButton, IEditorMediator editorMediator) {
-        this.addProcessorButton = addProcessorButton;
+
+    public AddVertexHandler(ToggleButton addVertexButton, IEditorMediator editorMediator) {
+        this.addVertexButton = addVertexButton;
         this.editorMediator = editorMediator;
     }
 
     public void handle(MouseEvent me) {
-        if (addProcessorButton.isSelected()) {
+        if (addVertexButton.isSelected()) {
             editorMediator.createVertex(me.getX(), me.getY());
         }
     }

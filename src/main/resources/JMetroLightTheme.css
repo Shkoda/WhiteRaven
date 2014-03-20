@@ -374,11 +374,12 @@
     -fx-background: -fx-accent;
     -fx-background-color: #dedede;
 }
-
 .menu-item:pressed {
     -fx-background-color: #212121;
     -fx-text-fill: white;
+
 }
+
 
 .menu-item:pressed .label {
     -fx-text-fill: white;
@@ -493,14 +494,14 @@
  ******************************************************************************/
 
 .combo-box-base {
-    -fx-background-color: transparent, #bababa, transparent, white;
+    /*-fx-background-color: transparent, #bababa, transparent, white;*/
+    -fx-background-color: transparent;
     -fx-background-radius: 0, 0, 0, 0;
     -fx-padding: 0.166667em; /* 2 */
 }
 
 .combo-box-base:hover {
     -fx-background-color: transparent, #909090, transparent, white;
-
 }
 
 /*.combo-box-base:focused {

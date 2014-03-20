@@ -60,6 +60,11 @@ public class TasksEditorView implements ITasksEditorView {
         return view == null ? initView() : view;
     }
 
+    @Override
+    public Pane getGraphView() {
+        return taskGraphView.getView();
+    }
+
     private GridPane initView() {
         view = EditorGridBuilder.build();
         initToolBar();

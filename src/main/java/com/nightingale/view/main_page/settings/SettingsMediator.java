@@ -62,138 +62,96 @@ public class SettingsMediator implements ISettingsMediator {
             }
         });
 
-        settingsView.getOpenTasks().setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                File file = createFileChooser("Open Task Graph", Config.TASK_GRAPH_EXTENSION_FILTER).showOpenDialog(null);
-                if (file != null) {
-                    OpenTaskGraphCommand command = commandProvider.get(OpenTaskGraphCommand.class);
-                    command.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
-                        @Override
-                        public void handle(WorkerStateEvent workerStateEvent) {
-                            taskGraphMediator.refresh();
-                        }
-                    });
-                    command.path = file.toPath();
-                    command.start();
-                }
+        settingsView.getOpenTasks().setOnAction(actionEvent -> {
+            File file = createFileChooser("Open Task Graph", Config.TASK_GRAPH_EXTENSION_FILTER).showOpenDialog(null);
+            if (file != null) {
+                OpenTaskGraphCommand command = commandProvider.get(OpenTaskGraphCommand.class);
+                command.setOnSucceeded(workerStateEvent -> {
+                    taskGraphMediator.refresh();
+                });
+                command.path = file.toPath();
+                command.start();
             }
         });
 
-        settingsView.getOpenProject().setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                File file = createFileChooser("Open Project", Config.PROJECT_FILE_EXTENSION_FILTER).showOpenDialog(null);
-                if (file != null) {
-                    OpenProjectCommand command = commandProvider.get(OpenProjectCommand.class);
-                    command.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
-                        @Override
-                        public void handle(WorkerStateEvent workerStateEvent) {
-                            taskGraphMediator.refresh();
-                            mppMediator.refresh();
-                        }
-                    });
-                    command.path = file.toPath();
-                    command.start();
-                }
+        settingsView.getOpenProject().setOnAction(actionEvent -> {
+            File file = createFileChooser("Open Project", Config.PROJECT_FILE_EXTENSION_FILTER).showOpenDialog(null);
+            if (file != null) {
+                OpenProjectCommand command = commandProvider.get(OpenProjectCommand.class);
+                command.setOnSucceeded(workerStateEvent -> {
+                    taskGraphMediator.refresh();
+                    mppMediator.refresh();
+                });
+                command.path = file.toPath();
+                command.start();
             }
         });
     }
 
     private void initSaveMenuItems() {
-        settingsView.getSaveMPP().setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                File file = createFileChooser("Save MPP", Config.MPP_EXTENSION_FILTER).showSaveDialog(null);
-                if (file != null) {
-                    SaveCommand command = commandProvider.get(SaveCommand.class);
-                    command.path = updateExtension(file, Config.MPP_EXTENSION);
-                    command.type = SaveCommand.Type.SAVE_MPP;
-                    command.start();
-                }
+        settingsView.getSaveMPP().setOnAction(actionEvent -> {
+            File file = createFileChooser("Save MPP", Config.MPP_EXTENSION_FILTER).showSaveDialog(null);
+            if (file != null) {
+                SaveCommand command = commandProvider.get(SaveCommand.class);
+                command.path = updateExtension(file, Config.MPP_EXTENSION);
+                command.type = SaveCommand.Type.SAVE_MPP;
+                command.start();
             }
         });
 
-        settingsView.getSaveTasks().setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                File file = createFileChooser("Save Task Graph", Config.TASK_GRAPH_EXTENSION_FILTER).showSaveDialog(null);
-                if (file != null) {
-                    SaveCommand command = commandProvider.get(SaveCommand.class);
-                    command.path = updateExtension(file, Config.TASK_GRAPH_EXTENSION);
-                    command.type = SaveCommand.Type.SAVE_TASK_GRAPH;
-                    command.start();
-                }
+        settingsView.getSaveTasks().setOnAction(actionEvent -> {
+            File file = createFileChooser("Save Task Graph", Config.TASK_GRAPH_EXTENSION_FILTER).showSaveDialog(null);
+            if (file != null) {
+                SaveCommand command = commandProvider.get(SaveCommand.class);
+                command.path = updateExtension(file, Config.TASK_GRAPH_EXTENSION);
+                command.type = SaveCommand.Type.SAVE_TASK_GRAPH;
+                command.start();
             }
         });
 
-        settingsView.getSaveProject().setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                File file = createFileChooser("Save Project", Config.PROJECT_FILE_EXTENSION_FILTER).showSaveDialog(null);
-                if (file != null) {
-                    SaveCommand command = commandProvider.get(SaveCommand.class);
-                    command.path = updateExtension(file, Config.PROJECT_EXTENSION);
-                    command.type = SaveCommand.Type.SAVE_PROJECT;
-                    command.start();
-                }
+        settingsView.getSaveProject().setOnAction(actionEvent -> {
+            File file = createFileChooser("Save Project", Config.PROJECT_FILE_EXTENSION_FILTER).showSaveDialog(null);
+            if (file != null) {
+                SaveCommand command = commandProvider.get(SaveCommand.class);
+                command.path = updateExtension(file, Config.PROJECT_EXTENSION);
+                command.type = SaveCommand.Type.SAVE_PROJECT;
+                command.start();
             }
         });
     }
 
     private void initNewMenuItems() {
-        settingsView.getNewMPP().setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                NewMppCommand command = commandProvider.get(NewMppCommand.class);
-                command.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
-                    @Override
-                    public void handle(WorkerStateEvent workerStateEvent) {
-                        taskGraphMediator.refresh();
-                        mppMediator.refresh();
-                    }
-                });
-                command.start();
-            }
+        settingsView.getNewMPP().setOnAction(actionEvent -> {
+            NewMppCommand command = commandProvider.get(NewMppCommand.class);
+            command.setOnSucceeded(workerStateEvent -> {
+                taskGraphMediator.refresh();
+                mppMediator.refresh();
+            });
+            command.start();
         });
 
-        settingsView.getNewTasks().setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                NewTaskGraphCommand command = commandProvider.get(NewTaskGraphCommand.class);
-                command.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
-                    @Override
-                    public void handle(WorkerStateEvent workerStateEvent) {
-                        taskGraphMediator.refresh();
-                        mppMediator.refresh();
-                    }
-                });
-                command.start();
-            }
+        settingsView.getNewTasks().setOnAction(actionEvent -> {
+            NewTaskGraphCommand command = commandProvider.get(NewTaskGraphCommand.class);
+            command.setOnSucceeded(workerStateEvent -> {
+                taskGraphMediator.refresh();
+                mppMediator.refresh();
+            });
+            command.start();
         });
 
-        settingsView.getNewProject().setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                NewProjectCommand command = commandProvider.get(NewProjectCommand.class);
-                command.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
-                    @Override
-                    public void handle(WorkerStateEvent workerStateEvent) {
-                        taskGraphMediator.refresh();
-                        mppMediator.refresh();
-                    }
-                });
-                command.start();
-            }
+        settingsView.getNewProject().setOnAction(actionEvent -> {
+            NewProjectCommand command = commandProvider.get(NewProjectCommand.class);
+            command.setOnSucceeded(workerStateEvent -> {
+                taskGraphMediator.refresh();
+                mppMediator.refresh();
+            });
+            command.start();
         });
     }
 
     private void initExitMenuItem() {
-        settingsView.getExit().setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                System.exit(0);
-            }
+        settingsView.getExit().setOnAction(actionEvent -> {
+            System.exit(0);
         });
     }
 
