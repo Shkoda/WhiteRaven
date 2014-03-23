@@ -114,7 +114,7 @@ public class TasksEditorMediator implements ITasksEditorMediator {
     public Node addConnectionView(TaskLinkModel connection, Node firstNode, Node secondNode) {
         final Node node = taskGraphView.addConnectionView(connection, firstNode, secondNode);
         node.addEventHandler(MouseEvent.MOUSE_PRESSED, new SelectNodeHandler(cursorButton, this, node, NodeType.LINK));
-     //   node.addEventHandler(MouseEvent.MOUSE_PRESSED, new ShowConnectionInfoHandler(taskEditorView, connection));
+        node.addEventHandler(MouseEvent.MOUSE_PRESSED, new ShowConnectionInfoHandler(taskEditorView, connection));
         return node;
     }
 

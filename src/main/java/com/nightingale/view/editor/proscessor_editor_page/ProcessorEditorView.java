@@ -2,6 +2,7 @@ package com.nightingale.view.editor.proscessor_editor_page;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.nightingale.model.entities.Informative;
 import com.nightingale.utils.Loggers;
 import com.nightingale.view.ViewablePage;
 import com.nightingale.view.config.Config;
@@ -10,8 +11,8 @@ import com.nightingale.view.editor.tasks_editor_page.TasksEditorView;
 import com.nightingale.view.view_components.editor.*;
 import com.nightingale.model.mpp.ProcessorLinkModel;
 import com.nightingale.model.mpp.ProcessorModel;
-import com.nightingale.view.view_components.editor.mpp_editor.ProcessorInfoPane;
-import com.nightingale.view.view_components.editor.mpp_editor.ProcessorLinkInfoPane;
+import com.nightingale.view.view_components.editor.ProcessorInfoPane;
+import com.nightingale.view.view_components.editor.InfoPane;
 import javafx.animation.FadeTransition;
 import javafx.animation.FadeTransitionBuilder;
 import javafx.scene.Node;
@@ -39,7 +40,7 @@ public class ProcessorEditorView implements IProcessorEditorView {
     private ToggleButton cursorButton, addProcessorButton, linkButton;
     private Button checkButton;
     private ProcessorInfoPane processorInfoPane;
-    private ProcessorLinkInfoPane linkInfoPane;
+    private InfoPane<ProcessorLinkModel> linkInfoPane;
 
     private Pane infoContainer;
 
@@ -57,13 +58,17 @@ public class ProcessorEditorView implements IProcessorEditorView {
 
     @Override
     public void showVertexInfoPane(ProcessorModel processorModel) {
+        showInfo(processorModel, processorInfoPane);
+    }
+
+
+    private void showInfo(Informative informative, InfoPane infoPane) {
         processorInfoPane.unbindParams();
         linkInfoPane.unbindParams();
-
-        infoContainer.getChildren().setAll(processorInfoPane.getToolBar());
-        processorInfoPane.setParams(processorModel);
-        processorInfoPane.bindParams(processorModel);
-        processorInfoPane.getToolBar().setVisible(true);
+        infoContainer.getChildren().setAll(infoPane.getToolBar());
+        infoPane.setParams(informative);
+        infoPane.bindParams(informative);
+        infoPane.getToolBar().setVisible(true);
     }
 
     @Override
@@ -80,22 +85,14 @@ public class ProcessorEditorView implements IProcessorEditorView {
     }
 
     @Override
-    public void showConnectionInfoPane(ProcessorLinkModel linkVO) {
-        processorInfoPane.unbindParams();
-        linkInfoPane.unbindParams();
-
-        infoContainer.getChildren().setAll(processorInfoPane.getToolBar());
-        linkInfoPane.setParams(linkVO);
-        linkInfoPane.bindParams(linkVO);
-        linkInfoPane.getToolBar().setVisible(true);
-        infoContainer.getChildren().setAll(linkInfoPane.getToolBar());
+    public void showConnectionInfoPane(ProcessorLinkModel linkModel) {
+        showInfo(linkModel, linkInfoPane);
     }
 
     @Override
     public void hideInfoPane() {
         processorInfoPane.unbindParams();
         linkInfoPane.unbindParams();
-   //     processorInfoPane.getToolBar().setVisible(false);
         for (Node node : infoContainer.getChildren())
             node.setVisible(false);
     }
@@ -163,7 +160,7 @@ public class ProcessorEditorView implements IProcessorEditorView {
         processorInfoPane = new ProcessorInfoPane();
         processorInfoPane.getToolBar().setVisible(false);
 
-        linkInfoPane = new ProcessorLinkInfoPane();
+        linkInfoPane = new InfoPane<>();
         linkInfoPane.getToolBar().setVisible(false);
 
         infoContainer = new Pane();

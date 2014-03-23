@@ -1,25 +1,25 @@
 package com.nightingale.view.editor.common.listeners;
 
-import com.nightingale.model.entities.Vertex;
+import com.nightingale.model.entities.Informative;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 
 /**
  * Created by Nightingale on 16.03.14.
  */
-public class VertexWeightChangeListener implements ChangeListener<String>{
+public class WeightChangeListener implements ChangeListener<String>{
 
-    private final Vertex vertex;
+    private final Informative informative;
 
-    public VertexWeightChangeListener(Vertex vertex) {
-        this.vertex = vertex;
+    public WeightChangeListener(Informative informative) {
+        this.informative = informative;
     }
 
     @Override
     public void changed(ObservableValue<? extends String> observableValue, String oldValue, String newValue) {
         if (newValue != null && !newValue.equals(""))
             try {
-                vertex.setWeight(Integer.valueOf(newValue));
+                informative.setWeight(Integer.valueOf(newValue));
             }catch (Exception ignored){
 
             }

@@ -5,12 +5,12 @@ import java.io.Serializable;
 /**
  * Created by Nightingale on 16.03.14.
  */
-public abstract class Vertex implements Serializable {
+public abstract class Vertex implements Serializable, Informative {
     protected int id;
 
     protected double translateX, translateY;
     protected String name;
-    protected int weight;
+    protected double weight;
 
     public Vertex update(int id) {
         this.id = id;
@@ -44,11 +44,11 @@ public abstract class Vertex implements Serializable {
         return name;
     }
 
-    public int getWeight() {
+    public double getWeight() {
         return weight;
     }
 
-    public Vertex setWeight(int weight) {
+    public Vertex setWeight(double weight) {
         this.weight = weight;
         return this;
     }

@@ -2,22 +2,20 @@ package com.nightingale.view.editor.tasks_editor_page;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.nightingale.model.entities.Informative;
 import com.nightingale.model.tasks.TaskLinkModel;
 import com.nightingale.model.tasks.TaskModel;
 import com.nightingale.utils.Loggers;
 import com.nightingale.view.ViewablePage;
 import com.nightingale.view.config.Config;
 import com.nightingale.view.editor.proscessor_editor_page.IProcessorEditorView;
-import com.nightingale.view.editor.proscessor_editor_page.ProcessorEditorView;
 import com.nightingale.view.editor.tasks_editor_page.task_graph.ITaskGraphView;
 import com.nightingale.view.modeller_page.IModellerView;
-import com.nightingale.view.modeller_page.ModellerView;
 import com.nightingale.view.view_components.editor.EditorCanvasContainerBuilder;
 import com.nightingale.view.view_components.editor.EditorGridBuilder;
 import com.nightingale.view.view_components.editor.EditorToolBuilder;
 import com.nightingale.view.view_components.editor.EditorToolbarBuilder;
-import com.nightingale.view.view_components.editor.task_editor.ConnectionInfoPane;
-import com.nightingale.view.view_components.editor.task_editor.TaskInfoPane;
+import com.nightingale.view.view_components.editor.InfoPane;
 import javafx.scene.Node;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ToggleButton;
@@ -48,8 +46,7 @@ public class TasksEditorView implements ITasksEditorView {
     private GridPane view;
     private ToggleButton cursorButton, addTaskButton, linkButton;
 
-    private TaskInfoPane taskInfoPane;
-    private ConnectionInfoPane linkInfoPane;
+    private InfoPane infoPane;
 
     private Pane infoContainer;
 
@@ -76,11 +73,8 @@ public class TasksEditorView implements ITasksEditorView {
     }
 
     private void initStatusBar() {
-        taskInfoPane = new TaskInfoPane();
-        taskInfoPane.getToolBar().setVisible(false);
-
-        linkInfoPane = new ConnectionInfoPane();
-        linkInfoPane.getToolBar().setVisible(false);
+        infoPane = new InfoPane();
+        infoPane.getToolBar().setVisible(false);
 
         infoContainer = new Pane();
         infoContainer.setStyle("-fx-background-color:  #f7f7f7; -fx-border-color: #bababa");
@@ -126,31 +120,25 @@ public class TasksEditorView implements ITasksEditorView {
 
     @Override
     public void showVertexInfoPane(TaskModel vertex) {
-        taskInfoPane.unbindParams();
-        linkInfoPane.unbindParams();
-
-        infoContainer.getChildren().setAll(taskInfoPane.getToolBar());
-        taskInfoPane.setParams(vertex);
-        taskInfoPane.bindParams(vertex);
-        taskInfoPane.getToolBar().setVisible(true);
+        showInfo(vertex);
     }
 
     @Override
     public void showConnectionInfoPane(TaskLinkModel connection) {
-        taskInfoPane.unbindParams();
-        linkInfoPane.unbindParams();
+        showInfo(connection);
+    }
 
-        infoContainer.getChildren().setAll(taskInfoPane.getToolBar());
-        linkInfoPane.setParams(connection);
-        linkInfoPane.bindParams(connection);
-        linkInfoPane.getToolBar().setVisible(true);
-        infoContainer.getChildren().setAll(linkInfoPane.getToolBar());
+    private void showInfo(Informative informative) {
+        infoPane.unbindParams();
+        infoContainer.getChildren().setAll(infoPane.getToolBar());
+        infoPane.setParams(informative);
+        infoPane.bindParams(informative);
+        infoPane.getToolBar().setVisible(true);
     }
 
     @Override
     public void hideInfoPane() {
-         taskInfoPane.unbindParams();
-        linkInfoPane.unbindParams();
+        infoPane.unbindParams();
         for (Node node : infoContainer.getChildren())
             node.setVisible(false);
     }

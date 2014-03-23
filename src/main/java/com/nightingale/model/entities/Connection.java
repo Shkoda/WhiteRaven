@@ -5,13 +5,13 @@ import java.io.Serializable;
 /**
  * Created by Nightingale on 16.03.14.
  */
-public abstract class Connection implements Serializable{
+public abstract class Connection implements Serializable, Informative{
     protected int id;
     protected int firstVertexId, secondVertexId;
     protected double translateX1, translateY1;
     protected double translateX2, translateY2;
     protected String name;
-    private int weight;
+    private double weight;
 
     public void update(int id, int firstVertexId, int secondVertexId) {
         this.id = id;
@@ -73,11 +73,11 @@ public abstract class Connection implements Serializable{
         return this;
     }
 
-    public int getWeight() {
+    public double getWeight() {
         return weight;
     }
 
-    public Connection setWeight(int weight) {
+    public Connection setWeight(double weight) {
         this.weight = weight;
         return this;
     }

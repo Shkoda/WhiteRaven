@@ -11,16 +11,16 @@ import javafx.scene.input.MouseEvent;
  */
 public class ShowConnectionInfoHandler implements EventHandler<MouseEvent> {
 
-    private IEditorView processorEditorView;
+    private IEditorView editorView;
     private Connection connection;
 
-    public ShowConnectionInfoHandler(IProcessorEditorView processorEditorView, Connection connection) {
-        this.processorEditorView = processorEditorView;
+    public ShowConnectionInfoHandler(IEditorView editorView, Connection connection) {
+        this.editorView = editorView;
         this.connection = connection;
     }
 
     @Override
     public void handle(MouseEvent mouseEvent) {
-        processorEditorView.showConnectionInfoPane(connection);
+        editorView.showConnectionInfoPane(connection);
     }
 }
