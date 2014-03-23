@@ -1,26 +1,35 @@
-package com.nightingale.view.utils;
+package com.nightingale.model.entities;
 
-import com.nightingale.model.entities.Vertex;
 import com.nightingale.utils.Loggers;
-import javafx.scene.Node;
 
 import java.io.Serializable;
 import java.util.*;
+import java.util.function.Consumer;
 
 /**
  * Created by Nightingale on 20.03.2014.
  */
 public class AcyclicDirectedGraph implements Serializable {
     private Map<Integer, Node> roots = new HashMap<>();
-    private Set<Integer> ids = new HashSet<>();
+    private Map<Integer, Node> ids = new HashMap<>();
+    private static final transient Comparator<Node> increaseRatingComparator = (o1, o2) -> ((Double) o1.getRating()).compareTo(o2.getRating());
+    private static final transient Comparator<Node> decreaseRatingComparator = (o1, o2) -> (-(((Double) o1.getRating()).compareTo(o2.getRating())));
 
 
-    public boolean addVertex(int id) {
-        if (ids.contains(id))
+    public Collection<Node> getRoots() {
+        return roots.values();
+    }
+
+    public Collection<Node> getNodes() {
+        return ids.values();
+    }
+
+    public boolean addVertex(Vertex vertex) {
+        if (ids.keySet().contains(vertex.id))
             return false;
-        ids.add(id);
-        Node node = new Node(id);
-        roots.put(id, node);
+        Node node = new Node(vertex);
+        ids.put(vertex.id, node);
+        roots.put(vertex.id, node);
         return true;
     }
 
@@ -82,7 +91,7 @@ public class AcyclicDirectedGraph implements Serializable {
     }
 
 
-    private Node search(int id) {
+    public Node search(int id) {
         for (Node root : roots.values()) {
             Node node = search(id, root);
             if (node != null)
@@ -104,23 +113,64 @@ public class AcyclicDirectedGraph implements Serializable {
         return null;
     }
 
-    private class Node implements Serializable {
+    public List<Node> getTaskQueue(Consumer<AcyclicDirectedGraph> consumer, boolean useIncreaseOrder) {
+        consumer.accept(this);
+        List<Node> nodes = new ArrayList<>(ids.values());
+        Comparator<AcyclicDirectedGraph.Node> comparator = useIncreaseOrder ?
+                increaseRatingComparator : decreaseRatingComparator;
+        nodes.sort(comparator);
+        return nodes;
+    }
+
+    public class Node implements Serializable {
         int id;
+        Vertex vertex;
         List<Node> parents;
         List<Node> children;
 
+        double rating;
 
-
-        private Node(int id) {
-            this.id = id;
+        private Node(Vertex vertex) {
+            this.id = vertex.id;
+            this.vertex = vertex;
             parents = new ArrayList<>();
             children = new ArrayList<>();
+        }
+
+        public String getName() {
+            return vertex.getName();
+        }
+
+        public double getWeight() {
+            return vertex.getWeight();
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public List<Node> getParents() {
+            return parents;
+        }
+
+        public List<Node> getChildren() {
+            return children;
+        }
+
+        public double getRating() {
+            return rating;
+        }
+
+        public void setRating(double rating) {
+            this.rating = rating;
         }
 
         @Override
         public String toString() {
             StringBuilder builder = new StringBuilder();
-            builder.append("Node{id=").append(id).append(", parents=[");
+            builder.append("Node{id=").append(id)
+                    .append(", rating=").append(rating)
+                    .append(", parents=[");
             for (Node parent : parents)
                 builder.append(parent.id).append(" ");
             builder.append("], children=[");

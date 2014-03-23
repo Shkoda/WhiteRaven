@@ -1,7 +1,5 @@
 package com.nightingale.model.entities;
 
-import com.nightingale.view.utils.AcyclicDirectedGraph;
-
 import java.io.Serializable;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -40,7 +38,7 @@ public class Graph<V extends Vertex, C extends Connection> implements Serializab
             vertex.update(id);
             vertexes.put(id, (V) vertex);
             if (acyclic)
-                acyclicDirectedGraph.addVertex(id);
+                acyclicDirectedGraph.addVertex(vertex);
             return (V) vertex;
         } catch (InstantiationException | IllegalAccessException e) {
             e.printStackTrace();
@@ -97,6 +95,9 @@ public class Graph<V extends Vertex, C extends Connection> implements Serializab
             acyclicDirectedGraph.removeLink(removed.firstVertexId, removed.secondVertexId);
     }
 
+    public AcyclicDirectedGraph getAcyclicDirectedGraph() {
+        return acyclicDirectedGraph;
+    }
 
     public Collection<V> getVertexes() {
         return vertexes.values();

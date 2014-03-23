@@ -21,12 +21,15 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.control.*;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextArea;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 
+import java.awt.*;
 import java.util.HashMap;
 
 import static com.nightingale.view.view_components.common.PageGridBuilder.WORK_PANE_POSITION;
@@ -50,23 +53,28 @@ public class ModellerView implements IModellerView {
     private ScrollPane taskPane;
     private ScrollPane mppScrollPane;
     private TableView mppTableView;
+    private String queueAlgorithm2, queueAlgorithm6, queueAlgorithm16;
 
     @Override
     public Pane getView() {
         Loggers.debugLogger.debug("get modeller view");
-        if (view == null)
-            initView();
+        return view == null ? initView() : refreshView();
+
+    }
+
+    private GridPane refreshView() {
         refreshTaskGraphSnapshot();
         refreshMppView();
+        modellerMediator.refreshQueues();
         return view;
     }
 
     private GridPane initView() {
         view = ModellerPageGridBuilder.build();
-        queueBox = ModellerComboBoxBuilder.buildQueueComboBox();
+
         loadBox = ModellerComboBoxBuilder.buildLoadComboBox();
-        addComboBox(queueBox, ModellerConstants.SELECT_QUEUE_ALGORITHM_POSITION);
         addComboBox(loadBox, ModellerConstants.SELECT_LOAD_ALGORITHM_POSITION);
+
 
         queueGrid = ModellerQueueGridBuilder.build();
         view.add(queueGrid, OUEUE_PANE_POSITION.columnNumber, OUEUE_PANE_POSITION.rowNumber);
@@ -74,12 +82,23 @@ public class ModellerView implements IModellerView {
         queueTextArea = ModellerQueueTextAreaBuilder.build();
         queueGrid.add(queueTextArea, OUEUE_POSITION.columnNumber, OUEUE_POSITION.rowNumber);
 
-        refreshTaskGraphSnapshot();
-
         mppScrollPane = new ScrollPane();
         view.add(mppScrollPane, MPP_PANE_POSITION.columnNumber, MPP_PANE_POSITION.rowNumber);
-        refreshMppView();
-        return view;
+
+        modellerMediator.initQueueComboBox();
+
+        return refreshView();
+    }
+
+    @Override
+    public TextArea getQueueTextArea() {
+        return queueTextArea;
+    }
+
+    @Override
+    public void setQueueComboBox(ComboBox queueComboBox) {
+        this.queueBox = queueComboBox;
+        addComboBox(queueBox, ModellerConstants.SELECT_QUEUE_ALGORITHM_POSITION);
     }
 
     private void refreshTaskGraphSnapshot() {
@@ -110,7 +129,7 @@ public class ModellerView implements IModellerView {
                         new SystemMoment(3, new HashMap<>(), new HashMap<>())
                 );
 
-                        mppScrollPane.setContent(mppTableView);
+        mppScrollPane.setContent(mppTableView);
     }
 
     private void addComboBox(ComboBox comboBox, GridPosition gridPosition) {
