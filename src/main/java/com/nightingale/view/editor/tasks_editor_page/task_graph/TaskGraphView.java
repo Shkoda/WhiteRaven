@@ -32,7 +32,7 @@ public class TaskGraphView implements ITaskGraphView {
         if (graphCanvas == null) {
       //      mediator = new TaskGraphMediator();
             mediator.init();
-            graphCanvas = CanvasPaneBuilder.build();
+            graphCanvas = CanvasPaneBuilder.build(GraphType.TASK);
 
         }
         return graphCanvas;

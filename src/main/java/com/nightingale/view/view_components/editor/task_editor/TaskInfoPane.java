@@ -1,6 +1,7 @@
 package com.nightingale.view.view_components.editor.task_editor;
 
 import com.nightingale.model.mpp.ProcessorModel;
+import com.nightingale.model.tasks.TaskModel;
 import com.nightingale.view.editor.proscessor_editor_page.listeners.ProcessorDuplexPropertyListener;
 import com.nightingale.view.editor.proscessor_editor_page.listeners.ProcessorIOPropertyChangeListener;
 import com.nightingale.view.editor.common.listeners.VertexWeightChangeListener;
@@ -19,69 +20,57 @@ import javafx.scene.text.Text;
 public class TaskInfoPane {
 
     private ToolBar toolBar;
-    private TextField performanceTextField, nameField;
-    private CheckBox isIOProcessor, fullDuplexEnabled;
+    private TextField weightTextField, nameField;
 
-    private VertexWeightChangeListener performanceChangeListener;
-    private ProcessorIOPropertyChangeListener ioPropertyChangeListener;
-    private ProcessorDuplexPropertyListener duplexPropertyListener;
+    private VertexWeightChangeListener vertexWeightChangeListener;
+
 
     public TaskInfoPane() {
         nameField = new TextField();
         nameField.setPrefWidth(50);
         nameField.setEditable(false);
 
-        performanceTextField = new TextField();
-        performanceTextField.setPrefWidth(50);
-        performanceTextField.addEventFilter(KeyEvent.KEY_TYPED, new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent keyEvent) {
-                try {
-                    Double.valueOf(performanceTextField.getText() + keyEvent.getCharacter());
-                } catch (Exception e) {
-                    keyEvent.consume();
-                }
+        weightTextField = new TextField();
+        weightTextField.setPrefWidth(50);
+        weightTextField.addEventFilter(KeyEvent.KEY_TYPED, keyEvent -> {
+            try {
+                Double.valueOf(weightTextField.getText() + ((KeyEvent) keyEvent).getCharacter());
+            } catch (Exception e) {
+                keyEvent.consume();
             }
         });
 
-        isIOProcessor = new CheckBox("has IO");
-        fullDuplexEnabled = new CheckBox("Fullduplex enabled");
 
         toolBar = new ToolBar();
         toolBar.getItems().addAll(new Text("  "), new Text("Name: "), nameField, new Text("  "),
-                new Text("Processor performance: "), performanceTextField,
-                new Text("  "), isIOProcessor, new Text("  "), fullDuplexEnabled);
+                new Text("Processor performance: "), weightTextField);
         toolBar.setStyle("-fx-border-color:transparent;-fx-background-color: transparent ");
 
     }
 
 
-    public void setParams(ProcessorModel processorModel) {
-//        nameField.setText(processorModel.getName());
-//        performanceTextField.setText(String.valueOf(processorModel.getPerformance()));
-//        isIOProcessor.setSelected(processorModel.isHasIO());
-//        fullDuplexEnabled.setSelected(processorModel.isFullDuplexEnabled());
+    public void setParams(TaskModel taskModel) {
+        nameField.setText(taskModel.getName());
+        weightTextField.setText(String.valueOf(taskModel.getWeight()));
     }
 
-    public void bindParams(final ProcessorModel processorModel) {
-        performanceChangeListener = new VertexWeightChangeListener(processorModel);
-        ioPropertyChangeListener = new ProcessorIOPropertyChangeListener(processorModel);
-        duplexPropertyListener = new ProcessorDuplexPropertyListener(processorModel);
+    public void bindParams(final TaskModel taskModel) {
+        vertexWeightChangeListener = new VertexWeightChangeListener(taskModel);
 
-        performanceTextField.textProperty().addListener(performanceChangeListener);
-        isIOProcessor.selectedProperty().addListener(ioPropertyChangeListener);
-        fullDuplexEnabled.selectedProperty().addListener(duplexPropertyListener);
+        weightTextField.textProperty().addListener(vertexWeightChangeListener);
+
     }
 
     public void unbindParams() {
-        if (performanceChangeListener == null || ioPropertyChangeListener == null || fullDuplexEnabled == null) {
+        if (vertexWeightChangeListener == null ) {
             return;
         }
 
-        performanceTextField.textProperty().removeListener(performanceChangeListener);
-        isIOProcessor.selectedProperty().removeListener(ioPropertyChangeListener);
-        fullDuplexEnabled.selectedProperty().removeListener(duplexPropertyListener);
+        weightTextField.textProperty().removeListener(vertexWeightChangeListener);
+
     }
+
+
 
     public ToolBar getToolBar() {
         return toolBar;

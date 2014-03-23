@@ -1,5 +1,6 @@
 package com.nightingale.view.view_components.editor.task_editor;
 
+import com.nightingale.model.tasks.TaskLinkModel;
 import com.nightingale.model.tasks.TaskModel;
 import com.nightingale.view.editor.common.listeners.ConnectionWeightListener;
 import javafx.event.EventHandler;
@@ -25,14 +26,11 @@ public class ConnectionInfoPane {
 
         weightField = new TextField();
         weightField.setPrefWidth(50);
-        weightField.addEventFilter(KeyEvent.KEY_TYPED, new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent keyEvent) {
-                try {
-                    Integer.valueOf(weightField.getText() + keyEvent.getCharacter());
-                } catch (Exception e) {
-                    keyEvent.consume();
-                }
+        weightField.addEventFilter(KeyEvent.KEY_TYPED, keyEvent -> {
+            try {
+                Integer.valueOf(weightField.getText() + ((KeyEvent) keyEvent).getCharacter());
+            } catch (Exception e) {
+                keyEvent.consume();
             }
         });
 
@@ -45,14 +43,14 @@ public class ConnectionInfoPane {
     }
 
 
-    public void setParams(TaskModel taskModel) {
-        nameField.setText(taskModel.getName());
-        weightField.setText(String.valueOf(taskModel.getWeight()));
+    public void setParams(TaskLinkModel taskLinkModel) {
+        nameField.setText(taskLinkModel.getName());
+        weightField.setText(String.valueOf(taskLinkModel.getWeight()));
     }
 
-    public void bindParams(final TaskModel taskModel) {
-//        weightListener = new ConnectionWeightListener(taskModel);
-//        weightField.textProperty().addListener(weightListener);
+    public void bindParams(final TaskLinkModel taskLinkModel) {
+        weightListener = new ConnectionWeightListener(taskLinkModel);
+        weightField.textProperty().addListener(weightListener);
     }
 
     public void unbindParams() {

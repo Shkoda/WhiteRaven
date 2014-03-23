@@ -57,6 +57,9 @@ public class ProcessorEditorView implements IProcessorEditorView {
 
     @Override
     public void showVertexInfoPane(ProcessorModel processorModel) {
+        processorInfoPane.unbindParams();
+        linkInfoPane.unbindParams();
+
         infoContainer.getChildren().setAll(processorInfoPane.getToolBar());
         processorInfoPane.setParams(processorModel);
         processorInfoPane.bindParams(processorModel);
@@ -78,6 +81,9 @@ public class ProcessorEditorView implements IProcessorEditorView {
 
     @Override
     public void showConnectionInfoPane(ProcessorLinkModel linkVO) {
+        processorInfoPane.unbindParams();
+        linkInfoPane.unbindParams();
+
         infoContainer.getChildren().setAll(processorInfoPane.getToolBar());
         linkInfoPane.setParams(linkVO);
         linkInfoPane.bindParams(linkVO);
@@ -88,6 +94,7 @@ public class ProcessorEditorView implements IProcessorEditorView {
     @Override
     public void hideInfoPane() {
         processorInfoPane.unbindParams();
+        linkInfoPane.unbindParams();
    //     processorInfoPane.getToolBar().setVisible(false);
         for (Node node : infoContainer.getChildren())
             node.setVisible(false);

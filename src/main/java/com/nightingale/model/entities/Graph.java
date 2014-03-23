@@ -1,5 +1,7 @@
 package com.nightingale.model.entities;
 
+import com.nightingale.view.utils.AcyclicDirectedGraph;
+
 import java.io.Serializable;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -17,11 +19,16 @@ public class Graph<V extends Vertex, C extends Connection> implements Serializab
     private Class<V> vertexClass;
     private Class<C> connectionClass;
 
-    public Graph(Class<V> vertexClass, Class<C> connectionClass) {
+    private boolean acyclic;
+    private AcyclicDirectedGraph acyclicDirectedGraph;
+
+    public Graph(Class<V> vertexClass, Class<C> connectionClass, boolean acyclic) {
         this.vertexClass = vertexClass;
         this.connectionClass = connectionClass;
         vertexes = new HashMap<>();
         connections = new HashMap<>();
+        this.acyclic = acyclic;
+        acyclicDirectedGraph = new AcyclicDirectedGraph();
     }
 
 
@@ -32,6 +39,8 @@ public class Graph<V extends Vertex, C extends Connection> implements Serializab
             Vertex vertex = vertexClass.newInstance();
             vertex.update(id);
             vertexes.put(id, (V) vertex);
+            if (acyclic)
+                acyclicDirectedGraph.addVertex(id);
             return (V) vertex;
         } catch (InstantiationException | IllegalAccessException e) {
             e.printStackTrace();
@@ -48,6 +57,8 @@ public class Graph<V extends Vertex, C extends Connection> implements Serializab
                 connectedLinks.add(kv.getKey());
         }
         connections.keySet().removeAll(connectedLinks);
+        if (acyclic)
+            acyclicDirectedGraph.removeVertex(vertexId);
     }
 
 
@@ -55,8 +66,13 @@ public class Graph<V extends Vertex, C extends Connection> implements Serializab
     public C linkVertexes(int firstVertexId, int secondVertexId) {
         int id = connectionIdGenerator.incrementAndGet();
         try {
+            if (acyclic) {
+                boolean linkingSuccessful = acyclicDirectedGraph.addLink(firstVertexId, secondVertexId);
+                if (!linkingSuccessful)
+                    return null;
+            }
             Connection connection = connectionClass.newInstance();
-            connection.update(id,firstVertexId,secondVertexId);
+            connection.update(id, firstVertexId, secondVertexId);
             connections.put(id, (C) connection);
             return (C) connection;
         } catch (InstantiationException | IllegalAccessException e) {
@@ -76,7 +92,9 @@ public class Graph<V extends Vertex, C extends Connection> implements Serializab
 
 
     public void removeConnection(int connectionId) {
-        connections.remove(connectionId);
+        C removed = connections.remove(connectionId);
+        if (acyclic && removed != null)
+            acyclicDirectedGraph.removeLink(removed.firstVertexId, removed.secondVertexId);
     }
 
 

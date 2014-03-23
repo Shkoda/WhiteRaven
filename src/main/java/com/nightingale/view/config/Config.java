@@ -19,8 +19,11 @@ public class Config {
 
     public static final double LINK_WIDTH = ((SCENE_WIDTH - ANCHOR_OFFSET_WORK_AREA * 2) - DISTANCE_BETWEEN_LINKS * 2) / 3;
 
-    public static final int CANVAS_WIDTH = 500;
-    public static final int CANVAS_HEIGHT = 250;
+    public static final int MPP_CANVAS_WIDTH = 675;
+    public static final int MPP_CANVAS_HEIGHT = 300;
+
+    public static final int TASK_CANVAS_WIDTH = 675;
+    public static final int TASK_CANVAS_HEIGHT = 500;
 
     public static final int PROCESSOR_CONNECTION_POINTS_PER_SIDE = 5;
     public static final int TASK_CONNECTION_POINTS_NUMBER = 20;

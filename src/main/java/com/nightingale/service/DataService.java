@@ -20,19 +20,19 @@ import java.nio.file.Path;
 public class DataService implements IDataService {
     @Override
     public DataManager.DataObject createNewDataModel() {
-        Graph<ProcessorModel, ProcessorLinkModel> mpp = new Graph<>(ProcessorModel.class, ProcessorLinkModel.class);
-        Graph<TaskModel, TaskLinkModel> graphModel = new Graph<>(TaskModel.class, TaskLinkModel.class);
+        Graph<ProcessorModel, ProcessorLinkModel> mpp = new Graph<>(ProcessorModel.class, ProcessorLinkModel.class, false);
+        Graph<TaskModel, TaskLinkModel> graphModel = new Graph<>(TaskModel.class, TaskLinkModel.class, true);
         return new DataManager.DataObject(graphModel, mpp);
     }
 
     @Override
     public Graph<ProcessorModel, ProcessorLinkModel> createNewMppModel() {
-        return new Graph<>(ProcessorModel.class, ProcessorLinkModel.class);
+        return new Graph<>(ProcessorModel.class, ProcessorLinkModel.class, false);
     }
 
     @Override
     public Graph<TaskModel, TaskLinkModel> createNewTaskGraph() {
-        return new Graph<>(TaskModel.class, TaskLinkModel.class);
+        return new Graph<>(TaskModel.class, TaskLinkModel.class, true);
     }
 
     @Override

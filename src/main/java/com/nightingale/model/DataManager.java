@@ -15,8 +15,8 @@ import java.io.Serializable;
  */
 
 public class DataManager {
-    private static Graph<ProcessorModel, ProcessorLinkModel> mpp = new Graph<>(ProcessorModel.class, ProcessorLinkModel.class);
-    private static Graph<TaskModel, TaskLinkModel> taskGraph = new Graph<>(TaskModel.class, TaskLinkModel.class);
+    private static Graph<ProcessorModel, ProcessorLinkModel> mpp = new Graph<>(ProcessorModel.class, ProcessorLinkModel.class, false);
+    private static Graph<TaskModel, TaskLinkModel> taskGraph = new Graph<>(TaskModel.class, TaskLinkModel.class, true);
 
 
     public static Graph<TaskModel, TaskLinkModel> getTaskGraphModel() {

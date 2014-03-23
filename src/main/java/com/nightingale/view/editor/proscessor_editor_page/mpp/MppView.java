@@ -32,7 +32,7 @@ public class MppView implements IMppView {
     public Pane getView() {
         if (mppCanvas == null) {
             mediator.init();
-            mppCanvas = CanvasPaneBuilder.build();
+            mppCanvas = CanvasPaneBuilder.build(GraphType.MPP);
         }
         return mppCanvas;
     }

@@ -16,6 +16,8 @@ import com.nightingale.view.view_components.editor.EditorCanvasContainerBuilder;
 import com.nightingale.view.view_components.editor.EditorGridBuilder;
 import com.nightingale.view.view_components.editor.EditorToolBuilder;
 import com.nightingale.view.view_components.editor.EditorToolbarBuilder;
+import com.nightingale.view.view_components.editor.task_editor.ConnectionInfoPane;
+import com.nightingale.view.view_components.editor.task_editor.TaskInfoPane;
 import javafx.scene.Node;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ToggleButton;
@@ -46,8 +48,8 @@ public class TasksEditorView implements ITasksEditorView {
     private GridPane view;
     private ToggleButton cursorButton, addTaskButton, linkButton;
 
-    // private ProcessorInfoPane processorInfoPane;
-    //   private ProcessorLinkInfoPane linkInfoPane;
+    private TaskInfoPane taskInfoPane;
+    private ConnectionInfoPane linkInfoPane;
 
     private Pane infoContainer;
 
@@ -74,11 +76,11 @@ public class TasksEditorView implements ITasksEditorView {
     }
 
     private void initStatusBar() {
-//        processorInfoPane = new ProcessorInfoPane();
-//        processorInfoPane.getToolBar().setVisible(false);
-//
-//        linkInfoPane = new ProcessorLinkInfoPane();
-//        linkInfoPane.getToolBar().setVisible(false);
+        taskInfoPane = new TaskInfoPane();
+        taskInfoPane.getToolBar().setVisible(false);
+
+        linkInfoPane = new ConnectionInfoPane();
+        linkInfoPane.getToolBar().setVisible(false);
 
         infoContainer = new Pane();
         infoContainer.setStyle("-fx-background-color:  #f7f7f7; -fx-border-color: #bababa");
@@ -124,17 +126,31 @@ public class TasksEditorView implements ITasksEditorView {
 
     @Override
     public void showVertexInfoPane(TaskModel vertex) {
+        taskInfoPane.unbindParams();
+        linkInfoPane.unbindParams();
 
+        infoContainer.getChildren().setAll(taskInfoPane.getToolBar());
+        taskInfoPane.setParams(vertex);
+        taskInfoPane.bindParams(vertex);
+        taskInfoPane.getToolBar().setVisible(true);
     }
 
     @Override
     public void showConnectionInfoPane(TaskLinkModel connection) {
+        taskInfoPane.unbindParams();
+        linkInfoPane.unbindParams();
 
+        infoContainer.getChildren().setAll(taskInfoPane.getToolBar());
+        linkInfoPane.setParams(connection);
+        linkInfoPane.bindParams(connection);
+        linkInfoPane.getToolBar().setVisible(true);
+        infoContainer.getChildren().setAll(linkInfoPane.getToolBar());
     }
 
     @Override
     public void hideInfoPane() {
-        // processorInfoPane.unbindParams();
+         taskInfoPane.unbindParams();
+        linkInfoPane.unbindParams();
         for (Node node : infoContainer.getChildren())
             node.setVisible(false);
     }
