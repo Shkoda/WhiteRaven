@@ -23,6 +23,10 @@ import com.nightingale.view.main_page.IMainMediator;
 import com.nightingale.view.main_page.IMainView;
 import com.nightingale.view.main_page.MainMediator;
 import com.nightingale.view.main_page.MainView;
+import com.nightingale.view.main_page.generate.GeneratorMediator;
+import com.nightingale.view.main_page.generate.GeneratorView;
+import com.nightingale.view.main_page.generate.IGeneratorMediator;
+import com.nightingale.view.main_page.generate.IGeneratorView;
 import com.nightingale.view.main_page.settings.ISettingsMediator;
 import com.nightingale.view.main_page.settings.ISettingsView;
 import com.nightingale.view.main_page.settings.SettingsMediator;
@@ -85,6 +89,8 @@ public class EventManagerModule extends AbstractModule {
 
         bind(IMppView.class).to(MppView.class);
         bind(ITaskGraphView.class).to(TaskGraphView.class);
+
+        bind(IGeneratorView.class).to(GeneratorView.class);
     }
 
     private void mapMediators() {
@@ -99,6 +105,8 @@ public class EventManagerModule extends AbstractModule {
 
         bind(IMppMediator.class).to(MppMediator.class);
         bind(ITaskGraphMediator.class).to(TaskGraphMediator.class);
+
+        bind(IGeneratorMediator.class).to(GeneratorMediator.class);
     }
 
     private void mapCommands() {

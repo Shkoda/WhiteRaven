@@ -8,6 +8,10 @@ import javafx.stage.FileChooser;
 public class Config {
     public static final int SCENE_WIDTH = 800;
     public static final int SCENE_HEIGHT = 500;
+
+    public static final int DIALOG_SCENE_WIDTH = 400;
+    public static final int DIALOG_SCENE_HEIGHT = 250;
+
     public static final double ANCHOR_OFFSET_WORK_AREA = 10;
     public static final double DISTANCE_BETWEEN_LINKS = 0;
     public static final int SYSTEM_MENU_BUTTON_SIZE = 30;

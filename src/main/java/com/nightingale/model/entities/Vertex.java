@@ -12,6 +12,15 @@ public abstract class Vertex implements Serializable, Informative {
     protected String name;
     protected double weight;
 
+    protected Vertex() {
+    }
+
+    protected Vertex(int id, double weight) {
+        this.id = id;
+        this.weight = weight;
+        name = "T"+id;
+    }
+
     public Vertex update(int id) {
         this.id = id;
         weight = 1;

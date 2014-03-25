@@ -1,5 +1,6 @@
 package com.nightingale.view.view_components.statistics;
 
+import com.nightingale.view.view_components.common.NumberField;
 import javafx.event.EventHandler;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToolBar;
@@ -20,18 +21,17 @@ public class StatisticsToolBar {
 
 
     public StatisticsToolBar() {
-        initNumberField(minTaskNumberField = new TextField(),23, 1);
-        initNumberField(maxTaskNumberField= new TextField(), 23,10);
-        initNumberField(vertexNumberGrowStep= new TextField(), 23,5);
+        minTaskNumberField = NumberField.buildIntField(1, 23);
+        maxTaskNumberField = NumberField.buildIntField(10, 23);
+        vertexNumberGrowStep = NumberField.buildIntField(5, 23);
 
-        initNumberField(minTaskConnectivityField= new TextField(),23, 1);
-        initNumberField(maxTaskConnectivityField= new TextField(),23, 20);
-        initNumberField(connectivityGrowStep= new TextField(),23,20);
+        minTaskConnectivityField = NumberField.buildDoubleField(1, 23);
+        maxTaskConnectivityField = NumberField.buildDoubleField(20, 23);
+        connectivityGrowStep = NumberField.buildDoubleField(20, 23);
 
-        initNumberField(minTaskWeightField= new TextField(),23, 45);
-        initNumberField(maxTaskWeightField= new TextField(),23, 50);
-        initNumberField(graphNumber= new TextField(), 23,90);
-
+        minTaskWeightField = NumberField.buildDoubleField(45, 23);
+        maxTaskWeightField = NumberField.buildDoubleField(50, 23);
+        graphNumber = NumberField.buildIntField(90, 23);
 
 
         toolBar = new ToolBar();
@@ -43,49 +43,14 @@ public class StatisticsToolBar {
         toolBar.getItems().addAll(createTextLabel("  N(Graph):"), graphNumber);
 
 
-
-
         toolBar.setStyle("-fx-border-color:transparent;-fx-background-color: transparent ");
-
     }
 
-    private Text createTextLabel(String text){
+    private Text createTextLabel(String text) {
         Text textField = new Text(text);
         textField.setStyle("-fx-font-size: 9");
         return textField;
     }
-
-
-    private void initNumberField(TextField textField, int width, int defaultValue) {
-        textField.setPrefWidth(width);
-        textField.setMaxWidth(width);
-        textField.setPrefHeight(10);
-        textField.setText(String.valueOf(defaultValue));
-        textField.setStyle("-fx-font-size: 9");
-        textField.setEditable(true);
-        textField.addEventFilter(KeyEvent.KEY_TYPED, new NumberFilter(textField));
-
-    }
-
-    private class NumberFilter implements EventHandler<KeyEvent> {
-        private TextField textField;
-
-        private NumberFilter(TextField textField) {
-            this.textField = textField;
-        }
-
-        @Override
-        public void handle(KeyEvent event) {
-            try {
-                Integer.valueOf(textField.getText() + event.getCharacter());
-            } catch (Exception e) {
-                event.consume();
-            }
-        }
-    }
-
-
-
 
     public ToolBar getToolBar() {
         return toolBar;

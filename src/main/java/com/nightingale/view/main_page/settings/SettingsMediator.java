@@ -12,10 +12,18 @@ import com.nightingale.command.menu.save.SaveCommand;
 import com.nightingale.view.config.Config;
 import com.nightingale.view.editor.proscessor_editor_page.mpp.IMppMediator;
 import com.nightingale.view.editor.tasks_editor_page.task_graph.ITaskGraphMediator;
+import com.nightingale.view.main_page.generate.IGeneratorView;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.layout.VBoxBuilder;
+import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -34,13 +42,25 @@ public class SettingsMediator implements ISettingsMediator {
     public IMppMediator mppMediator;
     @Inject
     public ITaskGraphMediator taskGraphMediator;
+    @Inject
+    public IGeneratorView generatorView;
 
     @Override
     public void initMenuItems() {
         initNewMenuItems();
+        initGenerateItem();
         initOpenMenuItems();
         initSaveMenuItems();
         initExitMenuItem();
+    }
+
+    private void initGenerateItem(){
+        settingsView.getGenerateTasks().setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+               generatorView.getView().show();
+            }
+        });
     }
 
     private void initOpenMenuItems() {

@@ -1,4 +1,4 @@
-package com.nightingale.model.functions;
+package com.nightingale.command.modelling.critical_path_functions;
 
 import com.nightingale.model.entities.AcyclicDirectedGraph;
 
