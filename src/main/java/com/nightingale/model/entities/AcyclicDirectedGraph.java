@@ -33,6 +33,11 @@ public class AcyclicDirectedGraph implements Serializable {
         return true;
     }
 
+    public Vertex getVertex(int id) {
+        Node search = search(id);
+        return search == null ? null : search.vertex;
+    }
+
     public boolean removeVertex(int id) {
         Node removeNode = search(id);
         if (removeNode == null)
@@ -56,9 +61,9 @@ public class AcyclicDirectedGraph implements Serializable {
     public boolean addLink(int parentId, int childId) {
         Node parent = search(parentId);
         Node child = search(childId);
-        Loggers.debugLogger.debug("parent: " + parent);
-        Loggers.debugLogger.debug("child: " + child);
-        if (parent == null || child == null || areConnected(child, parentId))
+        Loggers.debugLogger.debug("Linking "+parent+" -> "+child);
+
+        if (parent == null || child == null || areConnected(child, parentId)|| parent == child)
             return false;
         if (isRoot(childId))
             roots.remove(childId);

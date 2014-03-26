@@ -28,25 +28,28 @@ public class GeneratorView implements IGeneratorView {
     private GridPane mainGrid, controlsGrid;
     private TextField minTaskWeightField, maxTaskWeightField, taskNumberField, connectivityField;
     private Button submitButton;
+    private Stage modalStage;
 
     @Override
     public Stage getView() {
+        if (modalStage == null){
+            mainGrid = GeneratorMainGridPaneBuilder.build();
+            controlsGrid = GeneratorControlGridBuilder.build();
 
-        mainGrid = GeneratorMainGridPaneBuilder.build();
-        controlsGrid = GeneratorControlGridBuilder.build();
+            addTextLabels();
+            addTextFields();
+            addSubmitButton();
 
-        addTextLabels();
-        addTextFields();
-        addSubmitButton();
+            generatorMediator.initFieldValidators();
+            generatorMediator.initSubmitButton();
 
-        generatorMediator.initFieldValidators();
+            mainGrid.add(controlsGrid, CONTENT_POSITION.columnNumber, CONTENT_POSITION.rowNumber);
 
-        mainGrid.add(controlsGrid, CONTENT_POSITION.columnNumber, CONTENT_POSITION.rowNumber);
-
-        Stage modalStage = GeneratorStageBuilder.build();
-        Scene modalScene = new Scene(mainGrid);
-        modalStage.setScene(modalScene);
-        modalScene.getStylesheets().add(Main.class.getResource("/JMetroLightTheme.css").toExternalForm());
+            modalStage = GeneratorStageBuilder.build();
+            Scene modalScene = new Scene(mainGrid);
+            modalStage.setScene(modalScene);
+            modalScene.getStylesheets().add(Main.class.getResource("/JMetroLightTheme.css").toExternalForm());
+        }
 
         return modalStage;
     }
@@ -62,7 +65,7 @@ public class GeneratorView implements IGeneratorView {
     private void addTextFields() {
         controlsGrid.add(minTaskWeightField = NumberField.buildIntField(1), MIN_TASK_WEIGHT_FIELD.columnNumber, MIN_TASK_WEIGHT_FIELD.rowNumber);
         controlsGrid.add(maxTaskWeightField = NumberField.buildIntField(10), MAX_TASK_WEIGHT_FIELD.columnNumber, MAX_TASK_WEIGHT_FIELD.rowNumber);
-        controlsGrid.add(taskNumberField = NumberField.buildIntField(666), TASK_NUMBER_FIELD.columnNumber, TASK_NUMBER_FIELD.rowNumber);
+        controlsGrid.add(taskNumberField = NumberField.buildIntField(12), TASK_NUMBER_FIELD.columnNumber, TASK_NUMBER_FIELD.rowNumber);
         controlsGrid.add(connectivityField = NumberField.buildDoubleField(0.33), CONNECTIVITY_FIELD.columnNumber, CONNECTIVITY_FIELD.rowNumber);
     }
 

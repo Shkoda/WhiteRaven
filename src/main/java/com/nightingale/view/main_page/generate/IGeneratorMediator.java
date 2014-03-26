@@ -5,4 +5,5 @@ package com.nightingale.view.main_page.generate;
  */
 public interface IGeneratorMediator {
     void initFieldValidators();
+     void initSubmitButton();
 }

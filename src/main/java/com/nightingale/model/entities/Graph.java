@@ -29,6 +29,12 @@ public class Graph<V extends Vertex, C extends Connection> implements Serializab
         acyclicDirectedGraph = new AcyclicDirectedGraph();
     }
 
+    public double getConnectivity() {
+        double vertexSumWeight = vertexes.values().parallelStream().mapToDouble(V::getWeight).sum();
+        double linkSumWeight = connections.values().parallelStream().mapToDouble(C::getWeight).sum();
+        return vertexSumWeight / (vertexSumWeight + linkSumWeight);
+    }
+
 
     @SuppressWarnings("unchecked")
     public V addVertex() {
@@ -62,6 +68,11 @@ public class Graph<V extends Vertex, C extends Connection> implements Serializab
 
     @SuppressWarnings("unchecked")
     public C linkVertexes(int firstVertexId, int secondVertexId) {
+        if (vertexes.get(firstVertexId) == null)
+            throw new NullPointerException("Vertex "+firstVertexId+" doesn't exist!");
+        if (vertexes.get(secondVertexId) == null)
+            throw new NullPointerException("Vertex "+secondVertexId+" doesn't exist!");
+
         int id = connectionIdGenerator.incrementAndGet();
         try {
             if (acyclic) {
@@ -88,6 +99,10 @@ public class Graph<V extends Vertex, C extends Connection> implements Serializab
         return false;
     }
 
+    public C getRandomConnection() {
+        List<Integer> ids = new ArrayList<>(connections.keySet());
+        return connections.get(ids.get((int) (Math.random() * ids.size())));
+    }
 
     public void removeConnection(int connectionId) {
         C removed = connections.remove(connectionId);

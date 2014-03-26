@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * Created by Nightingale on 16.03.14.
  */
-public abstract class Connection implements Serializable, Informative{
+public abstract class Connection implements Serializable, Informative {
     protected int id;
     protected int firstVertexId, secondVertexId;
     protected double translateX1, translateY1;
@@ -19,6 +19,11 @@ public abstract class Connection implements Serializable, Informative{
         this.secondVertexId = secondVertexId;
         name = "L-" + firstVertexId + "-" + secondVertexId;
         weight = 1;
+    }
+
+    public Connection increaseWeightByOne() {
+        weight += 1;
+        return this;
     }
 
     public int getId() {

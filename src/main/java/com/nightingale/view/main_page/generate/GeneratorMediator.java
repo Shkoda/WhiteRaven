@@ -2,11 +2,18 @@ package com.nightingale.view.main_page.generate;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.nightingale.application.guice.ICommandProvider;
+import com.nightingale.command.generate.GenerateTaskGraphCommand;
+import com.nightingale.command.menu.open.OpenTaskGraphCommand;
+import com.nightingale.command.modelling.GenerateTaskQueueCommand;
+import com.nightingale.view.editor.tasks_editor_page.task_graph.ITaskGraphMediator;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 
 
 /**
@@ -15,12 +22,39 @@ import javafx.scene.control.TextField;
 @Singleton
 public class GeneratorMediator implements IGeneratorMediator {
     @Inject
+    ICommandProvider commandProvider;
+    @Inject
     IGeneratorView generatorView;
+    @Inject
+    ITaskGraphMediator taskGraphMediator;
 
     private TextField maxVertexWeightField, minVertexWeightField;
     private Button submitButton;
     private TextField taskNumberField;
     private TextField connectivityField;
+
+    public void initSubmitButton(){
+        submitButton = generatorView.getSubmitButton();
+        submitButton.setOnMouseClicked(me -> {
+            GenerateTaskGraphCommand command = commandProvider.get(GenerateTaskGraphCommand.class);
+            command.setOnSucceeded(workerStateEvent -> {
+                generatorView.getView().close();
+                taskGraphMediator.refresh();
+            });
+            command.minTaskWeight = Integer.valueOf(minVertexWeightField.getText());
+            command.maxTaskWeight = Integer.valueOf(maxVertexWeightField.getText());
+            command.taskNumber = Integer.valueOf(taskNumberField.getText());
+            command.connectivity = Double.valueOf(connectivityField.getText());
+            command.start();
+        });
+
+        OpenTaskGraphCommand command = commandProvider.get(OpenTaskGraphCommand.class);
+        command.setOnSucceeded(workerStateEvent -> {
+            taskGraphMediator.refresh();
+        });
+      //  command.path = file.toPath();
+        command.start();
+    }
 
     @Override
     public void initFieldValidators() {
