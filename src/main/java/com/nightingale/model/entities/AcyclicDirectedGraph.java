@@ -5,6 +5,7 @@ import com.nightingale.utils.Loggers;
 import java.io.Serializable;
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 /**
  * Created by Nightingale on 20.03.2014.
@@ -61,9 +62,9 @@ public class AcyclicDirectedGraph implements Serializable {
     public boolean addLink(int parentId, int childId) {
         Node parent = search(parentId);
         Node child = search(childId);
-        Loggers.debugLogger.debug("Linking "+parent+" -> "+child);
+        Loggers.debugLogger.debug("Linking " + parent + " -> " + child);
 
-        if (parent == null || child == null || areConnected(child, parentId)|| parent == child)
+        if (parent == null || child == null || areConnected(child, parentId) || parent == child)
             return false;
         if (isRoot(childId))
             roots.remove(childId);
@@ -156,6 +157,10 @@ public class AcyclicDirectedGraph implements Serializable {
 
         public List<Node> getParents() {
             return parents;
+        }
+
+        public List<Integer> getParentsIds() {
+            return parents.stream().map(Node::getId).collect(Collectors.toList());
         }
 
         public List<Node> getChildren() {

@@ -11,6 +11,7 @@ public class ProcessorModel extends Vertex {
 
     private boolean hasIO;
     private boolean fullDuplexEnabled;
+    private int physicalLinkNumber;
 
     @Override
     public Vertex update(int id) {
@@ -18,6 +19,7 @@ public class ProcessorModel extends Vertex {
         name = "P" + id;
         hasIO = true;
         fullDuplexEnabled = true;
+        physicalLinkNumber = 1;
         return this;
     }
 
@@ -37,6 +39,15 @@ public class ProcessorModel extends Vertex {
         this.fullDuplexEnabled = fullDuplexEnabled;
     }
 
+    public int getPhysicalLinkNumber() {
+        return physicalLinkNumber;
+    }
+
+    public ProcessorModel setPhysicalLinkNumber(int physicalLinkNumber) {
+        this.physicalLinkNumber = physicalLinkNumber;
+        return this;
+    }
+
     @Override
     public String toString() {
         return "ProcessorModel{" +
@@ -47,6 +58,7 @@ public class ProcessorModel extends Vertex {
                 ", hasIO=" + hasIO +
                 ", fullDuplexEnabled=" + fullDuplexEnabled +
                 ", performance=" + weight +
+                ", physicalLinkNumber=" + physicalLinkNumber +
                 '}';
     }
 }

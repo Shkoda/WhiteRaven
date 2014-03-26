@@ -1,6 +1,7 @@
 package com.nightingale.command.modelling;
 
 import com.google.inject.Inject;
+import com.nightingale.command.schedule.SystemModel;
 import com.nightingale.model.DataManager;
 import com.nightingale.model.entities.AcyclicDirectedGraph;
 import com.nightingale.service.IDataService;
@@ -23,7 +24,14 @@ public class GenerateTaskQueueCommand extends Service<List<AcyclicDirectedGraph.
         return new Task<List<AcyclicDirectedGraph.Node>>() {
             @Override
             protected List<AcyclicDirectedGraph.Node> call() throws Exception {
-                return graph.getTaskQueue(consumer, useIncreaseOrder);
+                List<AcyclicDirectedGraph.Node> queue = graph.getTaskQueue(consumer, useIncreaseOrder);
+
+                List<com.nightingale.command.schedule.Task> convertedTasks = com.nightingale.command.schedule.Task.convert(queue);
+                SystemModel systemModel = new SystemModel(DataManager.getMppModel());
+                systemModel.loadTasks(convertedTasks);
+                System.out.println(systemModel);
+
+                return queue;
             }
         };
     }

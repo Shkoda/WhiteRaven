@@ -4,6 +4,8 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.nightingale.application.guice.ICommandProvider;
 import com.nightingale.command.modelling.GenerateTaskQueueCommand;
+import com.nightingale.command.schedule.SystemModel;
+import com.nightingale.command.schedule.Task;
 import com.nightingale.model.DataManager;
 import com.nightingale.model.entities.AcyclicDirectedGraph;
 import com.nightingale.command.modelling.critical_path_functions.node_rank_consumers.DeadlineDifferenceConsumer;
@@ -68,10 +70,13 @@ public class ModellerMediator implements IModellerMediator {
         command.useIncreaseOrder = useIncreaseOrder;
 
         command.setOnSucceeded(workerStateEvent -> {
-            String newQueue = toString((List<AcyclicDirectedGraph.Node>) workerStateEvent.getSource().getValue());
+            List<AcyclicDirectedGraph.Node> queue= (List<AcyclicDirectedGraph.Node>) workerStateEvent.getSource().getValue();
+            String newQueue = toString(queue);
             queueMap.put(key, newQueue);
             if (key.equals(queueBox.getSelectionModel().getSelectedItem()))
                 modellerView.getQueueTextArea().setText(newQueue);
+
+
         });
         command.start();
     }
