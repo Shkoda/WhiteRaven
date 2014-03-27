@@ -26,6 +26,10 @@ public abstract class Connection implements Serializable, Informative {
         return this;
     }
 
+    public int getOtherVertexId(int thisId){
+        return thisId == firstVertexId ? secondVertexId : firstVertexId;
+    }
+
     public int getId() {
         return id;
     }

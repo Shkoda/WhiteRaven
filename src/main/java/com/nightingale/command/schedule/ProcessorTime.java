@@ -29,7 +29,7 @@ public class ProcessorTime {
 
         processorTime = new ArrayList<>();
         for (int i = 0; i < SystemModel.defaultTickNumber; i++)
-            processorTime.add(new ProcessorTick(physicalLinkNumber));
+            processorTime.add(new ProcessorTick(id, physicalLinkNumber, isFullDuplex));
     }
 
     public void loadTask(Task task, int startTime) {
@@ -47,7 +47,13 @@ public class ProcessorTime {
     private void increaseProcessorTime() {
         int currentSize = processorTime.size();
         for (int i = 0; i < currentSize; i++)
-            processorTime.add(new ProcessorTick(physicalLinkNumber));
+            processorTime.add(new ProcessorTick(id, physicalLinkNumber, isFullDuplex));
+    }
+
+    public ProcessorTick getTick(int number){
+        if (number>= processorTime.size())
+            increaseProcessorTime();
+        return processorTime.get(number);
     }
 
     public boolean isFree(int timeMoment) {

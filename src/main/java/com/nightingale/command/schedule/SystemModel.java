@@ -56,7 +56,7 @@ public class SystemModel {
 
     }
 
-    private int defineStartTime(int  minimalStartTime, ProcessorTime processorTime) {
+    private int defineStartTime(int minimalStartTime, ProcessorTime processorTime) {
         return processorTime.willBeFree(minimalStartTime);
     }
 
@@ -89,10 +89,15 @@ public class SystemModel {
         Graph<ProcessorModel, ProcessorLinkModel> mpp = new Graph<>(ProcessorModel.class, ProcessorLinkModel.class, false);
         mpp.addVertex();
         mpp.addVertex();
-   //     mpp.addVertex();
+        mpp.addVertex();
+        mpp.addVertex();
+        mpp.addVertex();
         mpp.linkVertexes(1, 2);
-//        mpp.linkVertexes(2, 3);
-//        mpp.linkVertexes(3, 1);
+        mpp.linkVertexes(2, 3);
+        mpp.linkVertexes(3, 1);
+        mpp.linkVertexes(3, 4);
+        mpp.linkVertexes(4, 5);
+
 
         Graph<TaskModel, TaskLinkModel> taskGraph = new Graph<>(TaskModel.class, TaskLinkModel.class, true);
         taskGraph.addVertex();
@@ -102,11 +107,11 @@ public class SystemModel {
         taskGraph.addVertex();
         taskGraph.addVertex();
 
-        taskGraph.linkVertexes(1,2);
-        taskGraph.linkVertexes(3,2);
-        taskGraph.linkVertexes(3,4);
-        taskGraph.linkVertexes(3,6);
-        taskGraph.linkVertexes(5,4);
+        taskGraph.linkVertexes(1, 2);
+        taskGraph.linkVertexes(3, 2);
+        taskGraph.linkVertexes(3, 4);
+        taskGraph.linkVertexes(3, 6);
+        taskGraph.linkVertexes(5, 4);
 
 
         List<AcyclicDirectedGraph.Node> queue = taskGraph.getAcyclicDirectedGraph().getTaskQueue(new NodesAfterCurrentConsumer(), false);
@@ -116,7 +121,10 @@ public class SystemModel {
         SystemModel systemModel = new SystemModel(mpp);
 
         systemModel.loadTasks(convertedTasks);
-        System.out.println(systemModel);
+        System.out.println(systemModel + "\n");
+
+        Paths paths = new Paths(mpp);
+        System.out.println(paths);
 
 
     }

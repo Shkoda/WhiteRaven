@@ -56,4 +56,29 @@ public abstract class Vertex implements Serializable, Informative {
         this.weight = weight;
         return this;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Vertex vertex = (Vertex) o;
+
+        if (id != vertex.id) return false;
+        if (Double.compare(vertex.weight, weight) != 0) return false;
+        if (name != null ? !name.equals(vertex.name) : vertex.name != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result;
+        long temp;
+        result = id;
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        temp = Double.doubleToLongBits(weight);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        return result;
+    }
 }
