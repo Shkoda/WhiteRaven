@@ -24,7 +24,7 @@ public class ProcessorTick {
     }
 
     public boolean ioAllowed(){
-        return ioOperationsNumber<=physicalLinkNumber;
+        return ioOperationsNumber<physicalLinkNumber;
     }
 
     public void addIOHandling(){
@@ -39,9 +39,9 @@ public class ProcessorTick {
 
     @Override
     public String toString() {
-        String id = currentTask == null ? "" : "T" + currentTask.id;
-        return "{" +
+        String id = currentTask == null ? "  " : "T" + currentTask.id;
+        return "{  " +
                 id +
-                '}';
+                " }";
     }
 }

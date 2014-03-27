@@ -63,6 +63,7 @@ public class Paths {
         public final ProcessorModel src, dst;
         public final List<ProcessorModel> queue;
         public final Map<Integer, ProcessorLinkModel> links;
+        public final int length;
 
         public Path(List<ProcessorModel> queue) {
             this.queue = queue;
@@ -74,6 +75,7 @@ public class Paths {
                 int dstId = queue.get(i + 1).getId();
                 links.put(srcId, getConnection(srcId, dstId));
             }
+            length = links.size();
         }
 
 

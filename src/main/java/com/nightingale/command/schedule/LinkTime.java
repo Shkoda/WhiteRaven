@@ -37,15 +37,34 @@ public class LinkTime {
             linkTime.add(new LinkTick(firstProcessor.getTick(i), secondProcessor.getTick(i)));
     }
 
-    public void transmitTask(Task task, double transmitDataVolume, int src, int startTime) {
-        if (startTime >= linkTime.size())
-            increaseLinkTime();
-
-        int transmitTime = (int) Math.ceil(transmitDataVolume / channelWidth);
+    /**
+     * @return transmission finish time
+     */
+    public int transmitTask(Task task, int minStartTime, int transmitTime, int src) {
+        int startTime = startTime(minStartTime, transmitTime, src);
         int finishTime = startTime + transmitTime - 1;
 
-        for (int i = startTime; i <= finishTime; i++)
+        for (int i = startTime; i <= finishTime; i++) {
             linkTime.get(i).setTransmission(task, src);
+            firstProcessor.getTick(i).addIOHandling();
+            secondProcessor.getTick(i).addIOHandling();
+        }
+        return finishTime;
+    }
+
+    private int startTime(int minimalStartTime, int transmitLength, int src) {
+        while (!intervalAvailable(minimalStartTime, transmitLength, src))
+            minimalStartTime++;
+        return minimalStartTime;
+    }
+
+    private boolean intervalAvailable(int start, int transmitLength, int src) {
+        if (start + transmitLength >= linkTime.size())
+            increaseLinkTime();
+        for (int i = start; i < start + transmitLength ; i++)
+            if (!(linkTime.get(i).isAvailable(src)&& firstProcessor.getTick(i).ioAllowed()&& secondProcessor.getTick(i).ioAllowed()))
+                return false;
+        return true;
     }
 
     private void increaseLinkTime() {
@@ -68,9 +87,8 @@ public class LinkTime {
 
     @Override
     public String toString() {
-        return "LinkTime{" +
-                "name='" + name + '\'' +
-                ", linkTime=\t" + linkTime +
+        return "LinkTime{" +firstProcessorId+":"+secondProcessorId+"}\t"+
+                 linkTime +
                 '}';
     }
 

@@ -17,6 +17,7 @@ public class ProcessorTime {
     public final double performance;
 
     public final List<ProcessorTick> processorTime;
+    public final List<Task> loadedTasks;
 
 
     public ProcessorTime(ProcessorModel processorModel) {
@@ -27,6 +28,7 @@ public class ProcessorTime {
         hasIO = processorModel.isHasIO();
         performance = processorModel.getWeight();
 
+        loadedTasks = new ArrayList<>();
         processorTime = new ArrayList<>();
         for (int i = 0; i < SystemModel.defaultTickNumber; i++)
             processorTime.add(new ProcessorTick(id, physicalLinkNumber, isFullDuplex));
@@ -42,6 +44,8 @@ public class ProcessorTime {
         task.setStartTime(startTime).setFinishTime(finishTime);
         for (int i = startTime; i<=finishTime; i++)
             processorTime.get(i).setTask(task);
+
+        loadedTasks.add(task);
     }
 
     private void increaseProcessorTime() {
@@ -70,9 +74,9 @@ public class ProcessorTime {
 
     @Override
     public String toString() {
-        return "ProcessorTime{" +
-                "name='" + name + '\'' +
-                ", processorTime=\t" + processorTime +
+        return "ProcTime{" +
+                 name +
+                " \t" + processorTime +
                 '}';
     }
 }

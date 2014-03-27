@@ -40,6 +40,15 @@ public class LinkTick {
         else t2.transmitTask = task;
     }
 
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("{");
+        builder.append(t1.transmitTask == null ? "  " : "T" + t1.transmitTask.id).append("/");
+        builder.append(t2.transmitTask == null ? "  " : "T" + t2.transmitTask.id).append("}");
+        return builder.toString();
+    }
+
     public class Transmission {
         public final int srcId, dstId;
         private Task transmitTask;
