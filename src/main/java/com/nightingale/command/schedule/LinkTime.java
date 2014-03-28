@@ -49,6 +49,7 @@ public class LinkTime {
             firstProcessor.getTick(i).addIOHandling();
             secondProcessor.getTick(i).addIOHandling();
         }
+        secondProcessor.loadedTasks.add(task);
         return finishTime;
     }
 

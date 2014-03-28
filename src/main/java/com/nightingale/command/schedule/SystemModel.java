@@ -55,10 +55,13 @@ public class SystemModel {
         }
 
         graph.getConnections().stream()
-                .forEach(link -> linkTimes.put(link.getId(),
-                        new LinkTime(link, processorTimes.get(link.getFirstVertexId()),
-                                processorTimes.get(link.getSecondVertexId()))
-                ));
+                .forEach(link -> {
+                    LinkTime linkTime = new LinkTime(link, processorTimes.get(link.getFirstVertexId()),
+                            processorTimes.get(link.getSecondVertexId()));
+                    linkTimes.put(link.getId(), linkTime);
+                    processorTimes.get(link.getFirstVertexId()).increaseConnectivity();
+                    processorTimes.get(link.getSecondVertexId()).increaseConnectivity();
+                });
 
         paths = new Paths(graph);
     }
@@ -103,6 +106,7 @@ public class SystemModel {
             LinkTime linkTime = linkTimes.get(connection.getId());
             minimalTransmitStart = linkTime.transmitTask(finishedTask, minimalTransmitStart, transmissionTime, processorSrcId) + 1;
             processorSrcId = connection.getOtherVertexId(processorSrcId);
+
         }
         return minimalTransmitStart;
     }
@@ -111,14 +115,14 @@ public class SystemModel {
         return processorTime.willBeFree(minimalStartTime);
     }
 
-    private ProcessorTime selectBestProcessor(List<ProcessorTime> availableProcessors) {
-        //todo
+    private ProcessorTime selectBestProcessor(List<ProcessorTime> availableProcessors) {        //todo write comparators
+        availableProcessors.sort((p1, p2) -> -(p1.getConnectivity().compareTo(p2.getConnectivity())));
         return availableProcessors.get(0);
     }
 
     private List<ProcessorTime> getAvailableProcessors(int timeMoment) {
         ArrayList<ProcessorTime> availableNow = processorTimes.values().stream()
-                .filter(processorTime -> processorTime.isFree(timeMoment))
+                .filter(processorTime -> processorTime.willBeFree(timeMoment) == timeMoment)
                 .collect(Collectors.toCollection(ArrayList::new));
         if (availableNow.isEmpty()) {
             Map<Integer, ProcessorTime> resources = new HashMap<>();
@@ -146,7 +150,7 @@ public class SystemModel {
         //   mpp.addVertex();
         mpp.linkVertexes(1, 2);
         mpp.linkVertexes(2, 3);
-        mpp.linkVertexes(3, 1);
+   //     mpp.linkVertexes(3, 1);
         //   mpp.linkVertexes(3, 4);
         //    mpp.linkVertexes(4, 5);
 
@@ -173,7 +177,7 @@ public class SystemModel {
         SystemModel systemModel = new SystemModel(mpp);
 
         systemModel.loadTasks(convertedTasks);
-    
+
     }
 
 

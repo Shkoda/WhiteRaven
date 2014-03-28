@@ -19,6 +19,8 @@ public class ProcessorTime {
     public final List<ProcessorTick> processorTime;
     public final List<Task> loadedTasks;
 
+    private int connectivity;
+
 
     public ProcessorTime(ProcessorModel processorModel) {
         id = processorModel.getId();
@@ -48,6 +50,14 @@ public class ProcessorTime {
         loadedTasks.add(task);
     }
 
+    public void increaseConnectivity(){
+        connectivity++;
+    }
+
+    public Integer getConnectivity() {
+        return connectivity;
+    }
+
     private void increaseProcessorTime() {
         int currentSize = processorTime.size();
         for (int i = 0; i < currentSize; i++)
@@ -60,16 +70,16 @@ public class ProcessorTime {
         return processorTime.get(number);
     }
 
-    public boolean isFree(int timeMoment) {
-        return processorTime.get(timeMoment).isFree(); //todo check this place
-    }
+//    public boolean isFree(int timeMoment) {
+//        return processorTime.get(timeMoment).isFree(); //todo check this place
+//    }
 
     public int willBeFree(int minimalTimeMoment) {
-        for (int i = minimalTimeMoment; i < processorTime.size(); i++) {
-            if (processorTime.get(i).isFree())
-                return i;
+        for (int i = processorTime.size()-1; i >= minimalTimeMoment; i--) {
+            if (!processorTime.get(i).isFree())
+                return i+1;
         }
-        return processorTime.size();
+        return minimalTimeMoment;
     }
 
     @Override
