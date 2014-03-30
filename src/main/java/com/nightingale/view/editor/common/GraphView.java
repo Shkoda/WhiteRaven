@@ -1,10 +1,7 @@
 package com.nightingale.view.editor.common;
 
-import com.nightingale.model.entities.Connection;
-import com.nightingale.model.entities.Graph;
-import com.nightingale.model.entities.Vertex;
-import com.nightingale.model.mpp.ProcessorLinkModel;
-import com.nightingale.model.mpp.ProcessorModel;
+import com.nightingale.model.entities.graph.Connection;
+import com.nightingale.model.entities.graph.Vertex;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 

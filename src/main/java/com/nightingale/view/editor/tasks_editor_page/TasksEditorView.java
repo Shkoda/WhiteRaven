@@ -2,7 +2,7 @@ package com.nightingale.view.editor.tasks_editor_page;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.nightingale.model.entities.Informative;
+import com.nightingale.model.entities.graph.Informative;
 import com.nightingale.model.tasks.TaskLinkModel;
 import com.nightingale.model.tasks.TaskModel;
 import com.nightingale.utils.Loggers;

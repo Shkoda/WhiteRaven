@@ -1,6 +1,6 @@
 package com.nightingale.view.view_components.editor;
 
-import com.nightingale.model.entities.Informative;
+import com.nightingale.model.entities.graph.Informative;
 import com.nightingale.view.editor.common.listeners.WeightChangeListener;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToolBar;

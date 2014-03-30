@@ -6,7 +6,7 @@ import com.nightingale.Main;
 import com.nightingale.application.guice.ICommandProvider;
 import com.nightingale.command.editor.CreateProcessorLinkCommand;
 import com.nightingale.command.editor.CreateProcessorCommand;
-import com.nightingale.model.entities.GraphType;
+import com.nightingale.model.entities.graph.GraphType;
 import com.nightingale.utils.Loggers;
 import com.nightingale.view.editor.common.handlers.add_tool.AddVertexHandler;
 import com.nightingale.view.editor.common.handlers.cursor_tool.*;

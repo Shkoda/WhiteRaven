@@ -1,6 +1,6 @@
 package com.nightingale.model.tasks;
 
-import com.nightingale.model.entities.Vertex;
+import com.nightingale.model.entities.graph.Vertex;
 
 /**
  * Created by Nightingale on 16.03.14.

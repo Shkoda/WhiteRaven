@@ -1,5 +1,6 @@
 package com.nightingale.view.view_components.startpage;
 
+import com.nightingale.view.utils.GridUtils;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
@@ -10,19 +11,14 @@ import javafx.scene.layout.RowConstraints;
 public class StartPageGridBuilder {
     public static GridPane build() {
         GridPane gridForLinks = new GridPane();
-        ColumnConstraints firstColumn = new ColumnConstraints();
-        firstColumn.setPercentWidth(50);
-        ColumnConstraints secondColumn = new ColumnConstraints();
-        secondColumn.setPercentWidth(50);
+        ColumnConstraints firstColumn = GridUtils.buildColumnConstraintsWithPercentage(50);
+        ColumnConstraints secondColumn = GridUtils.buildColumnConstraintsWithPercentage(50);
 
-        RowConstraints firstRow = new RowConstraints();
-        firstRow.setPercentHeight(50);
-        RowConstraints secondRow = new RowConstraints();
-        secondRow.setPercentHeight(50);
+        RowConstraints firstRow = GridUtils.buildRowConstraintsWithPercentage(50);
+        RowConstraints secondRow = GridUtils.buildRowConstraintsWithPercentage(50);
 
         gridForLinks.getColumnConstraints().addAll(firstColumn, secondColumn);
         gridForLinks.getRowConstraints().addAll(firstRow, secondRow);
-
 
         gridForLinks.setHgap(30);
         gridForLinks.setVgap(30);

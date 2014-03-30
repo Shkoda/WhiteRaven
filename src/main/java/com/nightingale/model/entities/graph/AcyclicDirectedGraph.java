@@ -1,4 +1,4 @@
-package com.nightingale.model.entities;
+package com.nightingale.model.entities.graph;
 
 import com.nightingale.utils.Loggers;
 

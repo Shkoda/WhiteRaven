@@ -1,6 +1,6 @@
 package com.nightingale.command.modelling.critical_path_functions;
 
-import com.nightingale.model.entities.AcyclicDirectedGraph;
+import com.nightingale.model.entities.graph.AcyclicDirectedGraph;
 
 import java.util.Comparator;
 import java.util.List;

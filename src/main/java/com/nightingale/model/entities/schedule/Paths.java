@@ -1,8 +1,9 @@
-package com.nightingale.command.schedule;
+package com.nightingale.model.entities.schedule;
 
-import com.nightingale.model.entities.Graph;
+import com.nightingale.model.entities.graph.Graph;
 import com.nightingale.model.mpp.ProcessorLinkModel;
 import com.nightingale.model.mpp.ProcessorModel;
+import com.nightingale.view.utils.DijkstraAlgorithm;
 
 import java.util.*;
 import java.util.stream.Collectors;

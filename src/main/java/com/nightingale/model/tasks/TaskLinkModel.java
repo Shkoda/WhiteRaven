@@ -1,6 +1,6 @@
 package com.nightingale.model.tasks;
 
-import com.nightingale.model.entities.Connection;
+import com.nightingale.model.entities.graph.Connection;
 
 /**
  * Created by Nightingale on 16.03.14.

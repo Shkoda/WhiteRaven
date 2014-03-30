@@ -1,6 +1,6 @@
 package com.nightingale.view.view_components.editor;
 
-import com.nightingale.view.view_components.common.ConstantSizeSetter;
+import com.nightingale.view.utils.GridUtils;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
@@ -15,20 +15,13 @@ public class EditorGridBuilder {
     public static GridPane build() {
         GridPane editorGrid = new GridPane();
 
-        RowConstraints statusRow = new RowConstraints();
-        ConstantSizeSetter.setConstantHeight(statusRow, STATUS_HEADER_HEIGHT);
+        RowConstraints statusRow = GridUtils.buildRowConstraintsWithConstantHeight(STATUS_HEADER_HEIGHT);
+        RowConstraints contentRow = GridUtils.buildBindedRowConstraints(editorGrid.heightProperty());
+        RowConstraints toolRow = GridUtils.buildRowConstraintsWithConstantHeight(TOOL_HEIGHT * 3 / 2);
 
-        RowConstraints contentRow = new RowConstraints();
-        contentRow.prefHeightProperty().bind(editorGrid.heightProperty());
-
-        RowConstraints toolRow = new RowConstraints();
-        ConstantSizeSetter.setConstantHeight(toolRow, TOOL_HEIGHT * 3 / 2);
+        ColumnConstraints column = GridUtils.buildBindedColumnConstraints(editorGrid.widthProperty());
 
         editorGrid.getRowConstraints().setAll(statusRow, contentRow, toolRow);
-
-        ColumnConstraints column = new ColumnConstraints();
-        column.prefWidthProperty().bind(editorGrid.widthProperty());
-
         editorGrid.getColumnConstraints().setAll(column);
 
         return editorGrid;

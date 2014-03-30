@@ -2,7 +2,7 @@ package com.nightingale.view.editor.common.handlers.cursor_tool;
 
 import com.nightingale.application.guice.ICommandProvider;
 import com.nightingale.command.editor.DeleteCommand;
-import com.nightingale.model.entities.GraphType;
+import com.nightingale.model.entities.graph.GraphType;
 import com.nightingale.utils.Loggers;
 import com.nightingale.view.editor.common.GraphMediator;
 import com.nightingale.view.editor.common.IEditorMediator;

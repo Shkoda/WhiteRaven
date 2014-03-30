@@ -1,8 +1,8 @@
-package com.nightingale.command.schedule;
+package com.nightingale.view.utils;
 
-import com.nightingale.model.entities.Connection;
-import com.nightingale.model.entities.Graph;
-import com.nightingale.model.entities.Vertex;
+import com.nightingale.model.entities.graph.Connection;
+import com.nightingale.model.entities.graph.Graph;
+import com.nightingale.model.entities.graph.Vertex;
 
 import java.util.*;
 
@@ -98,11 +98,11 @@ public class DijkstraAlgorithm<V extends Vertex, C extends Connection> {
     public List<V> getPath(V target) {
         List<V> path = new ArrayList<>();
         V step = target;
-        // check if a path exists
-        if (predecessors.get(step) == null) {
+
+        if (predecessors.get(step) == null) {       //if src == target || path doesn't exist
             path.add(target);
             return path;
-         //   return null;
+
         }
         path.add(step);
         while (predecessors.get(step) != null) {

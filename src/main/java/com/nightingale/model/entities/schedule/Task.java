@@ -1,12 +1,11 @@
-package com.nightingale.command.schedule;
+package com.nightingale.model.entities.schedule;
 
-import com.nightingale.model.entities.AcyclicDirectedGraph;
+import com.nightingale.model.entities.graph.AcyclicDirectedGraph;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * Created by Nightingale on 26.03.2014.
@@ -63,6 +62,34 @@ public class Task {
         return queue;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Task task = (Task) o;
+
+        if (finishTime != task.finishTime) return false;
+        if (id != task.id) return false;
+        if (startTime != task.startTime) return false;
+        if (Double.compare(task.weight, weight) != 0) return false;
+        if (parents != null ? !parents.equals(task.parents) : task.parents != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result;
+        long temp;
+        result = id;
+        temp = Double.doubleToLongBits(weight);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        result = 31 * result + (parents != null ? parents.hashCode() : 0);
+        result = 31 * result + startTime;
+        result = 31 * result + finishTime;
+        return result;
+    }
 
     @Override
     public String toString() {

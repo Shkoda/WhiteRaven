@@ -1,8 +1,7 @@
 package com.nightingale.view.editor.common.handlers.cursor_tool;
 
-import com.nightingale.model.entities.Connection;
+import com.nightingale.model.entities.graph.Connection;
 import com.nightingale.view.editor.common.IEditorView;
-import com.nightingale.view.editor.proscessor_editor_page.IProcessorEditorView;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 

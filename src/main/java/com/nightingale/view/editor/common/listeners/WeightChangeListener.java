@@ -1,6 +1,6 @@
 package com.nightingale.view.editor.common.listeners;
 
-import com.nightingale.model.entities.Informative;
+import com.nightingale.model.entities.graph.Informative;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 

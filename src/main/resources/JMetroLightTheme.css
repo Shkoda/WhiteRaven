@@ -840,21 +840,146 @@
     -fx-background-size: 40 40;
 }
 
-/*#GenerateGraphButton {*/
-/*-fx-background-color: transparent;*/
-/*}*/
+/*******************************************************************************
+ *                                                                             *
+ * Gantt                                                             *
+ *                                                                             *
+ ******************************************************************************/
 
-/*#GenerateGraphButton .label{*/
-/*-fx-font-family: "Segoe UI Light";*/
-/*-fx-text-fill: black;*/
-/*-fx-font-size: 12;*/
-/*}*/
+#GanttGrid {
+    -fx-border-color: #ffffff;
+    -fx-background-color: #ffffff;
+    -fx-border-width: 1mm;
 
-/*#GenerateGraphButton .button:hover {*/
-/*-fx-background-color: #18b0ff;*/
-/*}*/
+}
 
-/*#GenerateGraphButton .button:pressed, .button:default:hover:pressed {*/
-/*-fx-background-color: #0ece52;*/
-/*-fx-text-fill: white;*/
-/*}*/
+/*
+ top, right, bottom, and left
+*/
+
+#GanttTaskTopCell {
+/ / -fx-border-color : #ff001a #ff001a transparent #ff001a;
+    -fx-background-color: #0ece52;
+    -fx-text-fill: #ffffff;
+    -fx-background-insets: 2 2 0 2;
+}
+
+#GanttTaskMiddleCell {
+/ / -fx-border-color : transparent #ff001a transparent #ff001a;
+    -fx-background-color: #0ece52;
+    -fx-text-fill: #ffffff;
+    -fx-background-insets: 0 2 0 2;
+}
+
+#GanttTaskBottomCell {
+/ / -fx-border-color : transparent #ff001a #ff001a #ff001a;
+    -fx-background-color: #0ece52;
+    -fx-text-fill: #ffffff;
+    -fx-border-insets: 0 0 1 0;
+    -fx-background-insets: 0 2 2 2;
+}
+
+#GanttTaskMonoCell {
+/ / -fx-border-color : #ff001a;
+    -fx-background-color: #0ece52;
+    -fx-text-fill: #ffffff;
+    -fx-background-insets: 2 2 2 2;
+}
+
+#GanttEmptyCell {
+    /*-fx-background-insets: 2 2 2 2;*/
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+}
+
+/*
+**************************************
+*/
+#GanttLinkEmptyCell{
+    /*-fx-background-insets: 0;*/
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+/*
+ top, right, bottom, and left
+*/
+
+#GanttTransmittTopCell {
+/ / -fx-border-color : #ff001a #ff001a transparent #ff001a;
+    -fx-background-color: #20daff;
+    -fx-text-fill: #ffffff;
+    -fx-background-insets: 2 2 0 2;
+}
+
+#GanttTransmittMiddleCell {
+/ / -fx-border-color : transparent #ff001a transparent #ff001a;
+    -fx-background-color: #20daff;
+    -fx-text-fill: #ffffff;
+    -fx-background-insets: 0 2 0 2;
+}
+
+#GanttTransmittBottomCell {
+/ / -fx-border-color : transparent #ff001a #ff001a #ff001a;
+    -fx-background-color: #20daff;
+    -fx-text-fill: #ffffff;
+    -fx-border-insets: 0 0 1 0;
+    -fx-background-insets: 0 2 2 2;
+}
+
+#GanttTransmittMonoCell {
+/ / -fx-border-color : #ff001a;
+    -fx-background-color: #20daff;
+    -fx-text-fill: #ffffff;
+    -fx-background-insets: 2 2 2 2;
+}
+
+/*
+**************************************
+*/
+
+#GanttReverseTransmittTopCell {
+/ / -fx-border-color : #ff001a #ff001a transparent #ff001a;
+    -fx-background-color: #40beff;
+    -fx-text-fill: #ffffff;
+    -fx-background-insets: 2 2 0 2;
+}
+
+#GanttReverseTransmittMiddleCell {
+/ / -fx-border-color : transparent #ff001a transparent #ff001a;
+    -fx-background-color: #40beff;
+    -fx-text-fill: #ffffff;
+    -fx-background-insets: 0 2 0 2;
+}
+
+#GanttReverseTransmittBottomCell {
+/ / -fx-border-color : transparent #ff001a #ff001a #ff001a;
+    -fx-background-color: #40beff;
+    -fx-text-fill: #ffffff;
+    -fx-border-insets: 0 0 1 0;
+    -fx-background-insets: 0 2 2 2;
+}
+
+#GanttReverseTransmittMonoCell {
+/ / -fx-border-color : #ff001a;
+    -fx-background-color: #40beff;
+    -fx-text-fill: #ffffff;
+    -fx-background-insets: 2 2 2 2;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,6 +1,6 @@
 package com.nightingale.view.view_components.modeller;
 
-import com.nightingale.view.view_components.common.ConstantSizeSetter;
+import com.nightingale.view.utils.GridUtils;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
@@ -15,14 +15,10 @@ public class ModellerQueueGridBuilder {
         GridPane queueGridPane = new GridPane();
         queueGridPane.setGridLinesVisible(true);
 
-        ColumnConstraints column = new ColumnConstraints();
-        column.prefWidthProperty().bind(queueGridPane.widthProperty());
+        ColumnConstraints column = GridUtils.buildBindedColumnConstraints(queueGridPane.widthProperty());
 
-        RowConstraints contentRow = new RowConstraints();
-        contentRow.prefHeightProperty().bind(queueGridPane.heightProperty());
-
-        RowConstraints toolRow = new RowConstraints();
-        ConstantSizeSetter.setConstantHeight(toolRow, TOOL_HEIGHT * 3 / 2);
+        RowConstraints contentRow = GridUtils.buildBindedRowConstraints(queueGridPane.heightProperty());
+        RowConstraints toolRow = GridUtils.buildRowConstraintsWithConstantHeight(TOOL_HEIGHT * 3 / 2);
 
         queueGridPane.getColumnConstraints().addAll(column);
         queueGridPane.getRowConstraints().addAll(contentRow, toolRow);

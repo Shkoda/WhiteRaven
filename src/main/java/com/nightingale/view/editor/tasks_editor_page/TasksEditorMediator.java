@@ -6,7 +6,7 @@ import com.nightingale.Main;
 import com.nightingale.application.guice.ICommandProvider;
 import com.nightingale.command.editor.CreateTaskCommand;
 import com.nightingale.command.editor.CreateTaskLinkCommand;
-import com.nightingale.model.entities.GraphType;
+import com.nightingale.model.entities.graph.GraphType;
 import com.nightingale.model.tasks.TaskLinkModel;
 import com.nightingale.model.tasks.TaskModel;
 import com.nightingale.utils.Loggers;

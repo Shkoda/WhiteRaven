@@ -1,6 +1,6 @@
 package com.nightingale.view.view_components.modeller;
 
-import com.nightingale.view.view_components.common.ConstantSizeSetter;
+import com.nightingale.view.utils.GridUtils;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
@@ -15,20 +15,14 @@ public class ModellerPageGridBuilder {
         GridPane modellerGridPane = new GridPane();
         modellerGridPane.setGridLinesVisible(true);
 
-        ColumnConstraints firstColumn = new ColumnConstraints();
-        firstColumn.setPercentWidth(50);
-        ColumnConstraints secondColumn = new ColumnConstraints();
-        secondColumn.setPercentWidth(50);
+        ColumnConstraints firstColumn = GridUtils.buildColumnConstraintsWithPercentage(50);
+        ColumnConstraints secondColumn =GridUtils.buildColumnConstraintsWithPercentage(50);
 
-        RowConstraints contentRow = new RowConstraints();
-        contentRow.prefHeightProperty().bind(modellerGridPane.heightProperty());
-
-        RowConstraints toolRow = new RowConstraints();
-        ConstantSizeSetter.setConstantHeight(toolRow, TOOL_HEIGHT * 3 / 2);
+        RowConstraints contentRow =GridUtils.buildBindedRowConstraints(modellerGridPane.heightProperty());
+        RowConstraints toolRow = GridUtils.buildRowConstraintsWithConstantHeight(TOOL_HEIGHT * 3 / 2);
 
         modellerGridPane.getColumnConstraints().addAll(firstColumn, secondColumn);
         modellerGridPane.getRowConstraints().addAll(contentRow, toolRow);
-
 
         modellerGridPane.setHgap(10);
         modellerGridPane.setVgap(10);

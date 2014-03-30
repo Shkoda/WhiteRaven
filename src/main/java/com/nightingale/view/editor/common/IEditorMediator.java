@@ -1,7 +1,7 @@
 package com.nightingale.view.editor.common;
 
-import com.nightingale.model.entities.Connection;
-import com.nightingale.model.entities.Vertex;
+import com.nightingale.model.entities.graph.Connection;
+import com.nightingale.model.entities.graph.Vertex;
 import com.nightingale.utils.Tuple;
 import com.nightingale.view.utils.NodeType;
 import javafx.scene.Node;

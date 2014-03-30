@@ -3,6 +3,7 @@ package com.nightingale.view.view_components.common;
 
 import com.nightingale.view.config.Config;
 import com.nightingale.view.utils.GridPosition;
+import com.nightingale.view.utils.GridUtils;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.Node;
@@ -36,6 +37,12 @@ public class PageGridBuilder {
     }
 
     public static void clearCell(GridPane gridPane, GridPosition gridPosition) {
+        Node node = getCellNode(gridPane, gridPosition);
+        if (node != null)
+            gridPane.getChildren().remove(node);
+    }
+
+    public static Node getCellNode(GridPane gridPane, GridPosition gridPosition) {
         List<Node> children = gridPane.getChildren();
         for (Node node : children) {
             if (node == null)
@@ -43,31 +50,23 @@ public class PageGridBuilder {
             Integer nodeRow = GridPane.getRowIndex(node);
             Integer nodeColumn = GridPane.getColumnIndex(node);
             if (nodeRow != null && nodeColumn != null && nodeRow == gridPosition.rowNumber && nodeColumn == gridPosition.columnNumber) {
-                gridPane.getChildren().remove(node);
-                return;
+
+                return node;
             }
         }
+        return null;
     }
 
 
     private static void setConstraints(GridPane template) {
-        ColumnConstraints leftColumn = new ColumnConstraints();
-        ConstantSizeSetter.setConstantWidth(leftColumn, Config.SYSTEM_MENU_BUTTON_SIZE * 2);
+        ColumnConstraints leftColumn = GridUtils.buildColumnConstraintsWithConstantWidth(Config.SYSTEM_MENU_BUTTON_SIZE * 2);
+        ColumnConstraints rightColumn = GridUtils.buildColumnConstraintsWithConstantWidth(Config.SYSTEM_MENU_BUTTON_SIZE * 2);
+        ColumnConstraints contentColumn = GridUtils.buildBindedColumnConstraints(template.widthProperty());
 
-        ColumnConstraints rightColumn = new ColumnConstraints();
-        ConstantSizeSetter.setConstantWidth(rightColumn, SYSTEM_MENU_BUTTON_SIZE * 2);
-
-        final ColumnConstraints contentColumn = new ColumnConstraints();
-        contentColumn.prefWidthProperty().bind(template.widthProperty());
+        RowConstraints headerRow = GridUtils.buildRowConstraintsWithConstantHeight(SYSTEM_MENU_BUTTON_SIZE * 2);
+        RowConstraints contentRow = GridUtils.buildBindedRowConstraints(template.heightProperty());
 
         template.getColumnConstraints().setAll(leftColumn, contentColumn, rightColumn);
-
-        RowConstraints headerRow = new RowConstraints();
-        ConstantSizeSetter.setConstantHeight(headerRow, SYSTEM_MENU_BUTTON_SIZE * 2);
-
-        RowConstraints contentRow = new RowConstraints();
-        contentRow.prefHeightProperty().bind(template.heightProperty());
-
         template.getRowConstraints().setAll(headerRow, contentRow);
     }
 

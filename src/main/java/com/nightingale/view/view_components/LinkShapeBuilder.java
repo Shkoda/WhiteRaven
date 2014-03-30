@@ -1,7 +1,7 @@
 package com.nightingale.view.view_components;
 
-import com.nightingale.model.entities.Connection;
-import com.nightingale.model.entities.GraphType;
+import com.nightingale.model.entities.graph.Connection;
+import com.nightingale.model.entities.graph.GraphType;
 import com.nightingale.utils.Tuple;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;

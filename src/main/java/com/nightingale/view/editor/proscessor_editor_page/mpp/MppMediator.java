@@ -3,7 +3,7 @@ package com.nightingale.view.editor.proscessor_editor_page.mpp;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.nightingale.model.DataManager;
-import com.nightingale.model.entities.Graph;
+import com.nightingale.model.entities.graph.Graph;
 import com.nightingale.utils.Loggers;
 import com.nightingale.view.editor.proscessor_editor_page.IProcessorEditorMediator;
 import com.nightingale.view.view_components.VertexShapeBuilder;

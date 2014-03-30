@@ -1,8 +1,8 @@
 package com.nightingale.view.view_components;
 
 import com.nightingale.Main;
-import com.nightingale.model.entities.GraphType;
-import com.nightingale.model.entities.Vertex;
+import com.nightingale.model.entities.graph.GraphType;
+import com.nightingale.model.entities.graph.Vertex;
 import com.nightingale.utils.Tuple;
 import com.nightingale.view.config.Config;
 import javafx.beans.value.ChangeListener;

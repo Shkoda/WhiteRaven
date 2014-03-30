@@ -1,8 +1,7 @@
 package com.nightingale.command.modelling.critical_path_functions;
 
-import com.nightingale.model.entities.AcyclicDirectedGraph;
+import com.nightingale.model.entities.graph.AcyclicDirectedGraph;
 import com.nightingale.command.modelling.critical_path_functions.node_rank_consumers.DeadlineDifferenceConsumer;
-import com.nightingale.command.modelling.critical_path_functions.PathComparator;
 import com.nightingale.model.tasks.TaskModel;
 
 import java.util.*;

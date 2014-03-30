@@ -1,7 +1,7 @@
 package com.nightingale.model.mpp;
 
 
-import com.nightingale.model.entities.Vertex;
+import com.nightingale.model.entities.graph.Vertex;
 
 /**
  * Created by Nightingale on 09.03.14.

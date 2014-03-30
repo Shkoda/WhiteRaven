@@ -1,13 +1,10 @@
 package com.nightingale.command.generate;
 
-import com.nightingale.model.entities.AcyclicDirectedGraph;
-import com.nightingale.model.entities.Graph;
-import com.nightingale.model.entities.Vertex;
+import com.nightingale.model.entities.graph.Graph;
 import com.nightingale.model.tasks.TaskLinkModel;
 import com.nightingale.model.tasks.TaskModel;
 import com.nightingale.utils.Loggers;
 import com.nightingale.view.config.Config;
-import javafx.geometry.Point2D;
 
 import java.util.Random;
 

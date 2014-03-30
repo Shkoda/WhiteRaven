@@ -1,11 +1,8 @@
 package com.nightingale.view.editor.common;
 
-import com.nightingale.model.entities.Connection;
-import com.nightingale.model.entities.Vertex;
-import com.nightingale.model.mpp.ProcessorLinkModel;
-import com.nightingale.model.mpp.ProcessorModel;
+import com.nightingale.model.entities.graph.Connection;
+import com.nightingale.model.entities.graph.Vertex;
 import com.nightingale.view.ViewablePage;
-import javafx.scene.control.Button;
 import javafx.scene.control.ToggleButton;
 
 /**

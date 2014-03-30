@@ -2,23 +2,22 @@ package com.nightingale.view.modeller_page;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+
+import com.nightingale.command.modelling.critical_path_functions.node_rank_consumers.NodesAfterCurrentConsumer;
+import com.nightingale.model.entities.schedule.SystemModel;
 import com.nightingale.model.DataManager;
-import com.nightingale.model.entities.Graph;
-import com.nightingale.model.mpp.ProcessorLinkModel;
-import com.nightingale.model.mpp.ProcessorModel;
-import com.nightingale.model.mpp.SystemMoment;
+import com.nightingale.model.entities.graph.AcyclicDirectedGraph;
+import com.nightingale.model.entities.schedule.Task;
 import com.nightingale.utils.Loggers;
 import com.nightingale.view.ViewablePage;
 import com.nightingale.view.config.Config;
 import com.nightingale.view.editor.tasks_editor_page.ITasksEditorView;
 import com.nightingale.view.statistics_page.IStatisticsView;
-import com.nightingale.view.statistics_page.StatisticsView;
-import com.nightingale.view.editor.tasks_editor_page.TasksEditorView;
 import com.nightingale.view.utils.GridPosition;
 import com.nightingale.view.view_components.common.PageGridBuilder;
 import com.nightingale.view.view_components.modeller.*;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.control.*;
 import javafx.scene.control.ScrollPane;
@@ -29,10 +28,9 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 
-import java.awt.*;
-import java.util.HashMap;
 
-import static com.nightingale.view.view_components.common.PageGridBuilder.WORK_PANE_POSITION;
+import java.util.*;
+
 import static com.nightingale.view.view_components.modeller.ModellerConstants.*;
 
 /**
@@ -113,23 +111,61 @@ public class ModellerView implements IModellerView {
     }
 
     private void refreshMppView() {
-        Graph<ProcessorModel, ProcessorLinkModel> mppModel = DataManager.getMppModel();
-        mppTableView = new TableView();
 
-        for (ProcessorModel processorModel : mppModel.getVertexes())
-            mppTableView.getColumns().add(new TableColumn<>(processorModel.getName()));
+//        Graph<ProcessorModel, ProcessorLinkModel> mppModel = DataManager.getMppModel();
+//        mppTableView = new TableView();
+//
+//        for (ProcessorModel processorModel : mppModel.getVertexes())
+//            mppTableView.getColumns().add(new TableColumn<>(processorModel.getName()));
+//
+//        for (ProcessorLinkModel linkModel : mppModel.getConnections())
+//            mppTableView.getColumns().add(new TableColumn<>(linkModel.getName()));
+//
+//        ObservableList<SystemMoment> data =
+//                FXCollections.observableArrayList(
+//                        new SystemMoment(1, new HashMap<>(), new HashMap<>()),
+//                        new SystemMoment(2, new HashMap<>(), new HashMap<>()),
+//                        new SystemMoment(3, new HashMap<>(), new HashMap<>())
+//                );
+//
+//      mppTableView.getItems().add(null);
 
-        for (ProcessorLinkModel linkModel : mppModel.getConnections())
-            mppTableView.getColumns().add(new TableColumn<>(linkModel.getName()));
+        List<AcyclicDirectedGraph.Node> queue = DataManager.getTaskGraphModel().getAcyclicDirectedGraph().getTaskQueue(new NodesAfterCurrentConsumer(), false);
 
-        ObservableList<SystemMoment> data =
-                FXCollections.observableArrayList(
-                        new SystemMoment(1, new HashMap<>(), new HashMap<>()),
-                        new SystemMoment(2, new HashMap<>(), new HashMap<>()),
-                        new SystemMoment(3, new HashMap<>(), new HashMap<>())
-                );
+        List<Task> convertedTasks = Task.convert(queue);
+        System.out.println(convertedTasks);
 
-        mppScrollPane.setContent(mppTableView);
+        SystemModel systemModel = new SystemModel(DataManager.getMppModel());
+
+        systemModel.loadTasks(convertedTasks);
+
+
+        mppScrollPane.setContent(ScheduleGridBuilder.build(systemModel));
+
+
+
+
+
+    }
+
+ public    class Person {
+        StringProperty firstName;
+
+        Person(String firstName) {
+            this.firstName = new SimpleStringProperty(firstName);
+        }
+
+        public String getFirstName() {
+            return firstName.get();
+        }
+
+        public StringProperty firstNameProperty() {
+            return firstName;
+        }
+
+        public void setFirstName(String firstName) {
+            this.firstName.set(firstName);
+        }
     }
 
     private void addComboBox(ComboBox comboBox, GridPosition gridPosition) {

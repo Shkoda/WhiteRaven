@@ -2,7 +2,7 @@ package com.nightingale.view.editor.proscessor_editor_page.mpp;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.nightingale.model.entities.GraphType;
+import com.nightingale.model.entities.graph.GraphType;
 import com.nightingale.utils.Loggers;
 import com.nightingale.view.editor.common.GraphMediator;
 import com.nightingale.view.view_components.editor.CanvasPaneBuilder;

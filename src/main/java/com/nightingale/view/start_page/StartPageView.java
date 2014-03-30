@@ -31,14 +31,14 @@ public class StartPageView implements IStartPageView {
 
     @Override
     public Pane getView() {
-        if (root == null){
+        if (root == null) {
             initView();
             mediator.init();
         }
         return root;
     }
 
-    private void initView(){
+    private void initView() {
         root = new BorderPane();
 
         AnchorPane.setBottomAnchor(root, ANCHOR_OFFSET_WORK_AREA);
@@ -79,19 +79,23 @@ public class StartPageView implements IStartPageView {
         return null;
     }
 
-    protected Button getProcessorEditorLink() {
+    @Override
+    public Button getProcessorEditorLink() {
         return processorEditorLink;
     }
 
-    protected Button getTaskEditorLink() {
+    @Override
+    public Button getTaskEditorLink() {
         return taskEditorLink;
     }
 
-    protected Button getModellerLink() {
+    @Override
+    public Button getModellerLink() {
         return modellerLink;
     }
 
-    protected Button getStatisticsLink() {
+    @Override
+    public Button getStatisticsLink() {
         return statisticsLink;
     }
 }

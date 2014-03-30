@@ -1,19 +1,20 @@
-package com.nightingale.command.schedule;
+package com.nightingale.model.entities.schedule.tick;
+
+import com.nightingale.model.entities.schedule.Task;
 
 /**
  * Created by Nightingale on 26.03.2014.
  */
-public class ProcessorTick {
+public class ProcessorTick extends Tick {
     public final int processorId;
     public final int physicalLinkNumber;
     private Task currentTask;
-    public final boolean fullDuplexEnabled;
     private int ioOperationsNumber;
 
     public ProcessorTick(int processorId, int physicalLinkNumber, boolean fullDuplexEnabled) {
+        super(fullDuplexEnabled);
         this.processorId = processorId;
         this.physicalLinkNumber = physicalLinkNumber;
-        this.fullDuplexEnabled = fullDuplexEnabled;
     }
 
     public void setTask(Task task) {
@@ -23,13 +24,17 @@ public class ProcessorTick {
         currentTask = task;
     }
 
-    public boolean ioAllowed(){
-        return ioOperationsNumber<physicalLinkNumber;
+    public Task getCurrentTask() {
+        return currentTask;
     }
 
-    public void addIOHandling(){
+    public boolean ioAllowed() {
+        return ioOperationsNumber < physicalLinkNumber;
+    }
+
+    public void addIOHandling() {
         if (!ioAllowed())
-            throw new IllegalArgumentException("P"+processorId+": all io ports are busy");
+            throw new IllegalArgumentException("P" + processorId + ": all io ports are busy");
         ioOperationsNumber++;
     }
 

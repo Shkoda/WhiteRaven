@@ -1,6 +1,6 @@
 package com.nightingale.view.editor.common.handlers.cursor_tool;
 
-import com.nightingale.model.entities.Vertex;
+import com.nightingale.model.entities.graph.Vertex;
 import com.nightingale.view.editor.common.IEditorView;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;

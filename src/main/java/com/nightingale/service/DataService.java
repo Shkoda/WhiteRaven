@@ -1,7 +1,7 @@
 package com.nightingale.service;
 
 import com.nightingale.model.DataManager;
-import com.nightingale.model.entities.Graph;
+import com.nightingale.model.entities.graph.Graph;
 import com.nightingale.model.mpp.ProcessorLinkModel;
 import com.nightingale.model.mpp.ProcessorModel;
 import com.nightingale.model.tasks.TaskLinkModel;

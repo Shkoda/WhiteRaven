@@ -2,7 +2,7 @@ package com.nightingale.view.editor.proscessor_editor_page;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.nightingale.model.entities.Informative;
+import com.nightingale.model.entities.graph.Informative;
 import com.nightingale.utils.Loggers;
 import com.nightingale.view.ViewablePage;
 import com.nightingale.view.config.Config;

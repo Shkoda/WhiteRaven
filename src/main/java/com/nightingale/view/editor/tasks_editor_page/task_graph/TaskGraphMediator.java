@@ -3,7 +3,7 @@ package com.nightingale.view.editor.tasks_editor_page.task_graph;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.nightingale.model.DataManager;
-import com.nightingale.model.entities.Graph;
+import com.nightingale.model.entities.graph.Graph;
 import com.nightingale.model.tasks.TaskLinkModel;
 import com.nightingale.model.tasks.TaskModel;
 import com.nightingale.utils.Loggers;

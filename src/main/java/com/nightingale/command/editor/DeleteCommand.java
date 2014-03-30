@@ -1,7 +1,7 @@
 package com.nightingale.command.editor;
 
 import com.nightingale.model.DataManager;
-import com.nightingale.model.entities.GraphType;
+import com.nightingale.model.entities.graph.GraphType;
 import com.nightingale.view.utils.NodeType;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;

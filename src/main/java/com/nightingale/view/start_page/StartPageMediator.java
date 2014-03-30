@@ -2,9 +2,13 @@ package com.nightingale.view.start_page;
 
 import com.google.inject.Inject;
 import com.nightingale.view.ViewablePage;
+import com.nightingale.view.editor.proscessor_editor_page.IProcessorEditorView;
+import com.nightingale.view.editor.tasks_editor_page.ITasksEditorView;
 import com.nightingale.view.main_page.IMainView;
+import com.nightingale.view.modeller_page.IModellerView;
 import com.nightingale.view.modeller_page.ModellerView;
 import com.nightingale.view.editor.proscessor_editor_page.ProcessorEditorView;
+import com.nightingale.view.statistics_page.IStatisticsView;
 import com.nightingale.view.statistics_page.StatisticsView;
 import com.nightingale.view.editor.tasks_editor_page.TasksEditorView;
 import javafx.event.EventHandler;
@@ -19,20 +23,19 @@ public class StartPageMediator implements IStartPageMediator {
     @Inject
     public IMainView mainView;
     @Inject
-    public StartPageView startPageView;
+    public IStartPageView startPageView;
     @Inject
-    public ProcessorEditorView processorEditor;
+    public IProcessorEditorView processorEditor;
     @Inject
-    public TasksEditorView tasksEditor;
+    public ITasksEditorView tasksEditor;
     @Inject
-    public ModellerView modellerView;
+    public IModellerView modellerView;
     @Inject
-    public StatisticsView statisticsView;
+    public IStatisticsView statisticsView;
 
 
     @Override
     public void init() {
-
         setClickHandler(startPageView.getProcessorEditorLink(), processorEditor);
         setClickHandler(startPageView.getTaskEditorLink(), tasksEditor);
         setClickHandler(startPageView.getModellerLink(), modellerView);
@@ -40,12 +43,8 @@ public class StartPageMediator implements IStartPageMediator {
     }
 
     private void setClickHandler(Button button, final ViewablePage goToPage) {
-        button.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            public void handle(MouseEvent me) {
-                mainView.show(goToPage);
-            }
+        button.setOnMouseClicked(me -> {
+            mainView.show(goToPage);
         });
     }
-
-
 }

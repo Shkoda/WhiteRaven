@@ -1,4 +1,4 @@
-package com.nightingale.model.entities;
+package com.nightingale.model.entities.graph;
 
 /**
  * Created by Nightingale on 16.03.14.
