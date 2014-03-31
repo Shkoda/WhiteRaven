@@ -32,4 +32,66 @@ public class ModellerConstants {
             "із  пересилками  «з  попередженням»";
 
     public static final String LOADING_PROMT_TEXT = "Алгоритм призначення...";
+
+    public enum ScheduleType {
+        QUEUE_2_SCHEDULE_3,
+        QUEUE_6_SCHEDULE_3,
+        QUEUE_16_SCHEDULE_3,
+
+        QUEUE_2_SCHEDULE_5,
+        QUEUE_6_SCHEDULE_5,
+        QUEUE_16_SCHEDULE_5;
+
+        public static ScheduleType get(String queueType, String scheduleType) {
+            switch (scheduleType) {
+                case FIRST_LOADING_ALGORITHM_TEXT:
+                    switch (queueType) {
+                        case FIRST_QUEUE_ALGORITHM_TEXT:
+                            return QUEUE_2_SCHEDULE_3;
+                        case SECOND_QUEUE_ALGORITHM_TEXT:
+                            return QUEUE_6_SCHEDULE_3;
+                        case THIRD_QUEUE_ALGORITHM_TEXT:
+                            return QUEUE_16_SCHEDULE_3;
+                        default:
+                            return null;
+                    }
+                case SECOND_LOADING_ALGORITHM_TEXT:
+                    switch (queueType) {
+                        case FIRST_QUEUE_ALGORITHM_TEXT:
+                            return QUEUE_2_SCHEDULE_5;
+                        case SECOND_QUEUE_ALGORITHM_TEXT:
+                            return QUEUE_6_SCHEDULE_5;
+                        case THIRD_QUEUE_ALGORITHM_TEXT:
+                            return QUEUE_16_SCHEDULE_5;
+                        default:
+                            return null;
+                    }
+                default:
+                    return null;
+            }
+        }
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -17,8 +17,6 @@ public class TimeBeforeCurrentConsumer implements Consumer<AcyclicDirectedGraph>
     @Override
     public void accept(AcyclicDirectedGraph acyclicDirectedGraph) {
         Function<List<AcyclicDirectedGraph.Node>, Number> vertexWeightFunction = PathComparator.VERTEX_WEIGHT_FUNCTION;
-
-
         acyclicDirectedGraph
                 .getNodes()
                 .parallelStream()

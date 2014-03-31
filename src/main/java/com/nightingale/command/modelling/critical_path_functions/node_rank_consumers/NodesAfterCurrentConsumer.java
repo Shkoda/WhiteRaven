@@ -12,12 +12,11 @@ import java.util.function.Function;
 /**
  * Created by Nightingale on 23.03.2014.
  */
-public class NodesAfterCurrentConsumer implements Consumer<AcyclicDirectedGraph> {
 
+public class NodesAfterCurrentConsumer implements Consumer<AcyclicDirectedGraph> {
     @Override
     public void accept(AcyclicDirectedGraph acyclicDirectedGraph) {
         Function<List<AcyclicDirectedGraph.Node>, Number> vertexNumberFunction = PathComparator.VERTEX_NUMBER_FUNCTION;
-
 
         acyclicDirectedGraph
                 .getNodes()
@@ -26,11 +25,9 @@ public class NodesAfterCurrentConsumer implements Consumer<AcyclicDirectedGraph>
     }
 
     private void consumeNode(AcyclicDirectedGraph.Node node,  Function<List<AcyclicDirectedGraph.Node>, Number> vertexNumberFunction) {
-
         double vertexNumberDown = vertexNumberFunction
                 .apply(CriticalPath.find(node, vertexNumberFunction, CriticalPath.Direction.DOWN))
                 .doubleValue();
-
         node.setRating(vertexNumberDown );
         Loggers.debugLogger.debug("node #" + node.getId() + " down=" + vertexNumberDown + " rating=" + node.getRating());
     }

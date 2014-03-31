@@ -16,7 +16,7 @@ import java.util.*;
 /**
  * Created by Nightingale on 28.03.2014.
  */
-public class ScheduleGridBuilder {
+public class GanttViewBuilder {
     public static final String GANTT_GRID = "GanttGrid";
 
     public static final GanttFXIds TASK = new GanttFXIds("GanttTaskTopCell", "GanttTaskMiddleCell", "GanttTaskBottomCell", "GanttTaskMonoCell");
@@ -36,7 +36,7 @@ public class ScheduleGridBuilder {
         gridPane.setGridLinesVisible(true);
         gridPane.setId(GANTT_GRID);
 
-        int rowNumber = systemModel.getDuration() + 1;
+        int rowNumber = systemModel.getLastOperationFinishTime() + 1;
 
         initRows(gridPane, rowNumber);
         initColumns(gridPane, rowNumber, systemModel);
@@ -53,10 +53,10 @@ public class ScheduleGridBuilder {
     //---------------- columns initialization ------------------
 
     private static void initColumns(GridPane gridPane, int rowNumber, SystemModel systemModel) {
-        addColumns(gridPane, 1 + systemModel.processorTimes.size(), PROCESSOR_COLUMN_WIDTH);
-        addColumns(gridPane, systemModel.linkTimes.size(), LINK_COLUMN_WIDTH);
+        addColumns(gridPane, 1 + systemModel.processorResources.size(), PROCESSOR_COLUMN_WIDTH);
+        addColumns(gridPane, systemModel.linkResources.size(), LINK_COLUMN_WIDTH);
         initTimeColumn(gridPane, rowNumber);
-        initProcessorColumns(gridPane, new ArrayList<>(systemModel.processorTimes.values()));
+        initProcessorColumns(gridPane, new ArrayList<>(systemModel.processorResources.values()));
         initLinkColumns(gridPane, rowNumber, systemModel);
     }
 
@@ -89,8 +89,8 @@ public class ScheduleGridBuilder {
     }
 
     private static void initLinkColumns(GridPane gridPane, int rowNumber, SystemModel systemModel) {
-        int columnNumberOffset = 1 + systemModel.processorTimes.size();     //time column + processors columns
-        List<LinkResource> links = new ArrayList<>(systemModel.linkTimes.values());
+        int columnNumberOffset = 1 + systemModel.processorResources.size();     //time column + processors columns
+        List<LinkResource> links = new ArrayList<>(systemModel.linkResources.values());
         int linkNumber = links.size();
         for (int i = 0; i < linkNumber; i++) {
             LinkResource linkResource = links.get(i);

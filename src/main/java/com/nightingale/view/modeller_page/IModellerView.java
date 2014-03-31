@@ -2,6 +2,7 @@ package com.nightingale.view.modeller_page;
 
 import com.nightingale.view.ViewablePage;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 
 /**
@@ -11,5 +12,9 @@ public interface IModellerView extends ViewablePage {
 
     void setQueueComboBox(ComboBox queueComboBox);
 
+    void setScheduleComboBox(ComboBox scheduleComboBox);
+
     TextArea getQueueTextArea();
+
+    ScrollPane getGanttContainer();
 }

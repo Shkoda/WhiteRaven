@@ -3,6 +3,7 @@ package com.nightingale.view.modeller_page;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import com.nightingale.application.guice.ICommandProvider;
 import com.nightingale.command.modelling.critical_path_functions.node_rank_consumers.NodesAfterCurrentConsumer;
 import com.nightingale.model.entities.schedule.SystemModel;
 import com.nightingale.model.DataManager;
@@ -16,8 +17,6 @@ import com.nightingale.view.statistics_page.IStatisticsView;
 import com.nightingale.view.utils.GridPosition;
 import com.nightingale.view.view_components.common.PageGridBuilder;
 import com.nightingale.view.view_components.modeller.*;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.control.*;
 import javafx.scene.control.ScrollPane;
@@ -27,6 +26,7 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.text.Text;
 
 
 import java.util.*;
@@ -44,34 +44,56 @@ public class ModellerView implements IModellerView {
     public IStatisticsView nextPage;
     @Inject
     private IModellerMediator modellerMediator;
+    @Inject
+    private ICommandProvider commandProvider;
+
     private GridPane view;
+    private BorderPane errorMessageView;
+
+    private Pane currentView;
+
     private ComboBox<String> queueBox, loadBox;
     private GridPane queueGrid;
     private TextArea queueTextArea;
     private ScrollPane taskPane;
-    private ScrollPane mppScrollPane;
-    private TableView mppTableView;
-    private String queueAlgorithm2, queueAlgorithm6, queueAlgorithm16;
+    private ScrollPane ganttContainer;
 
     @Override
     public Pane getView() {
         Loggers.debugLogger.debug("get modeller view");
-        return view == null ? initView() : refreshView();
 
+//        CheckMppCommand command = commandProvider.get(CheckMppCommand.class);
+//        command.setOnSucceeded(workerStateEvent -> {
+//                    Boolean mppIsOk = (Boolean) workerStateEvent.getSource().getValue();
+//                    Loggers.debugLogger.debug("mpp ok: " + mppIsOk);
+//                    setCurrentView(mppIsOk);
+//
+//                }
+//        );
+//        command.start();
+        setCurrentView(true);
+        return currentView;
+    }
+
+    private void setCurrentView(boolean isMppOk) {
+        if (currentView == null)
+            initView();
+        currentView = isMppOk ? refreshView() : errorMessageView;
     }
 
     private GridPane refreshView() {
         refreshTaskGraphSnapshot();
         refreshMppView();
-        modellerMediator.refreshQueues();
+   //     modellerMediator.refreshQueues();
+        modellerMediator.refreshView();
         return view;
     }
 
-    private GridPane initView() {
+    private void initView() {
         view = ModellerPageGridBuilder.build();
 
-        loadBox = ModellerComboBoxBuilder.buildLoadComboBox();
-        addComboBox(loadBox, ModellerConstants.SELECT_LOAD_ALGORITHM_POSITION);
+//        loadBox = ModellerComboBoxBuilder.buildLoadComboBox();
+//        addComboBox(loadBox, ModellerConstants.SELECT_LOAD_ALGORITHM_POSITION);
 
 
         queueGrid = ModellerQueueGridBuilder.build();
@@ -80,12 +102,22 @@ public class ModellerView implements IModellerView {
         queueTextArea = ModellerQueueTextAreaBuilder.build();
         queueGrid.add(queueTextArea, OUEUE_POSITION.columnNumber, OUEUE_POSITION.rowNumber);
 
-        mppScrollPane = new ScrollPane();
-        view.add(mppScrollPane, MPP_PANE_POSITION.columnNumber, MPP_PANE_POSITION.rowNumber);
+        ganttContainer = new ScrollPane();
+        view.add(ganttContainer, MPP_PANE_POSITION.columnNumber, MPP_PANE_POSITION.rowNumber);
 
         modellerMediator.initQueueComboBox();
+        modellerMediator.initScheduleComboBox();
 
-        return refreshView();
+        errorMessageView = new BorderPane();
+        errorMessageView.setCenter(new Text("Your MPP is not correct." +
+                "\nIt should contain at least one processors." +
+                "\nProcessor graph should be fully connected."));
+
+    }
+
+    @Override
+    public ScrollPane getGanttContainer() {
+        return ganttContainer;
     }
 
     @Override
@@ -97,6 +129,12 @@ public class ModellerView implements IModellerView {
     public void setQueueComboBox(ComboBox queueComboBox) {
         this.queueBox = queueComboBox;
         addComboBox(queueBox, ModellerConstants.SELECT_QUEUE_ALGORITHM_POSITION);
+    }
+
+    @Override
+    public void setScheduleComboBox(ComboBox scheduleComboBox) {
+        this.loadBox = scheduleComboBox;
+        addComboBox(loadBox, ModellerConstants.SELECT_LOAD_ALGORITHM_POSITION);
     }
 
     private void refreshTaskGraphSnapshot() {
@@ -130,43 +168,21 @@ public class ModellerView implements IModellerView {
 //
 //      mppTableView.getItems().add(null);
 
-        List<AcyclicDirectedGraph.Node> queue = DataManager.getTaskGraphModel().getAcyclicDirectedGraph().getTaskQueue(new NodesAfterCurrentConsumer(), false);
-
-        List<Task> convertedTasks = Task.convert(queue);
-        System.out.println(convertedTasks);
-
-        SystemModel systemModel = new SystemModel(DataManager.getMppModel());
-
-        systemModel.loadTasks(convertedTasks);
-
-
-        mppScrollPane.setContent(ScheduleGridBuilder.build(systemModel));
-
-
-
+//        List<AcyclicDirectedGraph.Node> queue = DataManager.getTaskGraphModel().getAcyclicDirectedGraph().getTaskQueue(new NodesAfterCurrentConsumer(), false);
+//
+//        List<Task> convertedTasks = Task.convert(queue);
+//        System.out.println(convertedTasks);
+//
+//        SystemModel systemModel = new SystemModel(DataManager.getMppModel());
+//
+//        systemModel.loadTasks(convertedTasks, systemModel.SHORTEST_PATH_FUNCTION);
+//
+//        ganttContainer.setContent(GanttViewBuilder.build(systemModel));
 
 
     }
 
- public    class Person {
-        StringProperty firstName;
 
-        Person(String firstName) {
-            this.firstName = new SimpleStringProperty(firstName);
-        }
-
-        public String getFirstName() {
-            return firstName.get();
-        }
-
-        public StringProperty firstNameProperty() {
-            return firstName;
-        }
-
-        public void setFirstName(String firstName) {
-            this.firstName.set(firstName);
-        }
-    }
 
     private void addComboBox(ComboBox comboBox, GridPosition gridPosition) {
         BorderPane borderPane = new BorderPane();

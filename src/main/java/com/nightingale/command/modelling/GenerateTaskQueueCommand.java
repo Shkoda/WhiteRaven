@@ -26,7 +26,7 @@ public class GenerateTaskQueueCommand extends Service<List<AcyclicDirectedGraph.
 
                 List<com.nightingale.model.entities.schedule.Task> convertedTasks = com.nightingale.model.entities.schedule.Task.convert(queue);
                 SystemModel systemModel = new SystemModel(DataManager.getMppModel());
-                systemModel.loadTasks(convertedTasks);
+                systemModel.loadTasks(convertedTasks, systemModel.SHORTEST_PATH_FUNCTION);
                 System.out.println(systemModel);
 
                 return queue;

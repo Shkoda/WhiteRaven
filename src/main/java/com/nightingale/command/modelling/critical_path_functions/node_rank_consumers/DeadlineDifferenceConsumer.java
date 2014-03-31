@@ -14,7 +14,6 @@ import java.util.function.Function;
  */
 public class DeadlineDifferenceConsumer implements Consumer<AcyclicDirectedGraph> {
 
-
     @Override
     public void accept(AcyclicDirectedGraph acyclicDirectedGraph) {
         Function<List<AcyclicDirectedGraph.Node>, Number> vertexWeightFunction = PathComparator.VERTEX_WEIGHT_FUNCTION;

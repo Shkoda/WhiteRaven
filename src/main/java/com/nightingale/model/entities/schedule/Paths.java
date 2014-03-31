@@ -1,6 +1,7 @@
 package com.nightingale.model.entities.schedule;
 
 import com.nightingale.model.entities.graph.Graph;
+import com.nightingale.model.entities.schedule.resourse.ProcessorResource;
 import com.nightingale.model.mpp.ProcessorLinkModel;
 import com.nightingale.model.mpp.ProcessorModel;
 import com.nightingale.view.utils.DijkstraAlgorithm;
@@ -28,6 +29,13 @@ public class Paths {
     public Path getPath(ProcessorModel src, ProcessorModel dst) {
         for (Path path : paths)
             if (path.src.equals(src) && path.dst.equals(dst))
+                return path;
+        return null;
+    }
+
+    public Path getPath(ProcessorResource src, ProcessorResource dst) {
+        for (Path path : paths)
+            if (path.src.getId() == src.id && path.dst.getId() == dst.id)
                 return path;
         return null;
     }
@@ -64,7 +72,7 @@ public class Paths {
         public final ProcessorModel src, dst;
         public final List<ProcessorModel> queue;
         public final Map<Integer, ProcessorLinkModel> links;
-        public final int length;
+        public final Integer length;
 
         public Path(List<ProcessorModel> queue) {
             this.queue = queue;

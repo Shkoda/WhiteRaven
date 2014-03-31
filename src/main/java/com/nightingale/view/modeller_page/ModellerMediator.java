@@ -4,15 +4,20 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.nightingale.application.guice.ICommandProvider;
 import com.nightingale.command.modelling.GenerateTaskQueueCommand;
+import com.nightingale.command.modelling.RefreshModellerData;
 import com.nightingale.model.DataManager;
 import com.nightingale.model.entities.graph.AcyclicDirectedGraph;
 import com.nightingale.command.modelling.critical_path_functions.node_rank_consumers.DeadlineDifferenceConsumer;
 import com.nightingale.command.modelling.critical_path_functions.node_rank_consumers.NodesAfterCurrentConsumer;
 import com.nightingale.command.modelling.critical_path_functions.node_rank_consumers.TimeBeforeCurrentConsumer;
+import com.nightingale.model.entities.schedule.SystemModel;
+import com.nightingale.view.view_components.modeller.GanttViewBuilder;
 import com.nightingale.view.view_components.modeller.ModellerComboBoxBuilder;
 import com.nightingale.view.view_components.modeller.ModellerConstants;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
+import javafx.scene.layout.Pane;
 
 import java.util.HashMap;
 import java.util.List;
@@ -32,7 +37,55 @@ public class ModellerMediator implements IModellerMediator {
     private TextArea queueTextArea;
 
     private Map<String, String> queueMap;
-    private ComboBox queueBox;
+    private Map<ModellerConstants.ScheduleType, SystemModel> systemModels;
+
+    private ComboBox queueBox, scheduleBox;
+    private ScrollPane ganttContainer;
+
+    @Override
+    public void refreshView() {
+        RefreshModellerData command = commandProvider.get(RefreshModellerData.class);
+        command.graph = DataManager.getTaskGraphModel().getAcyclicDirectedGraph();
+        command.modellerMediator = this;
+
+        command.setOnSucceeded(workerStateEvent -> {
+            queueBox.getSelectionModel().select(null);
+            queueTextArea.setText("");
+
+            scheduleBox.getSelectionModel().select(null);
+            ganttContainer.setContent(new Pane());
+
+//
+//            List<AcyclicDirectedGraph.Node> queue = (List<AcyclicDirectedGraph.Node>) workerStateEvent.getSource().getValue();
+//            String newQueue = toString(queue);
+//            queueMap.put(key, newQueue);
+//            if (key.equals(queueBox.getSelectionModel().getSelectedItem()))
+//                modellerView.getQueueTextArea().setText(newQueue);
+
+
+        });
+        command.start();
+    }
+
+    @Override
+    public void initScheduleComboBox() {
+        ganttContainer = modellerView.getGanttContainer();
+        systemModels = new HashMap<>();
+        scheduleBox = ModellerComboBoxBuilder.buildLoadComboBox();
+        modellerView.setScheduleComboBox(scheduleBox);
+        scheduleBox.getSelectionModel().selectedItemProperty().addListener(
+                (ov, old_val, new_val) -> {
+                    Object selectedQueue = queueBox.getSelectionModel().getSelectedItem();
+                    if (selectedQueue == null)
+                        return;
+                    ModellerConstants.ScheduleType scheduleType =
+                            ModellerConstants.ScheduleType.get(selectedQueue.toString(), new_val.toString());
+
+                    if (scheduleType != null && systemModels.containsKey(scheduleType))
+                        ganttContainer.setContent(GanttViewBuilder.build(systemModels.get(scheduleType)));
+                }
+        );
+    }
 
     @Override
     public void initQueueComboBox() {
@@ -41,12 +94,31 @@ public class ModellerMediator implements IModellerMediator {
 
         queueBox = ModellerComboBoxBuilder.buildQueueComboBox();
         modellerView.setQueueComboBox(queueBox);
-        refreshQueues();
+        //      refreshQueues();
         queueBox.getSelectionModel().selectedItemProperty().addListener(
                 (ov, old_val, new_val) -> {
-                    queueTextArea.setText(queueMap.get((String) new_val));
+                    queueTextArea.setText(queueMap.get(new_val));
+
+                    Object selectedLoading = scheduleBox.getSelectionModel().getSelectedItem();
+                    if (selectedLoading== null || new_val == null)
+                        return;
+                    ModellerConstants.ScheduleType scheduleType =
+                            ModellerConstants.ScheduleType.get(new_val.toString(), selectedLoading.toString());
+
+                    if (scheduleType != null&& systemModels.containsKey(scheduleType))
+                        ganttContainer.setContent(GanttViewBuilder.build(systemModels.get(scheduleType)));
                 }
         );
+    }
+
+    @Override
+    public Map<String, String> getQueueMap() {
+        return queueMap;
+    }
+
+    @Override
+    public Map<ModellerConstants.ScheduleType, SystemModel> getScheduleMap() {
+        return systemModels;
     }
 
     @Override
@@ -68,7 +140,7 @@ public class ModellerMediator implements IModellerMediator {
         command.useIncreaseOrder = useIncreaseOrder;
 
         command.setOnSucceeded(workerStateEvent -> {
-            List<AcyclicDirectedGraph.Node> queue= (List<AcyclicDirectedGraph.Node>) workerStateEvent.getSource().getValue();
+            List<AcyclicDirectedGraph.Node> queue = (List<AcyclicDirectedGraph.Node>) workerStateEvent.getSource().getValue();
             String newQueue = toString(queue);
             queueMap.put(key, newQueue);
             if (key.equals(queueBox.getSelectionModel().getSelectedItem()))
