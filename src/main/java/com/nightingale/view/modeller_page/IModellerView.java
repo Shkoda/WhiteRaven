@@ -17,4 +17,6 @@ public interface IModellerView extends ViewablePage {
     TextArea getQueueTextArea();
 
     ScrollPane getGanttContainer();
+
+    void setMppState(boolean isMppOk);
 }

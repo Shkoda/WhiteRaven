@@ -12,6 +12,7 @@ import javax.annotation.processing.Processor;
 import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.DoubleStream;
 
@@ -65,8 +66,12 @@ public class SystemModel {
     }
 
     public SystemModel loadTasks(List<Task> queue, BiFunction<List<ProcessorResource>, List<Task>, ProcessorResource> selectProcessorFunction) {
-        queue.stream().forEach(task -> loadTask(task, selectProcessorFunction));
+        copy(queue).stream().forEach(task -> loadTask(task, selectProcessorFunction));//--------------------------------
         return this;
+    }
+
+    private List<Task> copy(List<Task> original){   //todo remove this workaround
+        return original.stream().map(task-> new Task(task.id, task.weight, new ArrayList<Task>(task.parents))).collect(Collectors.toList());
     }
 
     private void loadTask(Task task, BiFunction<List<ProcessorResource>, List<Task>, ProcessorResource> selectProcessorFunction) {

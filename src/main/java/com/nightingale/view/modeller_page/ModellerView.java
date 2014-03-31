@@ -57,44 +57,31 @@ public class ModellerView implements IModellerView {
     private TextArea queueTextArea;
     private ScrollPane taskPane;
     private ScrollPane ganttContainer;
+    private boolean isMppOk = true;
 
     @Override
     public Pane getView() {
         Loggers.debugLogger.debug("get modeller view");
-
-//        CheckMppCommand command = commandProvider.get(CheckMppCommand.class);
-//        command.setOnSucceeded(workerStateEvent -> {
-//                    Boolean mppIsOk = (Boolean) workerStateEvent.getSource().getValue();
-//                    Loggers.debugLogger.debug("mpp ok: " + mppIsOk);
-//                    setCurrentView(mppIsOk);
-//
-//                }
-//        );
-//        command.start();
-        setCurrentView(true);
-        return currentView;
-    }
-
-    private void setCurrentView(boolean isMppOk) {
         if (currentView == null)
             initView();
-        currentView = isMppOk ? refreshView() : errorMessageView;
+        refreshView();
+        return isMppOk ? view : errorMessageView;
     }
+
+    @Override
+    public void setMppState(boolean isMppOk) {
+        this.isMppOk = isMppOk;
+    }
+
 
     private GridPane refreshView() {
         refreshTaskGraphSnapshot();
-        refreshMppView();
-   //     modellerMediator.refreshQueues();
         modellerMediator.refreshView();
         return view;
     }
 
     private void initView() {
         view = ModellerPageGridBuilder.build();
-
-//        loadBox = ModellerComboBoxBuilder.buildLoadComboBox();
-//        addComboBox(loadBox, ModellerConstants.SELECT_LOAD_ALGORITHM_POSITION);
-
 
         queueGrid = ModellerQueueGridBuilder.build();
         view.add(queueGrid, OUEUE_PANE_POSITION.columnNumber, OUEUE_PANE_POSITION.rowNumber);
@@ -147,41 +134,6 @@ public class ModellerView implements IModellerView {
         PageGridBuilder.clearCell(queueGrid, TASK_GRAPH_POSITION);
         queueGrid.add(taskPane, TASK_GRAPH_POSITION.columnNumber, TASK_GRAPH_POSITION.rowNumber);
     }
-
-    private void refreshMppView() {
-
-//        Graph<ProcessorModel, ProcessorLinkModel> mppModel = DataManager.getMppModel();
-//        mppTableView = new TableView();
-//
-//        for (ProcessorModel processorModel : mppModel.getVertexes())
-//            mppTableView.getColumns().add(new TableColumn<>(processorModel.getName()));
-//
-//        for (ProcessorLinkModel linkModel : mppModel.getConnections())
-//            mppTableView.getColumns().add(new TableColumn<>(linkModel.getName()));
-//
-//        ObservableList<SystemMoment> data =
-//                FXCollections.observableArrayList(
-//                        new SystemMoment(1, new HashMap<>(), new HashMap<>()),
-//                        new SystemMoment(2, new HashMap<>(), new HashMap<>()),
-//                        new SystemMoment(3, new HashMap<>(), new HashMap<>())
-//                );
-//
-//      mppTableView.getItems().add(null);
-
-//        List<AcyclicDirectedGraph.Node> queue = DataManager.getTaskGraphModel().getAcyclicDirectedGraph().getTaskQueue(new NodesAfterCurrentConsumer(), false);
-//
-//        List<Task> convertedTasks = Task.convert(queue);
-//        System.out.println(convertedTasks);
-//
-//        SystemModel systemModel = new SystemModel(DataManager.getMppModel());
-//
-//        systemModel.loadTasks(convertedTasks, systemModel.SHORTEST_PATH_FUNCTION);
-//
-//        ganttContainer.setContent(GanttViewBuilder.build(systemModel));
-
-
-    }
-
 
 
     private void addComboBox(ComboBox comboBox, GridPosition gridPosition) {

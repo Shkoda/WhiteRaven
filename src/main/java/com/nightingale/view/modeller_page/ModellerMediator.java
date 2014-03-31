@@ -55,14 +55,6 @@ public class ModellerMediator implements IModellerMediator {
             scheduleBox.getSelectionModel().select(null);
             ganttContainer.setContent(new Pane());
 
-//
-//            List<AcyclicDirectedGraph.Node> queue = (List<AcyclicDirectedGraph.Node>) workerStateEvent.getSource().getValue();
-//            String newQueue = toString(queue);
-//            queueMap.put(key, newQueue);
-//            if (key.equals(queueBox.getSelectionModel().getSelectedItem()))
-//                modellerView.getQueueTextArea().setText(newQueue);
-
-
         });
         command.start();
     }
@@ -81,8 +73,11 @@ public class ModellerMediator implements IModellerMediator {
                     ModellerConstants.ScheduleType scheduleType =
                             ModellerConstants.ScheduleType.get(selectedQueue.toString(), new_val.toString());
 
-                    if (scheduleType != null && systemModels.containsKey(scheduleType))
-                        ganttContainer.setContent(GanttViewBuilder.build(systemModels.get(scheduleType)));
+                    if (scheduleType != null && systemModels.containsKey(scheduleType)){
+                        SystemModel systemModel = systemModels.get(scheduleType);
+                        System.out.println("\n"+scheduleType+"\n"+selectedQueue.toString()+"\n"+systemModel+"\n");
+                        ganttContainer.setContent(GanttViewBuilder.build(systemModel));
+                    }
                 }
         );
     }
@@ -94,19 +89,21 @@ public class ModellerMediator implements IModellerMediator {
 
         queueBox = ModellerComboBoxBuilder.buildQueueComboBox();
         modellerView.setQueueComboBox(queueBox);
-        //      refreshQueues();
         queueBox.getSelectionModel().selectedItemProperty().addListener(
                 (ov, old_val, new_val) -> {
                     queueTextArea.setText(queueMap.get(new_val));
 
                     Object selectedLoading = scheduleBox.getSelectionModel().getSelectedItem();
-                    if (selectedLoading== null || new_val == null)
+                    if (selectedLoading == null || new_val == null)
                         return;
                     ModellerConstants.ScheduleType scheduleType =
                             ModellerConstants.ScheduleType.get(new_val.toString(), selectedLoading.toString());
 
-                    if (scheduleType != null&& systemModels.containsKey(scheduleType))
-                        ganttContainer.setContent(GanttViewBuilder.build(systemModels.get(scheduleType)));
+                    if (scheduleType != null && systemModels.containsKey(scheduleType)){
+                        SystemModel systemModel = systemModels.get(scheduleType);
+                        System.out.println("\n"+scheduleType+"\n"+new_val.toString()+"\n"+systemModel+"\n");
+                        ganttContainer.setContent(GanttViewBuilder.build(systemModel));
+                    }
                 }
         );
     }
@@ -121,43 +118,4 @@ public class ModellerMediator implements IModellerMediator {
         return systemModels;
     }
 
-    @Override
-    public void refreshQueues() {
-        if (queueMap == null)
-            return;
-        AcyclicDirectedGraph acyclicDirectedGraph = DataManager.getTaskGraphModel().getAcyclicDirectedGraph();
-        refreshQueue(acyclicDirectedGraph, new DeadlineDifferenceConsumer(), true, ModellerConstants.FIRST_QUEUE_ALGORITHM_TEXT);
-        refreshQueue(acyclicDirectedGraph, new NodesAfterCurrentConsumer(), false, ModellerConstants.SECOND_QUEUE_ALGORITHM_TEXT);
-        refreshQueue(acyclicDirectedGraph, new TimeBeforeCurrentConsumer(), true, ModellerConstants.THIRD_QUEUE_ALGORITHM_TEXT);
-
-
-    }
-
-    private void refreshQueue(AcyclicDirectedGraph graph, Consumer<AcyclicDirectedGraph> consumer, boolean useIncreaseOrder, String key) {
-        GenerateTaskQueueCommand command = commandProvider.get(GenerateTaskQueueCommand.class);
-        command.graph = graph;
-        command.consumer = consumer;
-        command.useIncreaseOrder = useIncreaseOrder;
-
-        command.setOnSucceeded(workerStateEvent -> {
-            List<AcyclicDirectedGraph.Node> queue = (List<AcyclicDirectedGraph.Node>) workerStateEvent.getSource().getValue();
-            String newQueue = toString(queue);
-            queueMap.put(key, newQueue);
-            if (key.equals(queueBox.getSelectionModel().getSelectedItem()))
-                modellerView.getQueueTextArea().setText(newQueue);
-
-
-        });
-        command.start();
-    }
-
-    private static String toString(List<AcyclicDirectedGraph.Node> list) {
-        StringBuilder builder = new StringBuilder();
-        for (int i = 0; i < list.size(); i++) {
-            builder.append(list.get(i).getName());
-            if (i < list.size() - 1)
-                builder.append(" -> ");
-        }
-        return builder.toString();
-    }
 }

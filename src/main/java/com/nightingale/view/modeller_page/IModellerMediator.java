@@ -15,8 +15,6 @@ public interface IModellerMediator {
 
     void refreshView();
 
-    void refreshQueues();
-
     Map<String, String> getQueueMap();
 
     Map<ModellerConstants.ScheduleType, SystemModel> getScheduleMap();

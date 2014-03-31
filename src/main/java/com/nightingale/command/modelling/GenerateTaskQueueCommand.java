@@ -22,14 +22,13 @@ public class GenerateTaskQueueCommand extends Service<List<AcyclicDirectedGraph.
         return new Task<List<AcyclicDirectedGraph.Node>>() {
             @Override
             protected List<AcyclicDirectedGraph.Node> call() throws Exception {
-                List<AcyclicDirectedGraph.Node> queue = graph.getTaskQueue(consumer, useIncreaseOrder);
 
-                List<com.nightingale.model.entities.schedule.Task> convertedTasks = com.nightingale.model.entities.schedule.Task.convert(queue);
-                SystemModel systemModel = new SystemModel(DataManager.getMppModel());
-                systemModel.loadTasks(convertedTasks, systemModel.SHORTEST_PATH_FUNCTION);
-                System.out.println(systemModel);
+//                List<com.nightingale.model.entities.schedule.Task> convertedTasks = com.nightingale.model.entities.schedule.Task.convert(queue);
+//                SystemModel systemModel = new SystemModel(DataManager.getMppModel());
+//                systemModel.loadTasks(convertedTasks, systemModel.SHORTEST_PATH_FUNCTION);
+//                System.out.println(systemModel);
 
-                return queue;
+                return graph.getTaskQueue(consumer, useIncreaseOrder);
             }
         };
     }
