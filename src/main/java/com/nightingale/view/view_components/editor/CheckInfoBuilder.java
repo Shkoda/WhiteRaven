@@ -27,7 +27,7 @@ public class CheckInfoBuilder {
         CORRECT_MPP_TEXT.setStyle(" -fx-font-size: 20; -fx-font-family: \"Segoe UI Light\";");
         CORRECT_MPP_TEXT.setEffect(GREEN_EFFECT);
 
-        BAD_MPP_TEXT = new Text(" Your MPP graph is not fully connected");
+        BAD_MPP_TEXT = new Text(" MPP is not connected graph");
         BAD_MPP_TEXT.setStyle("-fx-font-size: 20; -fx-font-family: \"Segoe UI Light\";");
         BAD_MPP_TEXT.setEffect(RED_EFFECT);
     }

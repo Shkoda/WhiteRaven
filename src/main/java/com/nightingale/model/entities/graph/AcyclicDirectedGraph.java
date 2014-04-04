@@ -25,6 +25,10 @@ public class AcyclicDirectedGraph implements Serializable {
         return ids.values();
     }
 
+    public boolean isEmpty(){
+        return roots.isEmpty();
+    }
+
     public boolean addVertex(Vertex vertex) {
         if (ids.keySet().contains(vertex.id))
             return false;

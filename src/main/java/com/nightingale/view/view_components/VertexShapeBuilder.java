@@ -22,6 +22,8 @@ import javafx.scene.text.Text;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
 /**
  * Created by Nightingale on 10.03.14.
@@ -29,7 +31,7 @@ import java.util.List;
 public class VertexShapeBuilder {
 
     public final static ImagePattern PROCESSOR_IMAGE = new ImagePattern(new Image(Main.class.getResourceAsStream("/image/elements/processor.png")));
-    public final static ImagePattern TASK_IMAGE = new ImagePattern(new Image(Main.class.getResourceAsStream("/image/elements/task.png")));
+    public final static ImagePattern TASK_IMAGE = new ImagePattern(new Image(Main.class.getResourceAsStream("/image/elements/task_empty.png")));
 
     private static final List<Point2D> PROCESSOR_CONNECTION_POINTS, TASK_CONNECTION_POINTS;
 
@@ -64,34 +66,23 @@ public class VertexShapeBuilder {
 
         view.getChildren().addAll(rectangle, new Text(width - 5, height + 10, vertex.getName()));
 
-        view.setOnMouseEntered(new EventHandler<MouseEvent>() {
-            public void handle(MouseEvent me) {
-                ((Node) me.getSource()).setCursor(Cursor.HAND);
-            }
-        });
-
-        view.setOnMouseExited(new EventHandler<MouseEvent>() {
-            public void handle(MouseEvent me) {
-                ((Node) me.getSource()).setCursor(Cursor.DEFAULT);
-            }
-        });
-
 
         view.setId(String.valueOf(vertex.getId()));
+        view.translateXProperty().addListener((observableValue, oldValue, newValue) -> vertex.setTranslateX(newValue.doubleValue()));
+        view.translateYProperty().addListener((observableValue, oldValue, newValue) -> vertex.setTranslateY(newValue.doubleValue()));
 
-        view.translateXProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observableValue, Number oldValue, Number newValue) {
-                vertex.setTranslateX(newValue.doubleValue());
-            }
-        });
+        if (graphType == GraphType.TASK) {
+            Text weightText = new Text(String.valueOf((int)vertex.getWeight()));
+            weightText.setX(15);
+            weightText.setY(25);
+            vertex.addObserver((o, arg) -> weightText.setText(String.valueOf((int)(double)arg)));
+            view.getChildren().add(weightText);
+        }
 
-        view.translateYProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observableValue, Number oldValue, Number newValue) {
-                vertex.setTranslateY(newValue.doubleValue());
-            }
-        });
+        view.setOnMouseEntered(me -> ((Node) me.getSource()).setCursor(Cursor.HAND));
+        view.setOnMouseExited(me -> ((Node) me.getSource()).setCursor(Cursor.DEFAULT));
+
+
         return view;
     }
 

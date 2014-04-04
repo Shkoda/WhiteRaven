@@ -1,8 +1,13 @@
 package com.nightingale.model.entities.graph;
 
+import com.nightingale.model.DataManager;
+import com.nightingale.model.mpp.ProcessorLinkModel;
+import com.nightingale.view.utils.WeightedQuickUnionUF;
+
 import java.io.Serializable;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 /**
  * Created by Nightingale on 16.03.14.
@@ -37,6 +42,35 @@ public class Graph<V extends Vertex, C extends Connection> implements Serializab
         double vertexSumWeight = vertexes.values().parallelStream().mapToDouble(V::getWeight).sum();
         double linkSumWeight = connections.values().parallelStream().mapToDouble(C::getWeight).sum();
         return vertexSumWeight / (vertexSumWeight + linkSumWeight);
+    }
+
+    public boolean isEmpty() {
+        return vertexes.isEmpty();
+    }
+
+    public boolean isConnectedGraph() {
+        if (vertexes.isEmpty())
+            return false;
+        Integer maxId = vertexes.keySet().stream().max(Integer::compare).get();
+
+        WeightedQuickUnionUF unionUF = new WeightedQuickUnionUF(maxId + 1);
+
+        connections.values().stream().forEach(c -> unionUF.union(c.firstVertexId, c.secondVertexId));
+
+        return vertexes.values().stream()
+                .filter(v -> !unionUF.connected(maxId, v.id))
+                .collect(Collectors.toList())
+                .size() == 0;
+
+//        Collection<ProcessorLinkModel> links = DataManager.getMppModel().getConnections();
+//        for (ProcessorLinkModel linkModel : links)
+//            unionUF.union(linkModel.getFirstVertexId(), linkModel.getSecondVertexId());
+//
+//        for (int i = processors.size() - 1; i > 0; i--)
+//            if (!unionUF.connected(processorModelId, processors.get(i).getId()))
+//                return false;
+//
+//        return true;
     }
 
 

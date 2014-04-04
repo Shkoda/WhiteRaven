@@ -41,6 +41,9 @@ public class RefreshModellerData extends Service<Void> {
 
                 try {
 
+                    if (graph.isEmpty())
+                        return null;
+
                     List<AcyclicDirectedGraph.Node> queue2 = graph.getTaskQueue(new DeadlineDifferenceConsumer(), true);
                     List<AcyclicDirectedGraph.Node> queue6 = graph.getTaskQueue(new NodesAfterCurrentConsumer(), false);
                     List<AcyclicDirectedGraph.Node> queue16 = graph.getTaskQueue(new TimeBeforeCurrentConsumer(), true);
@@ -50,12 +53,15 @@ public class RefreshModellerData extends Service<Void> {
                     queueMap.put(ModellerConstants.SECOND_QUEUE_ALGORITHM_TEXT, RefreshModellerData.toString(queue6));
                     queueMap.put(ModellerConstants.THIRD_QUEUE_ALGORITHM_TEXT, RefreshModellerData.toString(queue16));
 
+                    mppModel = DataManager.getMppModel();
+                    if (!mppModel.isConnectedGraph())
+                        return null;
+
 
                     List<com.nightingale.model.entities.schedule.Task> convertedTasks2 = com.nightingale.model.entities.schedule.Task.convert(queue2);
                     List<com.nightingale.model.entities.schedule.Task> convertedTasks6 = com.nightingale.model.entities.schedule.Task.convert(queue6);
                     List<com.nightingale.model.entities.schedule.Task> convertedTasks16 = com.nightingale.model.entities.schedule.Task.convert(queue16);
 
-                    mppModel = DataManager.getMppModel();
 
                     Map<ModellerConstants.ScheduleType, SystemModel> scheduleMap = modellerMediator.getScheduleMap();
 

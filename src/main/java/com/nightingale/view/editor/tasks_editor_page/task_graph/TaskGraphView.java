@@ -30,7 +30,6 @@ public class TaskGraphView implements ITaskGraphView {
     @Override
     public Pane getView() {
         if (graphCanvas == null) {
-      //      mediator = new TaskGraphMediator();
             mediator.init();
             graphCanvas = CanvasPaneBuilder.build(GraphType.TASK);
 
@@ -57,6 +56,4 @@ public class TaskGraphView implements ITaskGraphView {
         graphCanvas.getChildren().add(view);
         return view;
     }
-
-
 }

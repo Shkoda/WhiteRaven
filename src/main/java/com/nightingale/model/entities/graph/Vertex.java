@@ -1,11 +1,12 @@
 package com.nightingale.model.entities.graph;
 
 import java.io.Serializable;
+import java.util.Observable;
 
 /**
  * Created by Nightingale on 16.03.14.
  */
-public abstract class Vertex implements Serializable, Informative {
+public abstract class Vertex extends Observable implements Serializable, Informative {
     protected int id;
 
     protected double translateX, translateY;
@@ -19,6 +20,8 @@ public abstract class Vertex implements Serializable, Informative {
     public Vertex update(int id) {
         this.id = id;
         weight = 1;
+        setChanged();
+        notifyObservers(weight);
         return this;
     }
 
@@ -54,6 +57,8 @@ public abstract class Vertex implements Serializable, Informative {
 
     public Vertex setWeight(double weight) {
         this.weight = weight;
+        setChanged();
+        notifyObservers(weight);
         return this;
     }
 

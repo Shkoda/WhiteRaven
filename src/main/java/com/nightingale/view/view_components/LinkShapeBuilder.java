@@ -33,10 +33,17 @@ public class LinkShapeBuilder {
         Tuple<Point2D, Point2D> ends = VertexShapeBuilder.getConnectionPoints(graphType, firstNode, secondNode);
         final Line line = new Line(ends._1.getX(), ends._1.getY(), ends._2.getX(), ends._2.getY());
 
-        final Text name = new Text(middleCoordinate(line.getStartX(), line.getEndX()), middleCoordinate(line.getStartY(), line.getEndY()), connection.getName());
-        name.setStyle("-fx-opacity: 0.5");
+        Text weightText = new Text(String.valueOf((int)connection.getWeight()));
+        weightText.setX(middleCoordinate(line.getStartX(), line.getEndX()));
+        weightText.setY(middleCoordinate(line.getStartY(), line.getEndY()));
+        connection.addObserver((o, arg) -> weightText.setText(String.valueOf((int)(double)arg)));
+        weightText.setStyle("-fx-opacity: 0.5");
+      //  view.getChildren().add(weightText);
 
-        view.getChildren().addAll(line, name);
+//        final Text name = new Text(middleCoordinate(line.getStartX(), line.getEndX()), middleCoordinate(line.getStartY(), line.getEndY()), connection.getName());
+//        name.setStyle("-fx-opacity: 0.5");
+
+        view.getChildren().addAll(line, weightText);
 
         Polygon arrow = null;
         if (graphType == GraphType.TASK) {
@@ -49,14 +56,14 @@ public class LinkShapeBuilder {
             view.getChildren().add(arrow);
         }
 
-        bindLinkName(line, name);
+        bindLinkWeightPosition(line, weightText);
         bindLineEndsToModel(line, connection);
         bindLineEndsToNodes(line, arrow, firstNode, secondNode);
 
         return view;
     }
 
-    private static void bindLinkName(final Line line, final Text name) {
+    private static void bindLinkWeightPosition(final Line line, final Text name) {
         line.startXProperty().addListener((observableValue, oldValue, newValue) -> {
             name.setX(middleCoordinate(newValue.doubleValue(), line.getEndX()));
         });

@@ -1,11 +1,12 @@
 package com.nightingale.model.entities.graph;
 
 import java.io.Serializable;
+import java.util.Observable;
 
 /**
  * Created by Nightingale on 16.03.14.
  */
-public abstract class Connection implements Serializable, Informative {
+public abstract class Connection extends Observable implements Serializable, Informative {
     protected int id;
     protected int firstVertexId, secondVertexId;
     protected double translateX1, translateY1;
@@ -19,10 +20,14 @@ public abstract class Connection implements Serializable, Informative {
         this.secondVertexId = secondVertexId;
         name = "L-" + firstVertexId + "-" + secondVertexId;
         weight = 1;
+        setChanged();
+        notifyObservers(weight);
     }
 
     public Connection increaseWeightByOne() {
         weight += 1;
+        setChanged();
+        notifyObservers(weight);
         return this;
     }
 
@@ -88,6 +93,8 @@ public abstract class Connection implements Serializable, Informative {
 
     public Connection setWeight(double weight) {
         this.weight = weight;
+        setChanged();
+        notifyObservers(weight);
         return this;
     }
 }
