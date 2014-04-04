@@ -17,8 +17,8 @@ public class LinkResource extends SystemResource<LinkTick> {
     public final ProcessorResource firstProcessor, secondProcessor;
     public final Map<Task, TransmissionDescription> t1TransmittedTasks, t2TransmittedTasks;
 
-    public LinkResource(ProcessorLinkModel linkModel, ProcessorResource firstProcessor, ProcessorResource secondProcessor) {
-        super(linkModel.getId(), linkModel.getName(), linkModel.getWeight(), linkModel.isFullDuplexEnabled());
+    public LinkResource(ProcessorLinkModel linkModel, ProcessorResource firstProcessor, ProcessorResource secondProcessor, SystemModel systemModel) {
+        super(linkModel.getId(), linkModel.getName(), linkModel.getWeight(), linkModel.isFullDuplexEnabled(), systemModel);
 
         this.firstProcessor = firstProcessor;
         this.secondProcessor = secondProcessor;
@@ -54,8 +54,16 @@ public class LinkResource extends SystemResource<LinkTick> {
         return finishTime;
     }
 
-    //--------------private api------------------
+    @Override
+    public void increaseResourceTicsNumber(int toDuration) {
+        int currentSize = resourceTicks.size();
+        int increase = toDuration - currentSize;
+        for (int i = 0; i < increase; i++)
+            resourceTicks.add(new LinkTick(firstProcessor.getTick(i + currentSize), secondProcessor.getTick(i + currentSize)));
+    }
 
+
+    //--------------private api------------------
 
     private int earliestAvailableStartTime(int minimalStartTime, int transmitLength, int src) {
         while (!intervalAvailable(minimalStartTime, transmitLength, src))
@@ -65,18 +73,11 @@ public class LinkResource extends SystemResource<LinkTick> {
 
     private boolean intervalAvailable(int start, int transmitLength, int src) {
         if (start + transmitLength >= resourceTicks.size())
-            increaseResourceTicsNumber();
+            systemModel.increaseResourceTime((start+transmitLength)*3/2);
         for (int i = start; i < start + transmitLength; i++)
             if (!(resourceTicks.get(i).isAvailable(src) && firstProcessor.getTick(i).ioAllowed() && secondProcessor.getTick(i).ioAllowed()))
                 return false;
         return true;
-    }
-
-    @Override
-    protected void increaseResourceTicsNumber() {
-        int currentSize = resourceTicks.size();
-        for (int i = 0; i < currentSize; i++)
-            resourceTicks.add(new LinkTick(firstProcessor.getTick(i + currentSize), secondProcessor.getTick(i + currentSize)));
     }
 
     public class TransmissionDescription {

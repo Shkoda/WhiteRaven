@@ -1,6 +1,7 @@
 package com.nightingale.model.entities.schedule;
 
 import com.nightingale.model.entities.graph.AcyclicDirectedGraph;
+import com.nightingale.utils.Loggers;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,6 +12,7 @@ import java.util.Map;
  * Created by Nightingale on 26.03.2014.
  */
 public class Task {
+    private static final int UNDEFINED = -1;
     public final int id;
     public final double weight;
     public final List<Task> parents;
@@ -20,10 +22,20 @@ public class Task {
         this.id = id;
         this.weight = weight;
         this.parents = parents;
+        startTime = UNDEFINED;
+        finishTime = UNDEFINED;
+    }
+
+    public Task(int id, double weight) {
+        this.weight = weight;
+        this.id = id;
+        parents = new ArrayList<>();
+        startTime = UNDEFINED;
+        finishTime = UNDEFINED;
     }
 
     public int getMinimalStartTime() {
-        return parents.isEmpty()? 0: parents.parallelStream().mapToInt(parent -> parent.finishTime).max().getAsInt() + 1;
+        return parents.isEmpty() ? 0 : parents.parallelStream().mapToInt(parent -> parent.finishTime).max().getAsInt() + 1;
     }
 
     public int getStartTime() {
@@ -31,6 +43,10 @@ public class Task {
     }
 
     public Task setStartTime(int startTime) {
+        if (this.startTime != UNDEFINED)
+            throw new IllegalArgumentException("startTime=" + this.startTime + " drop " + startTime);
+
+        Loggers.debugLogger.debug("T" + id + " startTime " + this.startTime + "->" + startTime);
         this.startTime = startTime;
         return this;
     }
@@ -40,27 +56,38 @@ public class Task {
     }
 
     public Task setFinishTime(int finishTime) {
+        if (this.finishTime != UNDEFINED)
+            throw new IllegalArgumentException("finishTime=" + this.finishTime + " drop " + finishTime);
+
+        Loggers.debugLogger.debug("T" + id + " finishTime " + this.finishTime + "->" + finishTime);
         this.finishTime = finishTime;
         return this;
     }
 
     public static List<Task> convert(List<AcyclicDirectedGraph.Node> input) {
-        List<Task> queue = new ArrayList<>();
-
         Map<Integer, Task> convertedTasks = new HashMap<>();
-        input.stream().forEach(node -> {
-            List<Integer> parentsIds = node.getParentsIds();
 
-            List<Task> parentTasks = new ArrayList<>();
-            convertedTasks.keySet().stream()
-                    .filter(parentsIds::contains)
-                    .forEach(parentsId -> parentTasks.add(convertedTasks.get(parentsId)));
-            Task task = new Task(node.getId(), node.getWeight(), parentTasks);
-            queue.add(task);
-            convertedTasks.put(task.id, task);
+        input.stream().forEach(i -> convertedTasks.put(i.getId(), new Task(i.getId(), i.getWeight())));
+
+        input.stream().forEach(i -> {
+            Task current = convertedTasks.get(i.getId());
+            i.getParentsIds().forEach(p -> current.parents.add(convertedTasks.get(p)));
         });
-        return queue;
+        return new ArrayList<>(convertedTasks.values());
     }
+
+    public static List<Task> copy(List<Task> input) {
+        Map<Integer, Task> copy = new HashMap<>();
+
+        input.stream().forEach(i -> copy.put(i.id, new Task(i.id, i.weight)));
+
+        input.stream().forEach(i -> {
+            Task current = copy.get(i.id);
+            i.parents.forEach(p -> current.parents.add(copy.get(p.id)));
+        });
+        return new ArrayList<>(copy.values());
+    }
+
 
     @Override
     public boolean equals(Object o) {

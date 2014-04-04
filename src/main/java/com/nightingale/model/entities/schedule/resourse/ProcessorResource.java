@@ -19,8 +19,8 @@ public class ProcessorResource extends SystemResource<ProcessorTick> {
     public final List<Task> executedTasks;
     private int connectivity;
 
-    public ProcessorResource(ProcessorModel processorModel) {
-        super(processorModel.getId(), processorModel.getName(), processorModel.getWeight(), processorModel.isFullDuplexEnabled());
+    public ProcessorResource(ProcessorModel processorModel, SystemModel systemModel) {
+        super(processorModel.getId(), processorModel.getName(), processorModel.getWeight(), processorModel.isFullDuplexEnabled(), systemModel);
 
         physicalLinkNumber = processorModel.getPhysicalLinkNumber();
         hasIO = processorModel.isHasIO();
@@ -31,12 +31,11 @@ public class ProcessorResource extends SystemResource<ProcessorTick> {
     }
 
     public void loadTask(Task task, int startTime) {
-
         int executionTime = (int) Math.ceil(task.weight / performance);
         int finishTime = startTime + executionTime - 1;
 
         if (finishTime >= resourceTicks.size())
-            increaseResourceTicsNumber();
+            systemModel.increaseResourceTime(finishTime*3/2);
 
         task.setStartTime(startTime).setFinishTime(finishTime);
         for (int i = startTime; i <= finishTime; i++)
@@ -62,9 +61,9 @@ public class ProcessorResource extends SystemResource<ProcessorTick> {
     }
 
     @Override
-    protected void increaseResourceTicsNumber() {
-        int currentSize = resourceTicks.size();
-        for (int i = 0; i < currentSize; i++)
+    public void increaseResourceTicsNumber(int toDuration) {
+        int increase = toDuration - resourceTicks.size();
+        for (int i = 0; i < increase; i++)
             resourceTicks.add(new ProcessorTick(id, physicalLinkNumber, isFullDuplex));
     }
 

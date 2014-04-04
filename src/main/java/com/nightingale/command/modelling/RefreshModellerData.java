@@ -7,8 +7,10 @@ import com.nightingale.model.DataManager;
 import com.nightingale.model.entities.graph.AcyclicDirectedGraph;
 import com.nightingale.model.entities.graph.Graph;
 import com.nightingale.model.entities.schedule.SystemModel;
+import com.nightingale.model.entities.schedule.resourse.ProcessorResource;
 import com.nightingale.model.mpp.ProcessorLinkModel;
 import com.nightingale.model.mpp.ProcessorModel;
+import com.nightingale.utils.Loggers;
 import com.nightingale.view.modeller_page.IModellerMediator;
 import com.nightingale.view.modeller_page.IModellerView;
 import com.nightingale.view.view_components.modeller.ModellerConstants;
@@ -17,8 +19,10 @@ import javafx.concurrent.Task;
 
 import java.util.List;
 import java.util.Map;
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
-
+import java.util.logging.Logger;
+import static com.nightingale.view.view_components.modeller.ModellerConstants.ScheduleType.*;
 /**
  * Created by Nightingale on 31.03.2014.
  */
@@ -35,54 +39,64 @@ public class RefreshModellerData extends Service<Void> {
             @Override
             protected Void call() throws Exception {
 
-                List<AcyclicDirectedGraph.Node> queue2 = graph.getTaskQueue(new DeadlineDifferenceConsumer(), true);
-                List<AcyclicDirectedGraph.Node> queue6 = graph.getTaskQueue(new NodesAfterCurrentConsumer(), false);
-                List<AcyclicDirectedGraph.Node> queue16 = graph.getTaskQueue(new TimeBeforeCurrentConsumer(), true);
+                try {
 
-                Map<String, String> queueMap = modellerMediator.getQueueMap();
-                queueMap.put(ModellerConstants.FIRST_QUEUE_ALGORITHM_TEXT, RefreshModellerData.toString(queue2));
-                queueMap.put(ModellerConstants.SECOND_QUEUE_ALGORITHM_TEXT, RefreshModellerData.toString(queue6));
-                queueMap.put(ModellerConstants.THIRD_QUEUE_ALGORITHM_TEXT, RefreshModellerData.toString(queue16));
+                    List<AcyclicDirectedGraph.Node> queue2 = graph.getTaskQueue(new DeadlineDifferenceConsumer(), true);
+                    List<AcyclicDirectedGraph.Node> queue6 = graph.getTaskQueue(new NodesAfterCurrentConsumer(), false);
+                    List<AcyclicDirectedGraph.Node> queue16 = graph.getTaskQueue(new TimeBeforeCurrentConsumer(), true);
 
-
-                List<com.nightingale.model.entities.schedule.Task> convertedTasks2 = com.nightingale.model.entities.schedule.Task.convert(queue2);
-                List<com.nightingale.model.entities.schedule.Task> convertedTasks6 = com.nightingale.model.entities.schedule.Task.convert(queue6);
-                List<com.nightingale.model.entities.schedule.Task> convertedTasks16 = com.nightingale.model.entities.schedule.Task.convert(queue16);
-
-                mppModel = DataManager.getMppModel();
-
-                Map<ModellerConstants.ScheduleType, SystemModel> scheduleMap = modellerMediator.getScheduleMap();
+                    Map<String, String> queueMap = modellerMediator.getQueueMap();
+                    queueMap.put(ModellerConstants.FIRST_QUEUE_ALGORITHM_TEXT, RefreshModellerData.toString(queue2));
+                    queueMap.put(ModellerConstants.SECOND_QUEUE_ALGORITHM_TEXT, RefreshModellerData.toString(queue6));
+                    queueMap.put(ModellerConstants.THIRD_QUEUE_ALGORITHM_TEXT, RefreshModellerData.toString(queue16));
 
 
-                SystemModel systemModel_2_3 = new SystemModel(mppModel);
-                systemModel_2_3.loadTasks(convertedTasks2, systemModel_2_3.MAX_CONNECTIVITY_FUNCTION);
-                scheduleMap.put(ModellerConstants.ScheduleType.QUEUE_2_SCHEDULE_3, systemModel_2_3);
+                    List<com.nightingale.model.entities.schedule.Task> convertedTasks2 = com.nightingale.model.entities.schedule.Task.convert(queue2);
+                    List<com.nightingale.model.entities.schedule.Task> convertedTasks6 = com.nightingale.model.entities.schedule.Task.convert(queue6);
+                    List<com.nightingale.model.entities.schedule.Task> convertedTasks16 = com.nightingale.model.entities.schedule.Task.convert(queue16);
 
-                SystemModel systemModel_6_3 = new SystemModel(mppModel);
-                systemModel_6_3.loadTasks(convertedTasks6, systemModel_6_3.MAX_CONNECTIVITY_FUNCTION);
-                scheduleMap.put(ModellerConstants.ScheduleType.QUEUE_6_SCHEDULE_3, systemModel_6_3);
+                    mppModel = DataManager.getMppModel();
 
-                SystemModel systemModel_16_3 = new SystemModel(mppModel);
-                systemModel_16_3.loadTasks(convertedTasks16, systemModel_16_3.MAX_CONNECTIVITY_FUNCTION);
-                scheduleMap.put(ModellerConstants.ScheduleType.QUEUE_16_SCHEDULE_3, systemModel_16_3);
+                    Map<ModellerConstants.ScheduleType, SystemModel> scheduleMap = modellerMediator.getScheduleMap();
 
-                SystemModel systemModel_2_5 = new SystemModel(mppModel);
-                systemModel_2_5.loadTasks(convertedTasks2, systemModel_2_5.SHORTEST_PATH_FUNCTION);
-                scheduleMap.put(ModellerConstants.ScheduleType.QUEUE_2_SCHEDULE_5, systemModel_2_5);
+                    Loggers.debugLogger.debug(QUEUE_2_SCHEDULE_3 +" "+convertedTasks2);
+                    SystemModel systemModel_2_3 = new SystemModel(mppModel);
+                    systemModel_2_3.initResources().loadTasks(convertedTasks2, systemModel_2_3.MAX_CONNECTIVITY_FUNCTION);
+                    scheduleMap.put(QUEUE_2_SCHEDULE_3, systemModel_2_3);
 
-                SystemModel systemModel_6_5 = new SystemModel(mppModel);
-                systemModel_6_5.loadTasks(convertedTasks6, systemModel_6_5.SHORTEST_PATH_FUNCTION);
-                scheduleMap.put(ModellerConstants.ScheduleType.QUEUE_6_SCHEDULE_5, systemModel_6_5);
+                    Loggers.debugLogger.debug(QUEUE_6_SCHEDULE_3 +" "+convertedTasks6);
+                    SystemModel systemModel_6_3 = new SystemModel(mppModel);
+                    systemModel_6_3.initResources().loadTasks(convertedTasks6, systemModel_6_3.MAX_CONNECTIVITY_FUNCTION);
+                    scheduleMap.put(QUEUE_6_SCHEDULE_3, systemModel_6_3);
 
-                SystemModel systemModel_16_5 = new SystemModel(mppModel);
-                systemModel_16_5.loadTasks(convertedTasks16, systemModel_16_5.SHORTEST_PATH_FUNCTION);
-                scheduleMap.put(ModellerConstants.ScheduleType.QUEUE_16_SCHEDULE_5, systemModel_16_5);
+                    Loggers.debugLogger.debug(QUEUE_16_SCHEDULE_3 +" "+convertedTasks16);
+                    SystemModel systemModel_16_3 = new SystemModel(mppModel);
+                    systemModel_16_3.initResources().loadTasks(convertedTasks16, systemModel_16_3.MAX_CONNECTIVITY_FUNCTION);
+                    scheduleMap.put(QUEUE_16_SCHEDULE_3, systemModel_16_3);
 
+                    Loggers.debugLogger.debug(QUEUE_2_SCHEDULE_5 +" "+convertedTasks2);
+                    SystemModel systemModel_2_5 = new SystemModel(mppModel);
+                    systemModel_2_5.initResources().loadTasks(convertedTasks2, systemModel_2_5.SHORTEST_PATH_FUNCTION);
+                    scheduleMap.put(QUEUE_2_SCHEDULE_5, systemModel_2_5);
+
+                    Loggers.debugLogger.debug(QUEUE_6_SCHEDULE_5 +" "+convertedTasks6);
+                    SystemModel systemModel_6_5 = new SystemModel(mppModel);
+                    systemModel_6_5.initResources().loadTasks(convertedTasks6, systemModel_6_5.SHORTEST_PATH_FUNCTION);
+                    scheduleMap.put(QUEUE_6_SCHEDULE_5, systemModel_6_5);
+
+                    Loggers.debugLogger.debug(QUEUE_16_SCHEDULE_5 +" "+convertedTasks16);
+                    SystemModel systemModel_16_5 = new SystemModel(mppModel);
+                    systemModel_16_5.initResources().loadTasks(convertedTasks16, systemModel_16_5.SHORTEST_PATH_FUNCTION);
+                    scheduleMap.put(QUEUE_16_SCHEDULE_5, systemModel_16_5);
+
+                 //   return null;
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
                 return null;
             }
         };
     }
-
 
     private static String toString(List<AcyclicDirectedGraph.Node> list) {
         StringBuilder builder = new StringBuilder();

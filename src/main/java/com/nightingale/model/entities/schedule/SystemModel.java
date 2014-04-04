@@ -12,6 +12,7 @@ import javax.annotation.processing.Processor;
 import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.logging.Logger;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.DoubleStream;
@@ -34,28 +35,40 @@ public class SystemModel {
     private Map<Integer, ProcessorModel> vertexes;
     private Paths paths;
 
+    private Graph<ProcessorModel, ProcessorLinkModel> graph;
+
 
     public SystemModel(Graph<ProcessorModel, ProcessorLinkModel> graph) {
         processorResources = new HashMap<>();
         taskOnProcessorsMap = new HashMap<>();
         vertexes = graph.getVertexIdMap();
         linkResources = new HashMap<>();
+        this.graph = graph;
 
+
+        paths = new Paths(graph);
+    }
+
+    public SystemModel initResources() {
         graph.getVertexes().stream().forEach(processor -> {
-            ProcessorResource processorResource = new ProcessorResource(processor);
+            ProcessorResource processorResource = new ProcessorResource(processor, this);
             processorResources.put(processorResource.id, processorResource);
         });
 
         graph.getConnections().stream()
                 .forEach(link -> {
                     LinkResource linkResource = new LinkResource(link, processorResources.get(link.getFirstVertexId()),
-                            processorResources.get(link.getSecondVertexId()));
+                            processorResources.get(link.getSecondVertexId()), this);
                     linkResources.put(link.getId(), linkResource);
                     processorResources.get(link.getFirstVertexId()).increaseConnectivity();
                     processorResources.get(link.getSecondVertexId()).increaseConnectivity();
                 });
+        return this;
+    }
 
-        paths = new Paths(graph);
+    public void increaseResourceTime(int toDuration) {
+        processorResources.values().forEach(p -> p.increaseResourceTicsNumber(toDuration));
+        linkResources.values().forEach(l -> l.increaseResourceTicsNumber(toDuration));
     }
 
     public int getLastOperationFinishTime() {
@@ -66,21 +79,29 @@ public class SystemModel {
     }
 
     public SystemModel loadTasks(List<Task> queue, BiFunction<List<ProcessorResource>, List<Task>, ProcessorResource> selectProcessorFunction) {
-        copy(queue).stream().forEach(task -> loadTask(task, selectProcessorFunction));//--------------------------------
+        Task.copy(queue).stream().forEach(task -> loadTask(task, selectProcessorFunction));//--------------------------------
         return this;
     }
 
-    private List<Task> copy(List<Task> original){   //todo remove this workaround
-        return original.stream().map(task-> new Task(task.id, task.weight, new ArrayList<Task>(task.parents))).collect(Collectors.toList());
-    }
 
     private void loadTask(Task task, BiFunction<List<ProcessorResource>, List<Task>, ProcessorResource> selectProcessorFunction) {
+        Loggers.debugLogger.debug("loading T" + task.id);
+
         int minimalStartTime = task.getMinimalStartTime();
+        Loggers.debugLogger.debug("minimalStartTime=" + minimalStartTime);
+
         List<ProcessorResource> availableProcessors = getAvailableProcessors(minimalStartTime);
+        Loggers.debugLogger.debug("availableProcessors=" + availableProcessors);
+
         ProcessorResource processor = selectProcessorFunction.apply(availableProcessors, task.parents);
+        Loggers.debugLogger.debug("processor " + processor.name);
         if (!task.parents.isEmpty())
             minimalStartTime = transmitParentData(task.parents, processor);
+        Loggers.debugLogger.debug("transmitParentData time=" + minimalStartTime);
+
         int startTime = defineStartTime(minimalStartTime, processor);
+        Loggers.debugLogger.debug("startTime=" + startTime);
+
         processor.loadTask(task, startTime);
         taskOnProcessorsMap.put(task.id, processor);
 
@@ -114,9 +135,7 @@ public class SystemModel {
                 int transmissionTime = (int) Math.ceil(finishedTask.weight / connection.getWeight());
                 minimalTransmitStart = linkResource.transmitTask(finishedTask, minimalTransmitStart, transmissionTime, processorSrcId) + 1;
             }
-
             processorSrcId = connection.getOtherVertexId(processorSrcId);
-
         }
         return minimalTransmitStart;
     }

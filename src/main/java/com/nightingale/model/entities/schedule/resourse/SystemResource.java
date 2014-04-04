@@ -1,4 +1,6 @@
 package com.nightingale.model.entities.schedule.resourse;
+
+import com.nightingale.model.entities.schedule.SystemModel;
 import com.nightingale.model.entities.schedule.tick.Tick;
 
 import java.util.ArrayList;
@@ -14,21 +16,26 @@ public abstract class SystemResource<T extends Tick> {
     public final boolean isFullDuplex;
     public final double performance;
     public final List<T> resourceTicks;
+    public final SystemModel systemModel;
 
 
-    protected SystemResource(int id, String name, double performance, boolean isFullDuplex) {
+    protected SystemResource(int id, String name, double performance, boolean isFullDuplex, SystemModel systemModel) {
         this.name = name;
         this.id = id;
         this.isFullDuplex = isFullDuplex;
         this.performance = performance;
         resourceTicks = new ArrayList<>();
+        this.systemModel = systemModel;
     }
 
     public T getTick(int time) {
-        if (time>= resourceTicks.size())
-            increaseResourceTicsNumber();
+        if (time >= resourceTicks.size())
+            systemModel.increaseResourceTime(time * 3 / 2);
         return resourceTicks.get(time);
     }
 
-    abstract protected void increaseResourceTicsNumber();
+    public int getDuration(){
+        return resourceTicks.size();
+    }
+    abstract protected void increaseResourceTicsNumber(int toDuration);
 }
