@@ -22,6 +22,7 @@ import java.util.stream.DoubleStream;
  */
 public class SystemModel {
     public static final int defaultTickNumber = 10;
+    private static final Random random = new Random();
 
     public final BiFunction<List<ProcessorResource>, List<Task>, ProcessorResource> MAX_CONNECTIVITY_FUNCTION = new MaxConnectivityFunction();
     public final BiFunction<List<ProcessorResource>, List<Task>, ProcessorResource> SHORTEST_PATH_FUNCTION = new ShortestPathFunction();
@@ -144,10 +145,6 @@ public class SystemModel {
         return processorResource.earliestAvailableStartTime(minimalStartTime);
     }
 
-    private ProcessorResource selectBestProcessor(List<ProcessorResource> availableProcessors) {        //todo write comparators
-        availableProcessors.sort((p1, p2) -> -(p1.getConnectivity().compareTo(p2.getConnectivity())));
-        return availableProcessors.get(0);
-    }
 
     private List<ProcessorResource> getAvailableProcessors(int timeMoment) {
         ArrayList<ProcessorResource> availableNow = processorResources.values().stream()
@@ -174,8 +171,18 @@ public class SystemModel {
 
         @Override
         public ProcessorResource apply(List<ProcessorResource> processorResources, List<Task> tasks) {
-            processorResources.sort((p1, p2) -> -(p1.getConnectivity().compareTo(p2.getConnectivity())));
-            return processorResources.get(0);
+            int maxConnectivity = processorResources.stream()
+                    .mapToInt(ProcessorResource::getConnectivity)
+                    .max().getAsInt();
+            List<ProcessorResource> maxConnectivityProcessors = processorResources.stream()
+                    .filter(p -> p.getConnectivity() == maxConnectivity)
+                    .collect(Collectors.toList());              //todo check this function
+            return maxConnectivityProcessors.get(random.nextInt(maxConnectivityProcessors.size()));
+
+//            processorResources.sort((p1, p2) -> -(p1.getConnectivity().compareTo(p2.getConnectivity())));
+//            int maxConnectivity = processorResources.get(0).getConnectivity();
+//            processorResources.stream().filter(p -> p.getConnectivity() == maxConnectivity);
+//            return processorResources.get(0);
         }
     }
 
