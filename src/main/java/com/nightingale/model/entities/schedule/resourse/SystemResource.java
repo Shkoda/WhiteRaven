@@ -34,8 +34,5 @@ public abstract class SystemResource<T extends Tick> {
         return resourceTicks.get(time);
     }
 
-    public int getDuration(){
-        return resourceTicks.size();
-    }
     abstract protected void increaseResourceTicsNumber(int toDuration);
 }

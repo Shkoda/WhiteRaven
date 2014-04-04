@@ -12,8 +12,6 @@ import java.util.Map;
  * Created by Nightingale on 26.03.2014.
  */
 public class LinkResource extends SystemResource<LinkTick> {
-
-    public final int firstProcessorId, secondProcessorId;
     public final ProcessorResource firstProcessor, secondProcessor;
     public final Map<Task, TransmissionDescription> t1TransmittedTasks, t2TransmittedTasks;
 
@@ -22,9 +20,6 @@ public class LinkResource extends SystemResource<LinkTick> {
 
         this.firstProcessor = firstProcessor;
         this.secondProcessor = secondProcessor;
-
-        firstProcessorId = linkModel.getFirstVertexId();
-        secondProcessorId = linkModel.getSecondVertexId();
 
         t1TransmittedTasks = new HashMap<>();
         t2TransmittedTasks = new HashMap<>();
@@ -44,19 +39,20 @@ public class LinkResource extends SystemResource<LinkTick> {
         boolean useReverseTransmission = false;
 
         for (int i = startTime; i <= finishTime; i++) {
-            useReverseTransmission = resourceTicks.get(i).setTransmission(task, src).isRevers;
+            useReverseTransmission = resourceTicks.get(i).setTransmission(task, src).isReverse;
             firstProcessor.getTick(i).addIOHandling();
             secondProcessor.getTick(i).addIOHandling();
         }
 
         Map<Task, TransmissionDescription> descriptionMap = useReverseTransmission ? t2TransmittedTasks : t1TransmittedTasks;
         descriptionMap.put(task, new TransmissionDescription(startTime, finishTime));
-        ProcessorResource receiver = useReverseTransmission? firstProcessor: secondProcessor;
+
+        ProcessorResource receiver = useReverseTransmission ? firstProcessor : secondProcessor;
 
         if (receiver.loadedTasks.containsKey(task))
-            throw new IllegalArgumentException("T"+task.id+" is available on "+receiver.name+" since "+receiver.loadedTasks.get(task));
+            throw new IllegalArgumentException("T" + task.id + " is available on " + receiver.name + " since " + receiver.loadedTasks.get(task));
+
         receiver.loadedTasks.put(task, finishTime + 1);
-//        secondProcessor.loadedTasks.put(task, finishTime + 1);
         return finishTime;
     }
 
@@ -105,10 +101,9 @@ public class LinkResource extends SystemResource<LinkTick> {
         }
     }
 
-
     @Override
     public String toString() {
-        return "LinkTime{" + firstProcessorId + ":" + secondProcessorId + "}\t" +
+        return "LinkTime{" + firstProcessor.id + ":" + secondProcessor.id + "}\t" +
                 resourceTicks +
                 '}';
     }

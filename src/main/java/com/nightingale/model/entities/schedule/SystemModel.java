@@ -10,24 +10,15 @@ import com.nightingale.model.mpp.ProcessorModel;
 import com.nightingale.model.tasks.TaskLinkModel;
 import com.nightingale.model.tasks.TaskModel;
 import com.nightingale.utils.Loggers;
-
-import javax.xml.crypto.Data;
 import java.util.*;
 import java.util.function.BiFunction;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
-import java.util.stream.DoubleStream;
 
 /**
  * Created by Nightingale on 26.03.2014.
  */
 public class SystemModel {
     public static final int defaultTickNumber = 10;
-    private static final Random random = new Random();
-
-    public final BiFunction<List<ProcessorResource>, List<Task>, ProcessorResource> MAX_CONNECTIVITY_FUNCTION = new MaxConnectivityFunction();
-    public final BiFunction<List<ProcessorResource>, List<Task>, ProcessorResource> SHORTEST_PATH_FUNCTION = new ShortestPathFunction();
-
     public final Map<Integer, ProcessorResource> processorResources;
     public final Map<Integer, LinkResource> linkResources;
     /**
@@ -41,13 +32,12 @@ public class SystemModel {
     private Graph<TaskModel, TaskLinkModel> taskGraph;
 
     public SystemModel() {
-        this.mpp = DataManager.getMppModel();
-        this.taskGraph = DataManager.getTaskGraphModel();
+        mpp = DataManager.getMppModel();
+        taskGraph = DataManager.getTaskGraphModel();
         processorResources = new HashMap<>();
         taskOnProcessorsMap = new HashMap<>();
         vertexes = mpp.getVertexIdMap();
         linkResources = new HashMap<>();
-
         paths = new Paths(mpp);
     }
 
@@ -68,23 +58,9 @@ public class SystemModel {
         return this;
     }
 
-    public void increaseResourceTime(int toDuration) {
-        processorResources.values().forEach(p -> p.increaseResourceTicsNumber(toDuration));
-        linkResources.values().forEach(l -> l.increaseResourceTicsNumber(toDuration));
-    }
-
-    public int getLastOperationFinishTime() {
-        return processorResources.values().size() == 0 ? 0 :
-                processorResources.values().stream()
-                        .mapToInt(processor -> processor.earliestAvailableStartTime(0))
-                        .max().getAsInt();
-    }
-
-    public SystemModel loadTasks(List<Task> queue, BiFunction<List<ProcessorResource>, List<Task>, ProcessorResource> selectProcessorFunction) {
+    public void loadTasks(List<Task> queue, BiFunction<List<ProcessorResource>, List<Task>, ProcessorResource> selectProcessorFunction) {
         Task.copy(queue).stream().forEach(task -> loadTask(task, selectProcessorFunction));
-        return this;
     }
-
 
     private void loadTask(Task task, BiFunction<List<ProcessorResource>, List<Task>, ProcessorResource> selectProcessorFunction) {
         Loggers.debugLogger.debug("loading T" + task.id);
@@ -120,30 +96,25 @@ public class SystemModel {
             minimalProcessorLoadTime = (processor.loadedTasks.keySet().contains(parent)) ?
                     Math.max(minimalProcessorLoadTime, processor.loadedTasks.get(parent)) :
                     Math.max(minimalProcessorLoadTime, transmitData(parent, childTask, processor.id));
-        // if (!processor.loadedTasks.keySet().contains(parent))
-
         return minimalProcessorLoadTime;
     }
+
 
     /**
      * @return minimum processor load time
      */
     private int transmitData(Task parentTask, Task childTask, int dstProcessorId) {
-        ProcessorResource srcProcessor = taskOnProcessorsMap.get(parentTask.id);
-        int srcProcessorId = srcProcessor.id;
-
+        int srcProcessorId = taskOnProcessorsMap.get(parentTask.id).id;
         Paths.Path path = paths.getPath(vertexes.get(srcProcessorId), vertexes.get(dstProcessorId));
+
         int minimalTransmitStart = parentTask.getFinishTime() + 1;
         double transmissionWeight = taskGraph.getConnection(parentTask.id, childTask.id).getWeight();
 
-        Loggers.debugLogger.debug("T"+parentTask.id+" : "+path);
         for (int i = 0; i < path.length; i++) {
 
             Connection connection = path.links.get(srcProcessorId);
             ProcessorResource currentDst = processorResources.get(connection.getOtherVertexId(srcProcessorId));
             Integer taskAvailableTime = currentDst.loadedTasks.get(parentTask);
-
-            Loggers.debugLogger.debug("transmitting T" + parentTask.id + " " + srcProcessorId + " --> " + currentDst.id);
 
             if (taskAvailableTime == null) {//if dst processor doesn't contain task
                 LinkResource linkResource = linkResources.get(connection.getId());
@@ -152,17 +123,10 @@ public class SystemModel {
             } else {
                 minimalTransmitStart = Math.max(minimalTransmitStart, taskAvailableTime);
             }
-
-            Loggers.debugLogger.debug("min start time="+minimalTransmitStart);
             srcProcessorId = currentDst.id;
         }
         return minimalTransmitStart;
     }
-
-    private int defineStartTime(int minimalStartTime, ProcessorResource processorResource) {
-        return processorResource.earliestAvailableStartTime(minimalStartTime);
-    }
-
 
     private List<ProcessorResource> getAvailableProcessors(int timeMoment) {
         ArrayList<ProcessorResource> availableNow = processorResources.values().stream()
@@ -176,6 +140,30 @@ public class SystemModel {
         return availableNow;
     }
 
+    private int defineStartTime(int minimalStartTime, ProcessorResource processorResource) {
+        return processorResource.earliestAvailableStartTime(minimalStartTime);
+    }
+
+    public void increaseResourceTime(int toDuration) {
+        processorResources.values().forEach(p -> p.increaseResourceTicsNumber(toDuration));
+        linkResources.values().forEach(l -> l.increaseResourceTicsNumber(toDuration));
+    }
+
+    public int getLastOperationFinishTime() {
+        return processorResources.values().size() == 0 ? 0 :
+                processorResources.values().stream()
+                        .mapToInt(processor -> processor.earliestAvailableStartTime(0))
+                        .max().getAsInt();
+    }
+
+    public Map<Integer, ProcessorResource> getTaskOnProcessorsMap() {
+        return taskOnProcessorsMap;
+    }
+
+    public Paths getPaths() {
+        return paths;
+    }
+
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
@@ -184,38 +172,6 @@ public class SystemModel {
         return builder.toString();
     }
 
-    //------------------- support function classes-----------------------
-
-    public class MaxConnectivityFunction implements BiFunction<List<ProcessorResource>, List<Task>, ProcessorResource> {
-        @Override
-        public ProcessorResource apply(List<ProcessorResource> processorResources, List<Task> tasks) {
-            int maxConnectivity = processorResources.stream()
-                    .mapToInt(ProcessorResource::getConnectivity)
-                    .max().getAsInt();
-            List<ProcessorResource> maxConnectivityProcessors = processorResources.stream()
-                    .filter(p -> p.getConnectivity() == maxConnectivity)
-                    .collect(Collectors.toList());              //todo check this function
-            return maxConnectivityProcessors.get(random.nextInt(maxConnectivityProcessors.size()));
-        }
-    }
-
-    public class ShortestPathFunction implements BiFunction<List<ProcessorResource>, List<Task>, ProcessorResource> {
-        @Override
-        public ProcessorResource apply(List<ProcessorResource> processorResources, List<Task> tasks) {
-            Collections.sort(processorResources, (p1, p2) -> transmitRating(p1, tasks).compareTo(transmitRating(p2, tasks)));
-            return processorResources.get(0);
-        }
-
-        private Double transmitRating(ProcessorResource processorResource, List<Task> tasks) {
-            if (tasks.isEmpty())
-                return 0.0;
-            DoubleStream doubleStream = tasks.stream()
-                    .mapToDouble(task -> paths.getPath(taskOnProcessorsMap.get(task.id), processorResource).length);
-            return processorResource.physicalLinkNumber == 1 ?
-                    doubleStream.sum() :
-                    doubleStream.max().getAsDouble();
-        }
-    }
 }
 
 

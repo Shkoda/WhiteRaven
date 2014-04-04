@@ -44,13 +44,13 @@ public class LinkTick extends Tick {
 
     public class Transmission {
         public final int srcId, dstId;
-        public final boolean isRevers;
+        public final boolean isReverse;
         private Task transmitTask;
 
-        public Transmission(int srcId, int dstId, boolean isRevers) {
+        public Transmission(int srcId, int dstId, boolean isReverse) {
             this.srcId = srcId;
             this.dstId = dstId;
-            this.isRevers = isRevers;
+            this.isReverse = isReverse;
         }
 
         public Task getTask() {
