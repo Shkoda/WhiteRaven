@@ -37,7 +37,9 @@ public class LinkResource extends SystemResource<LinkTick> {
      * @return transmission finish time
      */
     public int transmitTask(Task task, int minStartTime, int transmitTime, int src) {
-        int startTime = earliestAvailableStartTime(minStartTime, transmitTime, src);
+        int startTime = intervalAvailable(minStartTime, minStartTime + transmitTime - 1, src) ?
+                minStartTime :
+                earliestAvailableStartTime(minStartTime, transmitTime, src);
         int finishTime = startTime + transmitTime - 1;
         boolean useReverseTransmission = false;
 
@@ -49,8 +51,12 @@ public class LinkResource extends SystemResource<LinkTick> {
 
         Map<Task, TransmissionDescription> descriptionMap = useReverseTransmission ? t2TransmittedTasks : t1TransmittedTasks;
         descriptionMap.put(task, new TransmissionDescription(startTime, finishTime));
+        ProcessorResource receiver = useReverseTransmission? firstProcessor: secondProcessor;
 
-        secondProcessor.loadedTasks.add(task);
+        if (receiver.loadedTasks.containsKey(task))
+            throw new IllegalArgumentException("T"+task.id+" is available on "+receiver.name+" since "+receiver.loadedTasks.get(task));
+        receiver.loadedTasks.put(task, finishTime + 1);
+//        secondProcessor.loadedTasks.put(task, finishTime + 1);
         return finishTime;
     }
 
@@ -73,9 +79,9 @@ public class LinkResource extends SystemResource<LinkTick> {
 
     private boolean intervalAvailable(int start, int transmitLength, int src) {
         if (start + transmitLength >= resourceTicks.size())
-            systemModel.increaseResourceTime((start+transmitLength)*3/2);
+            systemModel.increaseResourceTime((start + transmitLength) * 3 / 2);
         for (int i = start; i < start + transmitLength; i++)
-            if (!(resourceTicks.get(i).isAvailable(src) && firstProcessor.getTick(i).ioAllowed() && secondProcessor.getTick(i).ioAllowed()))
+            if (!(!resourceTicks.get(i).isBusy(src) && firstProcessor.getTick(i).ioAllowed() && secondProcessor.getTick(i).ioAllowed()))
                 return false;
         return true;
     }

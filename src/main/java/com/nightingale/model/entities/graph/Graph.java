@@ -61,16 +61,6 @@ public class Graph<V extends Vertex, C extends Connection> implements Serializab
                 .filter(v -> !unionUF.connected(maxId, v.id))
                 .collect(Collectors.toList())
                 .size() == 0;
-
-//        Collection<ProcessorLinkModel> links = DataManager.getMppModel().getConnections();
-//        for (ProcessorLinkModel linkModel : links)
-//            unionUF.union(linkModel.getFirstVertexId(), linkModel.getSecondVertexId());
-//
-//        for (int i = processors.size() - 1; i > 0; i--)
-//            if (!unionUF.connected(processorModelId, processors.get(i).getId()))
-//                return false;
-//
-//        return true;
     }
 
 
@@ -140,6 +130,13 @@ public class Graph<V extends Vertex, C extends Connection> implements Serializab
     public C getRandomConnection() {
         List<Integer> ids = new ArrayList<>(connections.keySet());
         return connections.get(ids.get((int) (Math.random() * ids.size())));
+    }
+
+    public C getConnection(int srcId, int dstId) {
+        List<C> link = connections.values().stream()
+                .filter(c -> c.getFirstVertexId() == srcId && c.getSecondVertexId() == dstId)
+                .collect(Collectors.toList());
+        return link.isEmpty() ? null : link.get(0);
     }
 
     public void removeConnection(int connectionId) {

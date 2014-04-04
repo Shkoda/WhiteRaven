@@ -6,7 +6,9 @@ import com.nightingale.model.entities.schedule.tick.ProcessorTick;
 import com.nightingale.model.mpp.ProcessorModel;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Nightingale on 26.03.2014.
@@ -15,8 +17,14 @@ public class ProcessorResource extends SystemResource<ProcessorTick> {
 
     public final int physicalLinkNumber;
     public final boolean hasIO;
-    public final List<Task> loadedTasks;
-    public final List<Task> executedTasks;
+    /**
+     * value - when task will be available for others
+     */
+    public final Map<Task, Integer> loadedTasks;
+    /**
+     * value - when task will be available for others
+     */
+    public final Map<Task, Integer> executedTasks;
     private int connectivity;
 
     public ProcessorResource(ProcessorModel processorModel, SystemModel systemModel) {
@@ -24,8 +32,8 @@ public class ProcessorResource extends SystemResource<ProcessorTick> {
 
         physicalLinkNumber = processorModel.getPhysicalLinkNumber();
         hasIO = processorModel.isHasIO();
-        loadedTasks = new ArrayList<>();
-        executedTasks = new ArrayList<>();
+        loadedTasks = new HashMap<>();
+        executedTasks = new HashMap<>();
         for (int i = 0; i < SystemModel.defaultTickNumber; i++)
             resourceTicks.add(new ProcessorTick(id, physicalLinkNumber, isFullDuplex));
     }
@@ -35,13 +43,13 @@ public class ProcessorResource extends SystemResource<ProcessorTick> {
         int finishTime = startTime + executionTime - 1;
 
         if (finishTime >= resourceTicks.size())
-            systemModel.increaseResourceTime(finishTime*3/2);
+            systemModel.increaseResourceTime(finishTime * 3 / 2);
 
         task.setStartTime(startTime).setFinishTime(finishTime);
         for (int i = startTime; i <= finishTime; i++)
             resourceTicks.get(i).setTask(task);
-        executedTasks.add(task);
-        loadedTasks.add(task);
+        executedTasks.put(task, finishTime + 1);
+        loadedTasks.put(task, finishTime + 1);
     }
 
     public int earliestAvailableStartTime(int minimalStartTime) {

@@ -38,10 +38,6 @@ public class LinkShapeBuilder {
         weightText.setY(middleCoordinate(line.getStartY(), line.getEndY()));
         connection.addObserver((o, arg) -> weightText.setText(String.valueOf((int)(double)arg)));
         weightText.setStyle("-fx-opacity: 0.5");
-      //  view.getChildren().add(weightText);
-
-//        final Text name = new Text(middleCoordinate(line.getStartX(), line.getEndX()), middleCoordinate(line.getStartY(), line.getEndY()), connection.getName());
-//        name.setStyle("-fx-opacity: 0.5");
 
         view.getChildren().addAll(line, weightText);
 

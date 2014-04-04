@@ -19,17 +19,17 @@ public class LinkTick extends Tick {
         this.t2 = new Transmission(secondProcessorTick.processorId, firstProcessorTick.processorId, true);
     }
 
-    public boolean isAvailable(int src) {
+    public boolean isBusy(int src) {
         if (!firstProcessorTick.ioAllowed() || !secondProcessorTick.ioAllowed())
-            return false;
+            return true;
         if (!fullDuplexEnabled)
-            return t1.transmitTask == null && t2.transmitTask == null;
-        return (t1.srcId == src) ?
-                t1.transmitTask == null : t2.transmitTask == null;
+            return t1.transmitTask != null || t2.transmitTask != null;
+        return !((t1.srcId == src) ?
+                        t1.transmitTask == null : t2.transmitTask == null);
     }
 
     public Transmission setTransmission(Task task, int src) {
-        if (!isAvailable(src))
+        if (isBusy(src))
             throw new IllegalArgumentException("Link " + t1.srcId + "->" + t1.dstId + " is not available");
         Transmission transmission = t1.srcId == src ? t1 : t2;
         transmission.transmitTask = task;

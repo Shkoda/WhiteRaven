@@ -66,32 +66,32 @@ public class RefreshModellerData extends Service<Void> {
                     Map<ModellerConstants.ScheduleType, SystemModel> scheduleMap = modellerMediator.getScheduleMap();
 
                     Loggers.debugLogger.debug(QUEUE_2_SCHEDULE_3 +" "+convertedTasks2);
-                    SystemModel systemModel_2_3 = new SystemModel(mppModel);
+                    SystemModel systemModel_2_3 = new SystemModel();
                     systemModel_2_3.initResources().loadTasks(convertedTasks2, systemModel_2_3.MAX_CONNECTIVITY_FUNCTION);
                     scheduleMap.put(QUEUE_2_SCHEDULE_3, systemModel_2_3);
 
                     Loggers.debugLogger.debug(QUEUE_6_SCHEDULE_3 +" "+convertedTasks6);
-                    SystemModel systemModel_6_3 = new SystemModel(mppModel);
+                    SystemModel systemModel_6_3 = new SystemModel();
                     systemModel_6_3.initResources().loadTasks(convertedTasks6, systemModel_6_3.MAX_CONNECTIVITY_FUNCTION);
                     scheduleMap.put(QUEUE_6_SCHEDULE_3, systemModel_6_3);
 
                     Loggers.debugLogger.debug(QUEUE_16_SCHEDULE_3 +" "+convertedTasks16);
-                    SystemModel systemModel_16_3 = new SystemModel(mppModel);
+                    SystemModel systemModel_16_3 = new SystemModel();
                     systemModel_16_3.initResources().loadTasks(convertedTasks16, systemModel_16_3.MAX_CONNECTIVITY_FUNCTION);
                     scheduleMap.put(QUEUE_16_SCHEDULE_3, systemModel_16_3);
 
                     Loggers.debugLogger.debug(QUEUE_2_SCHEDULE_5 +" "+convertedTasks2);
-                    SystemModel systemModel_2_5 = new SystemModel(mppModel);
+                    SystemModel systemModel_2_5 = new SystemModel();
                     systemModel_2_5.initResources().loadTasks(convertedTasks2, systemModel_2_5.SHORTEST_PATH_FUNCTION);
                     scheduleMap.put(QUEUE_2_SCHEDULE_5, systemModel_2_5);
 
                     Loggers.debugLogger.debug(QUEUE_6_SCHEDULE_5 +" "+convertedTasks6);
-                    SystemModel systemModel_6_5 = new SystemModel(mppModel);
+                    SystemModel systemModel_6_5 = new SystemModel();
                     systemModel_6_5.initResources().loadTasks(convertedTasks6, systemModel_6_5.SHORTEST_PATH_FUNCTION);
                     scheduleMap.put(QUEUE_6_SCHEDULE_5, systemModel_6_5);
 
                     Loggers.debugLogger.debug(QUEUE_16_SCHEDULE_5 +" "+convertedTasks16);
-                    SystemModel systemModel_16_5 = new SystemModel(mppModel);
+                    SystemModel systemModel_16_5 = new SystemModel();
                     systemModel_16_5.initResources().loadTasks(convertedTasks16, systemModel_16_5.SHORTEST_PATH_FUNCTION);
                     scheduleMap.put(QUEUE_16_SCHEDULE_5, systemModel_16_5);
 

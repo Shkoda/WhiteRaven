@@ -8,7 +8,6 @@ import java.util.*;
 
 public class DijkstraAlgorithm<V extends Vertex, C extends Connection> {
 
-    private final List<V> nodes;
     private final List<C> edges;
     private Set<V> settledNodes;
     private Set<V> unSettledNodes;
@@ -18,7 +17,6 @@ public class DijkstraAlgorithm<V extends Vertex, C extends Connection> {
 
     public DijkstraAlgorithm(Graph<V, C> graph) {
         // create a copy of the array so that we can operate on this array
-        this.nodes = new ArrayList<>(graph.getVertexes());
         this.edges = new ArrayList<>(graph.getConnections());
         vertexIdMap = new HashMap<>(graph.getVertexIdMap());
     }

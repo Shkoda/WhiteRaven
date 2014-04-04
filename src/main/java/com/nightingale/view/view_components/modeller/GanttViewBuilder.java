@@ -79,7 +79,7 @@ public class GanttViewBuilder {
             int columnNumber = i + columnNumberOffset;
             fillCell(gridPane, columnNumber, 0, new Text(processorResource.name), GANTT_EMPTY_CELL);//header
 
-            processorResource.executedTasks.stream().forEach(task -> {
+            processorResource.executedTasks.keySet().stream().forEach(task -> {
                 for (int taskTick = task.getStartTime(); taskTick <= task.getFinishTime(); taskTick++) {
                     String fxId = selectGanttNodeFxId(TASK, task.getStartTime(), task.getFinishTime(), taskTick);
                     fillCell(gridPane, columnNumber, taskTick + 1, new Text("T" + task.id), fxId);

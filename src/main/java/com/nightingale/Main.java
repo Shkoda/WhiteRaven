@@ -16,8 +16,6 @@ import javafx.stage.Stage;
  */
 public class Main extends Application {
 
-    private Pane mainPagePane;
-
     public static  Scene scene;
 
 
@@ -33,7 +31,8 @@ public class Main extends Application {
         stage.setMinHeight(Config.SCENE_HEIGHT);
         stage.setMinWidth(Config.SCENE_WIDTH);
 
-         scene = SceneBuilder.create()
+        Pane mainPagePane;
+        scene = SceneBuilder.create()
                 .root(mainPagePane = mainView.getView())
                 .width(Config.SCENE_WIDTH)
                 .height(Config.SCENE_HEIGHT)

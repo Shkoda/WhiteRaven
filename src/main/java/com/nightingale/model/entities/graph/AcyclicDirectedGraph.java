@@ -25,7 +25,7 @@ public class AcyclicDirectedGraph implements Serializable {
         return ids.values();
     }
 
-    public boolean isEmpty(){
+    public boolean isEmpty() {
         return roots.isEmpty();
     }
 

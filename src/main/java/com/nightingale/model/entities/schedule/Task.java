@@ -45,8 +45,6 @@ public class Task {
     public Task setStartTime(int startTime) {
         if (this.startTime != UNDEFINED)
             throw new IllegalArgumentException("startTime=" + this.startTime + " drop " + startTime);
-
-        Loggers.debugLogger.debug("T" + id + " startTime " + this.startTime + "->" + startTime);
         this.startTime = startTime;
         return this;
     }
@@ -58,8 +56,6 @@ public class Task {
     public Task setFinishTime(int finishTime) {
         if (this.finishTime != UNDEFINED)
             throw new IllegalArgumentException("finishTime=" + this.finishTime + " drop " + finishTime);
-
-        Loggers.debugLogger.debug("T" + id + " finishTime " + this.finishTime + "->" + finishTime);
         this.finishTime = finishTime;
         return this;
     }

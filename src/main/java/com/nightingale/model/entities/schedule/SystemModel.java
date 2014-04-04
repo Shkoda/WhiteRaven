@@ -1,19 +1,20 @@
 package com.nightingale.model.entities.schedule;
 
+import com.nightingale.model.DataManager;
 import com.nightingale.model.entities.schedule.resourse.LinkResource;
 import com.nightingale.model.entities.schedule.resourse.ProcessorResource;
 import com.nightingale.model.entities.graph.Connection;
 import com.nightingale.model.entities.graph.Graph;
 import com.nightingale.model.mpp.ProcessorLinkModel;
 import com.nightingale.model.mpp.ProcessorModel;
+import com.nightingale.model.tasks.TaskLinkModel;
+import com.nightingale.model.tasks.TaskModel;
 import com.nightingale.utils.Loggers;
 
-import javax.annotation.processing.Processor;
+import javax.xml.crypto.Data;
 import java.util.*;
 import java.util.function.BiFunction;
-import java.util.function.Function;
 import java.util.logging.Logger;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.DoubleStream;
 
@@ -36,27 +37,27 @@ public class SystemModel {
     private Map<Integer, ProcessorModel> vertexes;
     private Paths paths;
 
-    private Graph<ProcessorModel, ProcessorLinkModel> graph;
+    private Graph<ProcessorModel, ProcessorLinkModel> mpp;
+    private Graph<TaskModel, TaskLinkModel> taskGraph;
 
-
-    public SystemModel(Graph<ProcessorModel, ProcessorLinkModel> graph) {
+    public SystemModel() {
+        this.mpp = DataManager.getMppModel();
+        this.taskGraph = DataManager.getTaskGraphModel();
         processorResources = new HashMap<>();
         taskOnProcessorsMap = new HashMap<>();
-        vertexes = graph.getVertexIdMap();
+        vertexes = mpp.getVertexIdMap();
         linkResources = new HashMap<>();
-        this.graph = graph;
 
-
-        paths = new Paths(graph);
+        paths = new Paths(mpp);
     }
 
     public SystemModel initResources() {
-        graph.getVertexes().stream().forEach(processor -> {
+        mpp.getVertexes().stream().forEach(processor -> {
             ProcessorResource processorResource = new ProcessorResource(processor, this);
             processorResources.put(processorResource.id, processorResource);
         });
 
-        graph.getConnections().stream()
+        mpp.getConnections().stream()
                 .forEach(link -> {
                     LinkResource linkResource = new LinkResource(link, processorResources.get(link.getFirstVertexId()),
                             processorResources.get(link.getSecondVertexId()), this);
@@ -80,7 +81,7 @@ public class SystemModel {
     }
 
     public SystemModel loadTasks(List<Task> queue, BiFunction<List<ProcessorResource>, List<Task>, ProcessorResource> selectProcessorFunction) {
-        Task.copy(queue).stream().forEach(task -> loadTask(task, selectProcessorFunction));//--------------------------------
+        Task.copy(queue).stream().forEach(task -> loadTask(task, selectProcessorFunction));
         return this;
     }
 
@@ -97,7 +98,7 @@ public class SystemModel {
         ProcessorResource processor = selectProcessorFunction.apply(availableProcessors, task.parents);
         Loggers.debugLogger.debug("processor " + processor.name);
         if (!task.parents.isEmpty())
-            minimalStartTime = transmitParentData(task.parents, processor);
+            minimalStartTime = transmitParentData(task.parents, task, processor);
         Loggers.debugLogger.debug("transmitParentData time=" + minimalStartTime);
 
         int startTime = defineStartTime(minimalStartTime, processor);
@@ -112,31 +113,48 @@ public class SystemModel {
     /**
      * @return minimum processor load time
      */
-    private int transmitParentData(List<Task> parents, ProcessorResource processor) {
+    private int transmitParentData(List<Task> parents, Task childTask, ProcessorResource processor) {
         int minimalProcessorLoadTime = 0;
+        parents.sort((p1, p2) -> Integer.compare(p1.getFinishTime(), p2.getFinishTime()));
         for (Task parent : parents)
-            if (!processor.loadedTasks.contains(parent))
-                minimalProcessorLoadTime = Math.max(minimalProcessorLoadTime, transmitData(parent, processor.id));
+            minimalProcessorLoadTime = (processor.loadedTasks.keySet().contains(parent)) ?
+                    Math.max(minimalProcessorLoadTime, processor.loadedTasks.get(parent)) :
+                    Math.max(minimalProcessorLoadTime, transmitData(parent, childTask, processor.id));
+        // if (!processor.loadedTasks.keySet().contains(parent))
+
         return minimalProcessorLoadTime;
     }
 
     /**
      * @return minimum processor load time
      */
-    private int transmitData(Task finishedTask, int processorDstId) {
-        ProcessorResource srcProcessor = taskOnProcessorsMap.get(finishedTask.id);
-        int processorSrcId = srcProcessor.id;
-        Paths.Path path = paths.getPath(vertexes.get(processorSrcId), vertexes.get(processorDstId));
-        int minimalTransmitStart = finishedTask.getFinishTime() + 1;
+    private int transmitData(Task parentTask, Task childTask, int dstProcessorId) {
+        ProcessorResource srcProcessor = taskOnProcessorsMap.get(parentTask.id);
+        int srcProcessorId = srcProcessor.id;
 
+        Paths.Path path = paths.getPath(vertexes.get(srcProcessorId), vertexes.get(dstProcessorId));
+        int minimalTransmitStart = parentTask.getFinishTime() + 1;
+        double transmissionWeight = taskGraph.getConnection(parentTask.id, childTask.id).getWeight();
+
+        Loggers.debugLogger.debug("T"+parentTask.id+" : "+path);
         for (int i = 0; i < path.length; i++) {
-            Connection connection = path.links.get(processorSrcId);
-            if (!processorResources.get(connection.getOtherVertexId(processorSrcId)).loadedTasks.contains(finishedTask)) {//if dst processor doesn't contain task
+
+            Connection connection = path.links.get(srcProcessorId);
+            ProcessorResource currentDst = processorResources.get(connection.getOtherVertexId(srcProcessorId));
+            Integer taskAvailableTime = currentDst.loadedTasks.get(parentTask);
+
+            Loggers.debugLogger.debug("transmitting T" + parentTask.id + " " + srcProcessorId + " --> " + currentDst.id);
+
+            if (taskAvailableTime == null) {//if dst processor doesn't contain task
                 LinkResource linkResource = linkResources.get(connection.getId());
-                int transmissionTime = (int) Math.ceil(finishedTask.weight / connection.getWeight());
-                minimalTransmitStart = linkResource.transmitTask(finishedTask, minimalTransmitStart, transmissionTime, processorSrcId) + 1;
+                int transmissionTime = (int) Math.ceil(transmissionWeight / connection.getWeight());
+                minimalTransmitStart = linkResource.transmitTask(parentTask, minimalTransmitStart, transmissionTime, srcProcessorId) + 1;
+            } else {
+                minimalTransmitStart = Math.max(minimalTransmitStart, taskAvailableTime);
             }
-            processorSrcId = connection.getOtherVertexId(processorSrcId);
+
+            Loggers.debugLogger.debug("min start time="+minimalTransmitStart);
+            srcProcessorId = currentDst.id;
         }
         return minimalTransmitStart;
     }
@@ -155,7 +173,6 @@ public class SystemModel {
             processorResources.values().parallelStream().forEach(processorTime -> resources.put(processorTime.earliestAvailableStartTime(timeMoment), processorTime));
             availableNow.add(resources.get(resources.keySet().stream().min(Integer::compare).get()));
         }
-
         return availableNow;
     }
 
@@ -167,8 +184,9 @@ public class SystemModel {
         return builder.toString();
     }
 
-    public class MaxConnectivityFunction implements BiFunction<List<ProcessorResource>, List<Task>, ProcessorResource> {
+    //------------------- support function classes-----------------------
 
+    public class MaxConnectivityFunction implements BiFunction<List<ProcessorResource>, List<Task>, ProcessorResource> {
         @Override
         public ProcessorResource apply(List<ProcessorResource> processorResources, List<Task> tasks) {
             int maxConnectivity = processorResources.stream()
@@ -178,16 +196,10 @@ public class SystemModel {
                     .filter(p -> p.getConnectivity() == maxConnectivity)
                     .collect(Collectors.toList());              //todo check this function
             return maxConnectivityProcessors.get(random.nextInt(maxConnectivityProcessors.size()));
-
-//            processorResources.sort((p1, p2) -> -(p1.getConnectivity().compareTo(p2.getConnectivity())));
-//            int maxConnectivity = processorResources.get(0).getConnectivity();
-//            processorResources.stream().filter(p -> p.getConnectivity() == maxConnectivity);
-//            return processorResources.get(0);
         }
     }
 
     public class ShortestPathFunction implements BiFunction<List<ProcessorResource>, List<Task>, ProcessorResource> {
-
         @Override
         public ProcessorResource apply(List<ProcessorResource> processorResources, List<Task> tasks) {
             Collections.sort(processorResources, (p1, p2) -> transmitRating(p1, tasks).compareTo(transmitRating(p2, tasks)));
@@ -197,10 +209,8 @@ public class SystemModel {
         private Double transmitRating(ProcessorResource processorResource, List<Task> tasks) {
             if (tasks.isEmpty())
                 return 0.0;
-
             DoubleStream doubleStream = tasks.stream()
                     .mapToDouble(task -> paths.getPath(taskOnProcessorsMap.get(task.id), processorResource).length);
-
             return processorResource.physicalLinkNumber == 1 ?
                     doubleStream.sum() :
                     doubleStream.max().getAsDouble();
