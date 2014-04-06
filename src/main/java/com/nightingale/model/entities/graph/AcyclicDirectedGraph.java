@@ -68,7 +68,7 @@ public class AcyclicDirectedGraph implements Serializable {
         Node child = search(childId);
         Loggers.debugLogger.debug("Linking " + parent + " -> " + child);
 
-        if (parent == null || child == null || areConnected(child, parentId) || parent == child)
+        if (parent == null || child == null || edgeExist(parent, child) || isParent(child, parentId) || parent == child)
             return false;
         if (isRoot(childId))
             roots.remove(childId);
@@ -91,10 +91,14 @@ public class AcyclicDirectedGraph implements Serializable {
         return roots.containsKey(nodeId);
     }
 
+    private boolean edgeExist(Node parent, Node child) {
+        return parent.children.contains(child);
+    }
 
-    private boolean areConnected(Node node, int childId) {
-        for (Node child : node.children) {
-            if (child.id == childId || areConnected(child, childId))
+
+    private boolean isParent(Node parent, int childId) {
+        for (Node child : parent.children) {
+            if (child.id == childId || isParent(child, childId))
                 return true;
         }
         return false;

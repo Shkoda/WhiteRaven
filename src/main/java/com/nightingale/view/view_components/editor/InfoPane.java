@@ -57,6 +57,10 @@ public class InfoPane<I extends Informative> {
         weightTextField.textProperty().removeListener(weightChangeListener);
     }
 
+    public TextField getWeightTextField() {
+        return weightTextField;
+    }
+
     public ToolBar getToolBar() {
         return toolBar;
     }

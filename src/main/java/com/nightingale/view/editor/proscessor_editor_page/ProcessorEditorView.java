@@ -68,6 +68,7 @@ public class ProcessorEditorView implements IProcessorEditorView {
         infoContainer.getChildren().setAll(infoPane.getToolBar());
         infoPane.setParams(informative);
         infoPane.bindParams(informative);
+        infoPane.getWeightTextField().selectAll();
         infoPane.getToolBar().setVisible(true);
     }
 
