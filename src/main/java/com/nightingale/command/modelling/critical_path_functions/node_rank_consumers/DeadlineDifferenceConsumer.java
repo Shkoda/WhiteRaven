@@ -19,7 +19,7 @@ public class DeadlineDifferenceConsumer implements Consumer<AcyclicDirectedGraph
         Function<List<AcyclicDirectedGraph.Node>, Number> vertexWeightFunction = PathComparator.VERTEX_WEIGHT_FUNCTION;
 
         double graphCriticalPathWeight = vertexWeightFunction
-                .apply(CriticalPath.find(acyclicDirectedGraph, vertexWeightFunction, CriticalPath.Direction.DOWN))
+                .apply(CriticalPath.find(acyclicDirectedGraph, vertexWeightFunction))
                 .doubleValue();
 
         Loggers.debugLogger.debug("critical path weight: " + graphCriticalPathWeight);

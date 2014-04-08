@@ -20,11 +20,10 @@ public class CriticalPath {
         return nodes;
     }
 
-    public static List<AcyclicDirectedGraph.Node> find(AcyclicDirectedGraph graph, Function<List<AcyclicDirectedGraph.Node>, Number> pathRateFunction,
-                                                       Direction direction) {
+    public static List<AcyclicDirectedGraph.Node> find(AcyclicDirectedGraph graph, Function<List<AcyclicDirectedGraph.Node>, Number> pathRateFunction) {
         Map<Double, List<AcyclicDirectedGraph.Node>> paths = new HashMap<>();
         graph.getRoots().forEach(root -> {
-            List<AcyclicDirectedGraph.Node> criticalPath = find(root, new PathComparator(pathRateFunction), direction,
+            List<AcyclicDirectedGraph.Node> criticalPath = find(root, new PathComparator(pathRateFunction), Direction.DOWN,
                     new ArrayList<>(), null);
             paths.put(pathRateFunction.apply(criticalPath).doubleValue(), criticalPath);
         });

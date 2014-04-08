@@ -1,7 +1,11 @@
 package com.nightingale.view.utils;
 
+import javafx.scene.Node;
 import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
+
+import java.util.List;
 
 /**
  * Created by Nightingale on 30.03.2014.
@@ -54,5 +58,25 @@ public class GridUtils {
         return columnConstraints;
     }
 
+    public static void clearCell(GridPane gridPane, GridPosition gridPosition) {
+        Node node = getCellNode(gridPane, gridPosition);
+        if (node != null)
+            gridPane.getChildren().remove(node);
+    }
+
+    public static Node getCellNode(GridPane gridPane, GridPosition gridPosition) {
+        List<Node> children = gridPane.getChildren();
+        for (Node node : children) {
+            if (node == null)
+                continue;
+            Integer nodeRow = GridPane.getRowIndex(node);
+            Integer nodeColumn = GridPane.getColumnIndex(node);
+            if (nodeRow != null && nodeColumn != null && nodeRow == gridPosition.rowNumber && nodeColumn == gridPosition.columnNumber) {
+
+                return node;
+            }
+        }
+        return null;
+    }
 
 }

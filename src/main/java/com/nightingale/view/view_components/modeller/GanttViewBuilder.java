@@ -152,7 +152,7 @@ public class GanttViewBuilder {
     }
 
     private static GridPane getLinkGrid(GridPane gridPane, int column, int row) {
-        return (GridPane) ((BorderPane) PageGridBuilder
+        return (GridPane) ((BorderPane) GridUtils
                 .getCellNode(gridPane, new GridPosition(column, row)))
                 .getCenter();
     }

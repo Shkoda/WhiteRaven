@@ -18,10 +18,6 @@ public class TaskGraphGenerator {
     private static final double yCenter = Config.TASK_CANVAS_HEIGHT / 2;
     private static final double radius = Math.min(Config.TASK_CANVAS_HEIGHT, Config.TASK_CANVAS_WIDTH) / 3;
 
-    public static Graph<TaskModel, TaskLinkModel> generate(ExperimentConfig experimentConfig) {
-        return generate(experimentConfig.minTaskWeight, experimentConfig.maxTaskWeight,
-                experimentConfig.taskNumber, experimentConfig.connectivity);
-    }
 
     public static Graph<TaskModel, TaskLinkModel> generate(int minTaskWeight, int maxTaskWeight, int taskNumber, double connectivity) {
         Graph<TaskModel, TaskLinkModel> graph = new Graph<>(TaskModel.class, TaskLinkModel.class, true);

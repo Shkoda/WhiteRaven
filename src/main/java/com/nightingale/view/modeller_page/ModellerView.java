@@ -15,6 +15,7 @@ import com.nightingale.view.config.Config;
 import com.nightingale.view.editor.tasks_editor_page.ITasksEditorView;
 import com.nightingale.view.statistics_page.IStatisticsView;
 import com.nightingale.view.utils.GridPosition;
+import com.nightingale.view.utils.GridUtils;
 import com.nightingale.view.view_components.common.PageGridBuilder;
 import com.nightingale.view.view_components.modeller.*;
 import javafx.scene.SnapshotParameters;
@@ -131,7 +132,7 @@ public class ModellerView implements IModellerView {
         WritableImage writableImage = new WritableImage((int) graphView.getWidth(), (int) graphView.getHeight());
         taskPane = new ScrollPane();
         taskPane.setContent(new ImageView(previousPage.getGraphView().snapshot(new SnapshotParameters(), writableImage)));
-        PageGridBuilder.clearCell(queueGrid, TASK_GRAPH_POSITION);
+        GridUtils.clearCell(queueGrid, TASK_GRAPH_POSITION);
         queueGrid.add(taskPane, TASK_GRAPH_POSITION.columnNumber, TASK_GRAPH_POSITION.rowNumber);
     }
 

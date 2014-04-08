@@ -3,13 +3,8 @@ package com.nightingale.view.modeller_page;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.nightingale.application.guice.ICommandProvider;
-import com.nightingale.command.modelling.GenerateTaskQueueCommand;
 import com.nightingale.command.modelling.RefreshModellerData;
 import com.nightingale.model.DataManager;
-import com.nightingale.model.entities.graph.AcyclicDirectedGraph;
-import com.nightingale.command.modelling.critical_path_functions.node_rank_consumers.DeadlineDifferenceConsumer;
-import com.nightingale.command.modelling.critical_path_functions.node_rank_consumers.NodesAfterCurrentConsumer;
-import com.nightingale.command.modelling.critical_path_functions.node_rank_consumers.TimeBeforeCurrentConsumer;
 import com.nightingale.model.entities.schedule.SystemModel;
 import com.nightingale.utils.Loggers;
 import com.nightingale.view.view_components.modeller.GanttViewBuilder;
@@ -21,9 +16,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.layout.Pane;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.function.Consumer;
 
 /**
  * Created by Nightingale on 09.03.14.

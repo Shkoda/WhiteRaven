@@ -12,13 +12,40 @@ public class ExperimentConfig {
     public final int experimentNumber;
     public final ModellerConstants.ScheduleDescription scheduleDescription;
 
-    public ExperimentConfig(int minTaskWeight, int maxTaskWeight, int taskNumber, double connectivity, int experimentNumber, ModellerConstants.ScheduleDescription scheduleDescription) {
-        this.minTaskWeight = minTaskWeight;
-        this.maxTaskWeight = maxTaskWeight;
+    public ExperimentConfig(StatisticsConfig statisticsConfig, int taskNumber, double connectivity, ModellerConstants.ScheduleDescription scheduleDescription) {
+        this.minTaskWeight = statisticsConfig.minTaskWeight;
+        this.maxTaskWeight = statisticsConfig.maxTaskWeight;
         this.taskNumber = taskNumber;
         this.connectivity = connectivity;
-        this.experimentNumber = experimentNumber;
+        this.experimentNumber = statisticsConfig.experimentNumber;
         this.scheduleDescription = scheduleDescription;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ExperimentConfig that = (ExperimentConfig) o;
+        return Double.compare(that.connectivity, connectivity) == 0
+                && experimentNumber == that.experimentNumber
+                && maxTaskWeight == that.maxTaskWeight
+                && minTaskWeight == that.minTaskWeight
+                && taskNumber == that.taskNumber
+                && !(scheduleDescription != null ? !scheduleDescription.equals(that.scheduleDescription) : that.scheduleDescription != null);
+    }
+
+    @Override
+    public int hashCode() {
+        int result;
+        long temp;
+        result = minTaskWeight;
+        result = 31 * result + maxTaskWeight;
+        result = 31 * result + taskNumber;
+        temp = Double.doubleToLongBits(connectivity);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        result = 31 * result + experimentNumber;
+        result = 31 * result + (scheduleDescription != null ? scheduleDescription.hashCode() : 0);
+        return result;
     }
 
     @Override

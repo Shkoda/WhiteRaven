@@ -65,23 +65,26 @@ public class Task {
 
         input.stream().forEach(i -> convertedTasks.put(i.getId(), new Task(i.getId(), i.getWeight())));
 
+        List<Task> result = new ArrayList<>();
         input.stream().forEach(i -> {
             Task current = convertedTasks.get(i.getId());
             i.getParentsIds().forEach(p -> current.parents.add(convertedTasks.get(p)));
+            result.add(current);
         });
-        return new ArrayList<>(convertedTasks.values());
+        return new ArrayList<>(result);
     }
 
     public static List<Task> copy(List<Task> input) {
         Map<Integer, Task> copy = new HashMap<>();
 
         input.stream().forEach(i -> copy.put(i.id, new Task(i.id, i.weight)));
-
+        List<Task> result = new ArrayList<>();
         input.stream().forEach(i -> {
             Task current = copy.get(i.id);
             i.parents.forEach(p -> current.parents.add(copy.get(p.id)));
+            result.add(current);
         });
-        return new ArrayList<>(copy.values());
+        return result;
     }
 
 

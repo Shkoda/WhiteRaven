@@ -11,9 +11,9 @@
 }
 
 .header {
-    -fx-font-size: 42pt;
+    -fx-font-size: 24pt;
     -fx-font-family: "Segoe UI Light";
-    -fx-text-fill: black;
+    -fx-text-fill: #f400ab;
 }
 
 .label {
@@ -492,45 +492,17 @@
  * TableView                                                                  *
  *                                                                             *
  ******************************************************************************/
-
-.table-view {
-    -fx-base: white;
-    -fx-control-inner-background: white;
-    -fx-background-color: white;
-    -fx-table-cell-border-color: transparent;
-    -fx-table-header-border-color: transparent;
-    -fx-padding: 5;
-}
-
-.table-view .column-header-background {
-    -fx-background-color: transparent;
-}
-
-.table-view .column-header {
-    -fx-background-color: #eeeeee;
-    -fx-pref-width: 10mm;
-    -fx-min-width: 10mm;
-    -fx-max-width: 10mm;
-}
-
-.table-view .column-header, .table-view .filler {
-    -fx-size: 35;
-    -fx-border-width: 0 0 1 0;
-    -fx-border-color: transparent transparent derive(-fx-base, 80%) transparent;
-    -fx-border-insets: 0 10 1 0;
-}
-
-.table-view .column-header .label {
-    -fx-font-size: 10pt;
-    -fx-font-family: "Segoe UI Light";
-    -fx-text-fill: black;
+.column-header .label{
+    -fx-font-size: 16;
     -fx-alignment: center;
-    -fx-opacity: 1;
+}
+.column-header{
+    -fx-background-color: #f2f2f2;
+    -fx-border-color: #e0e0e0;
+
 }
 
-.table-view:focused .table-row-cell:filled:focused:selected {
-    -fx-background-color: -fx-focus-color;
-}
+
 
 /*******************************************************************************
  *                                                                             *
@@ -625,13 +597,6 @@
 .list-spinner:hover {
     -fx-color: #f0f0f0;
 }
-
-/*.ListSpinner:focused { 
-    -fx-color: -fx-focused-base;
-    -fx-background-color: -fx-focus-color, -fx-outer-border, -fx-inner-border, -fx-body-color;
-    -fx-background-insets: -1.4, 0, 1, 2;
-    -fx-background-radius: 6.4, 5, 4, 3;	
-}*/
 
 .list-spinner .value-pane {
     -fx-padding: 0.0em 0.0em 0.0em 0.0em;

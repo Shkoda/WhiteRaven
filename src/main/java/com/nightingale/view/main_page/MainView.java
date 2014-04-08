@@ -6,6 +6,7 @@ import com.nightingale.view.ViewablePage;
 import com.nightingale.view.config.Config;
 import com.nightingale.view.main_page.settings.ISettingsView;
 import com.nightingale.view.start_page.StartPageView;
+import com.nightingale.view.utils.GridUtils;
 import com.nightingale.view.view_components.common.ButtonBuilder;
 import com.nightingale.view.view_components.common.PageGridBuilder;
 import javafx.scene.control.*;
@@ -73,14 +74,14 @@ public class MainView implements IMainView {
 
 
     private void resetPageName() {
-        PageGridBuilder.clearCell(gridRootTemplate, NAME_POSITION);
+        GridUtils.clearCell(gridRootTemplate, NAME_POSITION);
         gridRootTemplate.add(new Label(currentPage.getName()),
                 NAME_POSITION.columnNumber,
                 NAME_POSITION.rowNumber);
     }
 
     private void resetContent() {
-        PageGridBuilder.clearCell(gridRootTemplate, WORK_PANE_POSITION);
+        GridUtils.clearCell(gridRootTemplate, WORK_PANE_POSITION);
         gridRootTemplate.add(currentViewPane = currentPage.getView(), WORK_PANE_POSITION.columnNumber, WORK_PANE_POSITION.rowNumber);
     }
 

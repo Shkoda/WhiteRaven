@@ -5,15 +5,10 @@ import com.google.inject.Singleton;
 import com.nightingale.application.guice.ICommandProvider;
 import com.nightingale.command.generate.GenerateTaskGraphCommand;
 import com.nightingale.command.menu.open.OpenTaskGraphCommand;
-import com.nightingale.command.modelling.GenerateTaskQueueCommand;
 import com.nightingale.view.editor.tasks_editor_page.task_graph.ITaskGraphMediator;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
-import javafx.scene.input.MouseEvent;
 
 
 /**

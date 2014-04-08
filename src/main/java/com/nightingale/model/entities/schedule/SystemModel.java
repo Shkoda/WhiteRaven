@@ -10,8 +10,10 @@ import com.nightingale.model.mpp.ProcessorModel;
 import com.nightingale.model.tasks.TaskLinkModel;
 import com.nightingale.model.tasks.TaskModel;
 import com.nightingale.utils.Loggers;
+
 import java.util.*;
 import java.util.function.BiFunction;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 /**
@@ -114,6 +116,7 @@ public class SystemModel {
      * @return minimum processor load time
      */
     private int transmitData(Task parentTask, Task childTask, int dstProcessorId) {
+        Loggers.debugLogger.debug("transmit t" + parentTask.id + " to P" + dstProcessorId);
         int srcProcessorId = taskOnProcessorsMap.get(parentTask.id).id;
         Paths.Path path = paths.getPath(vertexes.get(srcProcessorId), vertexes.get(dstProcessorId));
 

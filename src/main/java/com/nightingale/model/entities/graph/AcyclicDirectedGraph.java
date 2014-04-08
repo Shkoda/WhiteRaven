@@ -1,6 +1,7 @@
 package com.nightingale.model.entities.graph;
 
 import com.nightingale.utils.Loggers;
+import com.nightingale.view.view_components.modeller.ModellerConstants;
 
 import java.io.Serializable;
 import java.util.*;
@@ -66,7 +67,6 @@ public class AcyclicDirectedGraph implements Serializable {
     public boolean addLink(int parentId, int childId) {
         Node parent = search(parentId);
         Node child = search(childId);
-        Loggers.debugLogger.debug("Linking " + parent + " -> " + child);
 
         if (parent == null || child == null || edgeExist(parent, child) || isParent(child, parentId) || parent == child)
             return false;
@@ -127,10 +127,10 @@ public class AcyclicDirectedGraph implements Serializable {
         return null;
     }
 
-    public List<Node> getTaskQueue(Consumer<AcyclicDirectedGraph> consumer, boolean useIncreaseOrder) {
-        consumer.accept(this);
+    public List<Node> getTaskQueue(ModellerConstants.QueueType queueType) {
+        queueType.taskRankConsumer.accept(this);
         List<Node> nodes = new ArrayList<>(ids.values());
-        Comparator<AcyclicDirectedGraph.Node> comparator = useIncreaseOrder ?
+        Comparator<AcyclicDirectedGraph.Node> comparator = queueType.taskSortingIncreaseOrder ?
                 increaseRatingComparator : decreaseRatingComparator;
         nodes.sort(comparator);
         return nodes;

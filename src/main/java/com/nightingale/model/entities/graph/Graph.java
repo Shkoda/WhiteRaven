@@ -38,6 +38,10 @@ public class Graph<V extends Vertex, C extends Connection> implements Serializab
         return vertexes.get(id);
     }
 
+    public int getVertexNumber() {
+        return vertexes.size();
+    }
+
     public double getConnectivity() {
         double vertexSumWeight = vertexes.values().parallelStream().mapToDouble(V::getWeight).sum();
         double linkSumWeight = connections.values().parallelStream().mapToDouble(C::getWeight).sum();

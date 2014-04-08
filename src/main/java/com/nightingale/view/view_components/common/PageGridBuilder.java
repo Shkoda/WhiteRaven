@@ -36,26 +36,6 @@ public class PageGridBuilder {
         return gridPane;
     }
 
-    public static void clearCell(GridPane gridPane, GridPosition gridPosition) {
-        Node node = getCellNode(gridPane, gridPosition);
-        if (node != null)
-            gridPane.getChildren().remove(node);
-    }
-
-    public static Node getCellNode(GridPane gridPane, GridPosition gridPosition) {
-        List<Node> children = gridPane.getChildren();
-        for (Node node : children) {
-            if (node == null)
-                continue;
-            Integer nodeRow = GridPane.getRowIndex(node);
-            Integer nodeColumn = GridPane.getColumnIndex(node);
-            if (nodeRow != null && nodeColumn != null && nodeRow == gridPosition.rowNumber && nodeColumn == gridPosition.columnNumber) {
-
-                return node;
-            }
-        }
-        return null;
-    }
 
 
     private static void setConstraints(GridPane template) {
