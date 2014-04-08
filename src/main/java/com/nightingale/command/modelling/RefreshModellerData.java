@@ -22,9 +22,6 @@ import javafx.concurrent.Task;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiFunction;
-import java.util.function.Consumer;
-import java.util.logging.Logger;
-import static com.nightingale.view.view_components.modeller.ModellerConstants.ScheduleType.*;
 /**
  * Created by Nightingale on 31.03.2014.
  */
@@ -51,9 +48,9 @@ public class RefreshModellerData extends Service<Void> {
                     List<AcyclicDirectedGraph.Node> queue16 = graph.getTaskQueue(new TimeBeforeCurrentConsumer(), true);
 
                     Map<String, String> queueMap = modellerMediator.getQueueMap();
-                    queueMap.put(ModellerConstants.FIRST_QUEUE_ALGORITHM_TEXT, RefreshModellerData.toString(queue2));
-                    queueMap.put(ModellerConstants.SECOND_QUEUE_ALGORITHM_TEXT, RefreshModellerData.toString(queue6));
-                    queueMap.put(ModellerConstants.THIRD_QUEUE_ALGORITHM_TEXT, RefreshModellerData.toString(queue16));
+                    queueMap.put(ModellerConstants.QueueType.QUEUE_2.text, RefreshModellerData.toString(queue2));
+                    queueMap.put(ModellerConstants.QueueType.QUEUE_6.text, RefreshModellerData.toString(queue6));
+                    queueMap.put(ModellerConstants.QueueType.QUEUE_16.text, RefreshModellerData.toString(queue16));
 
                     mppModel = DataManager.getMppModel();
                     if (!mppModel.isConnectedGraph())
@@ -65,39 +62,39 @@ public class RefreshModellerData extends Service<Void> {
                     List<com.nightingale.model.entities.schedule.Task> convertedTasks16 = com.nightingale.model.entities.schedule.Task.convert(queue16);
 
 
-                    Map<ModellerConstants.ScheduleType, SystemModel> scheduleMap = modellerMediator.getScheduleMap();
+                    Map<ModellerConstants.ScheduleDescription, SystemModel> scheduleMap = modellerMediator.getScheduleMap();
                     BiFunction<List<ProcessorResource>, List<com.nightingale.model.entities.schedule.Task>,
                             ProcessorResource> maxConnectivityFunction = new MaxConnectivityFunction();
 
-                    Loggers.debugLogger.debug(QUEUE_2_SCHEDULE_3 +" "+convertedTasks2);
+                    Loggers.debugLogger.debug(ModellerConstants.ScheduleDescription.QUEUE_2_SCHEDULE_3 +" "+convertedTasks2);
                     SystemModel systemModel_2_3 = new SystemModel();
                     systemModel_2_3.initResources().loadTasks(convertedTasks2, maxConnectivityFunction);
-                    scheduleMap.put(QUEUE_2_SCHEDULE_3, systemModel_2_3);
+                    scheduleMap.put(ModellerConstants.ScheduleDescription.QUEUE_2_SCHEDULE_3, systemModel_2_3);
 
-                    Loggers.debugLogger.debug(QUEUE_6_SCHEDULE_3 +" "+convertedTasks6);
+                    Loggers.debugLogger.debug(ModellerConstants.ScheduleDescription.QUEUE_6_SCHEDULE_3 +" "+convertedTasks6);
                     SystemModel systemModel_6_3 = new SystemModel();
                     systemModel_6_3.initResources().loadTasks(convertedTasks6, maxConnectivityFunction);
-                    scheduleMap.put(QUEUE_6_SCHEDULE_3, systemModel_6_3);
+                    scheduleMap.put(ModellerConstants.ScheduleDescription.QUEUE_6_SCHEDULE_3, systemModel_6_3);
 
-                    Loggers.debugLogger.debug(QUEUE_16_SCHEDULE_3 +" "+convertedTasks16);
+                    Loggers.debugLogger.debug(ModellerConstants.ScheduleDescription.QUEUE_16_SCHEDULE_3 +" "+convertedTasks16);
                     SystemModel systemModel_16_3 = new SystemModel();
                     systemModel_16_3.initResources().loadTasks(convertedTasks16,maxConnectivityFunction);
-                    scheduleMap.put(QUEUE_16_SCHEDULE_3, systemModel_16_3);
+                    scheduleMap.put(ModellerConstants.ScheduleDescription.QUEUE_16_SCHEDULE_3, systemModel_16_3);
 
-                    Loggers.debugLogger.debug(QUEUE_2_SCHEDULE_5 +" "+convertedTasks2);
+                    Loggers.debugLogger.debug(ModellerConstants.ScheduleDescription.QUEUE_2_SCHEDULE_5 +" "+convertedTasks2);
                     SystemModel systemModel_2_5 = new SystemModel();
                     systemModel_2_5.initResources().loadTasks(convertedTasks2, new ShortestPathFunction(systemModel_2_5.getPaths(), systemModel_2_5.getTaskOnProcessorsMap()));
-                    scheduleMap.put(QUEUE_2_SCHEDULE_5, systemModel_2_5);
+                    scheduleMap.put(ModellerConstants.ScheduleDescription.QUEUE_2_SCHEDULE_5, systemModel_2_5);
 
-                    Loggers.debugLogger.debug(QUEUE_6_SCHEDULE_5 +" "+convertedTasks6);
+                    Loggers.debugLogger.debug(ModellerConstants.ScheduleDescription.QUEUE_6_SCHEDULE_5 +" "+convertedTasks6);
                     SystemModel systemModel_6_5 = new SystemModel();
                     systemModel_6_5.initResources().loadTasks(convertedTasks6, new ShortestPathFunction(systemModel_6_5.getPaths(), systemModel_6_5.getTaskOnProcessorsMap()));
-                    scheduleMap.put(QUEUE_6_SCHEDULE_5, systemModel_6_5);
+                    scheduleMap.put(ModellerConstants.ScheduleDescription.QUEUE_6_SCHEDULE_5, systemModel_6_5);
 
-                    Loggers.debugLogger.debug(QUEUE_16_SCHEDULE_5 +" "+convertedTasks16);
+                    Loggers.debugLogger.debug(ModellerConstants.ScheduleDescription.QUEUE_16_SCHEDULE_5 +" "+convertedTasks16);
                     SystemModel systemModel_16_5 = new SystemModel();
                     systemModel_16_5.initResources().loadTasks(convertedTasks16, new ShortestPathFunction(systemModel_16_5.getPaths(), systemModel_16_5.getTaskOnProcessorsMap()));
-                    scheduleMap.put(QUEUE_16_SCHEDULE_5, systemModel_16_5);
+                    scheduleMap.put(ModellerConstants.ScheduleDescription.QUEUE_16_SCHEDULE_5, systemModel_16_5);
 
                  //   return null;
                 }catch (Exception e){

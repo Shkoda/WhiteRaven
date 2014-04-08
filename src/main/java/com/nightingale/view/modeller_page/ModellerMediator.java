@@ -11,6 +11,7 @@ import com.nightingale.command.modelling.critical_path_functions.node_rank_consu
 import com.nightingale.command.modelling.critical_path_functions.node_rank_consumers.NodesAfterCurrentConsumer;
 import com.nightingale.command.modelling.critical_path_functions.node_rank_consumers.TimeBeforeCurrentConsumer;
 import com.nightingale.model.entities.schedule.SystemModel;
+import com.nightingale.utils.Loggers;
 import com.nightingale.view.view_components.modeller.GanttViewBuilder;
 import com.nightingale.view.view_components.modeller.ModellerComboBoxBuilder;
 import com.nightingale.view.view_components.modeller.ModellerConstants;
@@ -37,7 +38,7 @@ public class ModellerMediator implements IModellerMediator {
     private TextArea queueTextArea;
 
     private Map<String, String> queueMap;
-    private Map<ModellerConstants.ScheduleType, SystemModel> systemModels;
+    private Map<ModellerConstants.ScheduleDescription, SystemModel> systemModels;
 
     private ComboBox queueBox, scheduleBox;
     private ScrollPane ganttContainer;
@@ -70,12 +71,13 @@ public class ModellerMediator implements IModellerMediator {
                     Object selectedQueue = queueBox.getSelectionModel().getSelectedItem();
                     if (selectedQueue == null)
                         return;
-                    ModellerConstants.ScheduleType scheduleType =
-                            ModellerConstants.ScheduleType.get(selectedQueue.toString(), new_val.toString());
+                    Loggers.debugLogger.debug(queueBox.getSelectionModel().getSelectedItem()+" "+queueMap.get(queueBox.getSelectionModel().getSelectedItem().toString()));
+                    ModellerConstants.ScheduleDescription scheduleDescription =
+                            ModellerConstants.ScheduleDescription.get(selectedQueue.toString(), new_val.toString());
 
-                    if (scheduleType != null && systemModels.containsKey(scheduleType)){
-                        SystemModel systemModel = systemModels.get(scheduleType);
-                        System.out.println("\n"+scheduleType+"\n"+selectedQueue.toString()+"\n"+systemModel+"\n");
+                    if (scheduleDescription != null && systemModels.containsKey(scheduleDescription)){
+                        SystemModel systemModel = systemModels.get(scheduleDescription);
+                        System.out.println("\n"+scheduleDescription+"\n"+selectedQueue.toString()+"\n"+systemModel+"\n");
                         ganttContainer.setContent(GanttViewBuilder.build(systemModel));
                     }
                 }
@@ -91,13 +93,14 @@ public class ModellerMediator implements IModellerMediator {
         modellerView.setQueueComboBox(queueBox);
         queueBox.getSelectionModel().selectedItemProperty().addListener(
                 (ov, old_val, new_val) -> {
-                    queueTextArea.setText(queueMap.get(new_val));
+                    Loggers.debugLogger.debug(new_val+" "+queueMap.get(new_val.toString()));
+                    queueTextArea.setText(queueMap.get(new_val.toString()));
 
                     Object selectedLoading = scheduleBox.getSelectionModel().getSelectedItem();
                     if (selectedLoading == null || new_val == null)
                         return;
-                    ModellerConstants.ScheduleType scheduleType =
-                            ModellerConstants.ScheduleType.get(new_val.toString(), selectedLoading.toString());
+                    ModellerConstants.ScheduleDescription scheduleType =
+                            ModellerConstants.ScheduleDescription.get(new_val.toString(), selectedLoading.toString());
 
                     if (scheduleType != null && systemModels.containsKey(scheduleType)){
                         SystemModel systemModel = systemModels.get(scheduleType);
@@ -114,7 +117,7 @@ public class ModellerMediator implements IModellerMediator {
     }
 
     @Override
-    public Map<ModellerConstants.ScheduleType, SystemModel> getScheduleMap() {
+    public Map<ModellerConstants.ScheduleDescription, SystemModel> getScheduleMap() {
         return systemModels;
     }
 

@@ -31,6 +31,16 @@ public class SystemModel {
     private Graph<ProcessorModel, ProcessorLinkModel> mpp;
     private Graph<TaskModel, TaskLinkModel> taskGraph;
 
+    public SystemModel(Graph<ProcessorModel, ProcessorLinkModel> mpp, Graph<TaskModel, TaskLinkModel> taskGraph) {
+        this.mpp = mpp;
+        this.taskGraph = taskGraph;
+        processorResources = new HashMap<>();
+        taskOnProcessorsMap = new HashMap<>();
+        vertexes = mpp.getVertexIdMap();
+        linkResources = new HashMap<>();
+        paths = new Paths(mpp);
+    }
+
     public SystemModel() {
         mpp = DataManager.getMppModel();
         taskGraph = DataManager.getTaskGraphModel();

@@ -7,13 +7,17 @@ import com.nightingale.model.entities.schedule.resourse.ProcessorResource;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.function.BiFunction;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 import java.util.stream.DoubleStream;
 
 /**
  * Created by Nightingale on 04.04.2014.
  */
-public  class ShortestPathFunction implements BiFunction<List<ProcessorResource>, List<Task>, ProcessorResource> {
+public class ShortestPathFunction implements BiFunction<List<ProcessorResource>, List<Task>, ProcessorResource> {
+    private static final Random random = new Random();
     private Paths paths;
     private Map<Integer, ProcessorResource> taskOnProcessorsMap;
 
@@ -24,8 +28,11 @@ public  class ShortestPathFunction implements BiFunction<List<ProcessorResource>
 
     @Override
     public ProcessorResource apply(List<ProcessorResource> processorResources, List<Task> tasks) {
-        Collections.sort(processorResources, (p1, p2) -> transmitRating(p1, tasks).compareTo(transmitRating(p2, tasks)));
-        return processorResources.get(0);
+        Map<Double, List<ProcessorResource>> processorRatings
+                = processorResources.stream().collect(Collectors.groupingBy(p -> transmitRating(p, tasks)));
+
+        List<ProcessorResource> bestProcessors = processorRatings.get(processorRatings.keySet().stream().max(Double::compare).get());
+        return bestProcessors.get(random.nextInt(bestProcessors.size()));
     }
 
     private Double transmitRating(ProcessorResource processorResource, List<Task> tasks) {

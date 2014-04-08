@@ -17,5 +17,5 @@ public interface IModellerMediator {
 
     Map<String, String> getQueueMap();
 
-    Map<ModellerConstants.ScheduleType, SystemModel> getScheduleMap();
+    Map<ModellerConstants.ScheduleDescription, SystemModel> getScheduleMap();
 }
