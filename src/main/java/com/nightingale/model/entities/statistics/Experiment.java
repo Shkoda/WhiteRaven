@@ -36,16 +36,16 @@ public class Experiment {
         return new ExperimentResult(experimentConfig, averageAccelerationFactor, averageEfficiencyFactor, averageAlgorithmEfficiencyFactor);
     }
 
-    public static SingleExperimentResult executeSingleExperiment(Graph<ProcessorModel, ProcessorLinkModel> oneProcessorSystem, Graph<ProcessorModel, ProcessorLinkModel> topology,
+    public static SingleExperimentResult executeSingleExperiment(SystemModel oneProcessorSystemPrototype, SystemModel topologyPrototype,
                                                                  ExperimentConfig experimentConfig, Graph<TaskModel, TaskLinkModel> taskGraph) {
 
         List<AcyclicDirectedGraph.Node> queue = taskGraph.getAcyclicDirectedGraph().getTaskQueue(experimentConfig.scheduleDescription.queueType);
 
-        int t1 = getExecutionDuration(queue, new SystemModel(oneProcessorSystem, taskGraph), experimentConfig.scheduleDescription.loadingType.ratingFunctionClass);
-        int tp = getExecutionDuration(queue, new SystemModel(topology, taskGraph), experimentConfig.scheduleDescription.loadingType.ratingFunctionClass);
+        int t1 = getExecutionDuration(queue, new SystemModel(oneProcessorSystemPrototype), experimentConfig.scheduleDescription.loadingType.ratingFunctionClass);
+        int tp = getExecutionDuration(queue, new SystemModel(topologyPrototype), experimentConfig.scheduleDescription.loadingType.ratingFunctionClass);
 
         double accelerationFactor = (double) t1 / tp;
-        double efficiencyFactor = accelerationFactor / topology.getVertexNumber();
+        double efficiencyFactor = accelerationFactor / topologyPrototype.getProcessorNumber();
 
         Function<List<AcyclicDirectedGraph.Node>, Number> vertexWeightFunction = PathComparator.VERTEX_WEIGHT_FUNCTION;
 

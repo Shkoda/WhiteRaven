@@ -33,6 +33,16 @@ public class SystemModel {
     private Graph<ProcessorModel, ProcessorLinkModel> mpp;
     private Graph<TaskModel, TaskLinkModel> taskGraph;
 
+    public SystemModel(SystemModel prototype) {
+        this.mpp = prototype.mpp;
+        this.taskGraph = prototype.taskGraph;
+        processorResources = new HashMap<>();
+        taskOnProcessorsMap = new HashMap<>();
+        vertexes = mpp.getVertexIdMap();
+        linkResources = new HashMap<>();
+        paths = prototype.paths;
+    }
+
     public SystemModel(Graph<ProcessorModel, ProcessorLinkModel> mpp, Graph<TaskModel, TaskLinkModel> taskGraph) {
         this.mpp = mpp;
         this.taskGraph = taskGraph;
@@ -169,6 +179,9 @@ public class SystemModel {
                         .max().getAsInt();
     }
 
+    public int getProcessorNumber(){
+        return processorResources.size();
+    }
     public Map<Integer, ProcessorResource> getTaskOnProcessorsMap() {
         return taskOnProcessorsMap;
     }

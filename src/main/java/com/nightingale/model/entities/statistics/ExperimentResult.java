@@ -51,6 +51,14 @@ public class ExperimentResult {
         return loadingType;
     }
 
+    public String[] toStringArray(){
+        return new String[]{
+                String.valueOf(queueType), String.valueOf(loadingType), String.valueOf(taskNumber),
+                String.valueOf(connectivity), String.valueOf(accelerationFactor), String.valueOf(efficiencyFactor),
+                String.valueOf(algorithmEfficiencyFactor)
+        };
+    }
+
     @Override
     public String toString() {
         return "ExperimentResult{" +
