@@ -1,7 +1,6 @@
 package com.nightingale.model.entities.graph;
 
-import com.nightingale.model.DataManager;
-import com.nightingale.model.mpp.ProcessorLinkModel;
+import com.nightingale.utils.Loggers;
 import com.nightingale.view.utils.WeightedQuickUnionUF;
 
 import java.io.Serializable;
@@ -107,14 +106,23 @@ public class Graph<V extends Vertex, C extends Connection> implements Serializab
 
         int id = connectionIdGenerator.incrementAndGet();
         try {
-            if (acyclic) {
-                boolean linkingSuccessful = acyclicDirectedGraph.addLink(firstVertexId, secondVertexId);
-                if (!linkingSuccessful)
-                    return null;
+            if (acyclic && !acyclicDirectedGraph.isConnectionAllowed(firstVertexId, secondVertexId)) {
+                Loggers.debugLogger.debug("acyclic && !acyclicDirectedGraph.isConnectionAllowed(firstVertexId, secondVertexId)");
+                return null;
             }
+
+
+
+//            if (acyclic) {
+//                boolean linkingSuccessful = acyclicDirectedGraph.addLink(firstVertexId, secondVertexId);
+//                if (!linkingSuccessful)
+//                    return null;
+//            }
             Connection connection = connectionClass.newInstance();
             connection.update(id, firstVertexId, secondVertexId);
             connections.put(id, (C) connection);
+            if (acyclic)
+                acyclicDirectedGraph.addLink(connection);
             return (C) connection;
         } catch (InstantiationException | IllegalAccessException e) {
             e.printStackTrace();

@@ -2,10 +2,8 @@ package com.nightingale.view.editor.proscessor_editor_page.handlers;
 
 import com.nightingale.application.guice.ICommandProvider;
 import com.nightingale.command.editor.CheckMppCommand;
-import com.nightingale.model.mpp.ProcessorModel;
 import com.nightingale.utils.Loggers;
 import com.nightingale.view.editor.proscessor_editor_page.IProcessorEditorView;
-import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 
@@ -25,13 +23,10 @@ public class ShowMppCorrectnessInfoHandler implements EventHandler<MouseEvent> {
     @Override
     public void handle(MouseEvent mouseEvent) {
         CheckMppCommand command = commandProvider.get(CheckMppCommand.class);
-        command.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
-            @Override
-            public void handle(WorkerStateEvent workerStateEvent) {
-                Boolean mppIsOk = (Boolean) workerStateEvent.getSource().getValue();
-                Loggers.debugLogger.debug("mpp ok: "+mppIsOk);
-                processorEditorView.showMppInfoPane(mppIsOk);
-            }
+        command.setOnSucceeded(workerStateEvent -> {
+            Boolean mppIsOk = (Boolean) workerStateEvent.getSource().getValue();
+            Loggers.debugLogger.debug("mpp ok: "+mppIsOk);
+            processorEditorView.showMppInfoPane(mppIsOk);
         }
         );
         command.start();

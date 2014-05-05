@@ -1,28 +1,17 @@
 package com.nightingale.model.entities.statistics;
 
-import com.nightingale.command.generate.TaskGraphGenerator;
 import com.nightingale.command.modelling.critical_path_functions.CriticalPath;
 import com.nightingale.command.modelling.critical_path_functions.PathComparator;
-import com.nightingale.model.DataManager;
 import com.nightingale.model.entities.graph.AcyclicDirectedGraph;
 import com.nightingale.model.entities.graph.Graph;
 import com.nightingale.model.entities.schedule.SystemModel;
 import com.nightingale.model.entities.schedule.processor_rating_functions.ProcessorRatingFunctionClass;
-import com.nightingale.model.entities.statistics.ExperimentConfig;
-import com.nightingale.model.entities.statistics.ExperimentResult;
-import com.nightingale.model.mpp.ProcessorLinkModel;
-import com.nightingale.model.mpp.ProcessorModel;
 import com.nightingale.model.tasks.TaskLinkModel;
 import com.nightingale.model.tasks.TaskModel;
 import com.nightingale.utils.Loggers;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.logging.Logger;
-
-import static com.nightingale.view.view_components.modeller.ModellerConstants.QueueType.QUEUE_2;
 
 /**
  * Created by Nightingale on 06.04.2014.
@@ -38,11 +27,11 @@ public class Experiment {
 
     public static SingleExperimentResult executeSingleExperiment(SystemModel oneProcessorSystemPrototype, SystemModel topologyPrototype,
                                                                  ExperimentConfig experimentConfig, Graph<TaskModel, TaskLinkModel> taskGraph) {
+        AcyclicDirectedGraph acyclicDirectedGraph = taskGraph.getAcyclicDirectedGraph();
+        List<AcyclicDirectedGraph.Node> queue =acyclicDirectedGraph.getTaskQueue(experimentConfig.scheduleDescription.queueType);
 
-        List<AcyclicDirectedGraph.Node> queue = taskGraph.getAcyclicDirectedGraph().getTaskQueue(experimentConfig.scheduleDescription.queueType);
-
-        int t1 = getExecutionDuration(queue, new SystemModel(oneProcessorSystemPrototype), experimentConfig.scheduleDescription.loadingType.ratingFunctionClass);
-        int tp = getExecutionDuration(queue, new SystemModel(topologyPrototype), experimentConfig.scheduleDescription.loadingType.ratingFunctionClass);
+        int t1 = getExecutionDuration(acyclicDirectedGraph, queue, new SystemModel(oneProcessorSystemPrototype), experimentConfig.scheduleDescription.loadingType.ratingFunctionClass);
+        int tp = getExecutionDuration(acyclicDirectedGraph, queue, new SystemModel(topologyPrototype), experimentConfig.scheduleDescription.loadingType.ratingFunctionClass);
 
         double accelerationFactor = (double) t1 / tp;
         double efficiencyFactor = accelerationFactor / topologyPrototype.getProcessorNumber();
@@ -57,8 +46,8 @@ public class Experiment {
         return new SingleExperimentResult(accelerationFactor, efficiencyFactor, algorithmEfficiencyFactor);
     }
 
-    private static int getExecutionDuration(List<AcyclicDirectedGraph.Node> queue, SystemModel systemModel, ProcessorRatingFunctionClass processorRatingFunctionClass) {
-        List<com.nightingale.model.entities.schedule.Task> convertedQueue = com.nightingale.model.entities.schedule.Task.convert(queue);
+    private static int getExecutionDuration(AcyclicDirectedGraph graph, List<AcyclicDirectedGraph.Node> queue, SystemModel systemModel, ProcessorRatingFunctionClass processorRatingFunctionClass) {
+        List<com.nightingale.model.entities.schedule.Task> convertedQueue = com.nightingale.model.entities.schedule.Task.convert(graph, queue);
         Loggers.debugLogger.debug(queue);
         Loggers.debugLogger.debug(convertedQueue);
         systemModel.initResources().loadTasks(convertedQueue, processorRatingFunctionClass.buildFunction(systemModel));

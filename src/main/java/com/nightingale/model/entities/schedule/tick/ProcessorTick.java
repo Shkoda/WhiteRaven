@@ -10,6 +10,7 @@ public class ProcessorTick extends Tick {
     public final int physicalLinkNumber;
     private Task currentTask;
     private int ioOperationsNumber;
+    private int receiveOperationNumber, sendOperationNumber;
 
     public ProcessorTick(int processorId, int physicalLinkNumber, boolean fullDuplexEnabled) {
         super(fullDuplexEnabled);
@@ -28,14 +29,30 @@ public class ProcessorTick extends Tick {
         return currentTask;
     }
 
-    public boolean ioAllowed() {
-        return ioOperationsNumber < physicalLinkNumber;
+    public boolean ioAllowed(int srcId) {
+        boolean isSender = srcId == processorId;
+
+        return isSender ? sendOperationNumber < physicalLinkNumber :
+                receiveOperationNumber < physicalLinkNumber;
+
     }
 
-    public void addIOHandling() {
-        if (!ioAllowed())
+    /**
+     * @param srcId used for comparing with this.id.
+     *              If this.id==srcId sendOperationNumber++
+     *              else receiveOperationNumber++
+     */
+    public void addIOHandling(int srcId) {
+        if (!ioAllowed(srcId))
             throw new IllegalArgumentException("P" + processorId + ": all io ports are busy");
-        ioOperationsNumber++;
+        boolean isSender = srcId == processorId;
+
+        if (isSender)
+            sendOperationNumber++;
+        else
+            receiveOperationNumber++;
+
+//        ioOperationsNumber++;
     }
 
     public boolean isFree() {

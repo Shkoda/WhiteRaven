@@ -1,8 +1,5 @@
 package com.nightingale.command.modelling;
 
-import com.nightingale.command.modelling.critical_path_functions.node_rank_consumers.DeadlineDifferenceConsumer;
-import com.nightingale.command.modelling.critical_path_functions.node_rank_consumers.NodesAfterCurrentConsumer;
-import com.nightingale.command.modelling.critical_path_functions.node_rank_consumers.TimeBeforeCurrentConsumer;
 import com.nightingale.model.DataManager;
 import com.nightingale.model.entities.graph.AcyclicDirectedGraph;
 import com.nightingale.model.entities.graph.Graph;
@@ -19,8 +16,8 @@ import javafx.concurrent.Task;
 import java.util.List;
 import java.util.Map;
 
-import static com.nightingale.view.view_components.modeller.ModellerConstants.ScheduleDescription.*;
 import static com.nightingale.view.view_components.modeller.ModellerConstants.QueueType.*;
+import static com.nightingale.view.view_components.modeller.ModellerConstants.ScheduleDescription.*;
 
 /**
  * Created by Nightingale on 31.03.2014.
@@ -58,13 +55,13 @@ public class RefreshModellerData extends Service<Void> {
 
                     Map<ModellerConstants.ScheduleDescription, SystemModel> scheduleMap = modellerMediator.getScheduleMap();
 
-                    addGantt(queue2, QUEUE_2_SCHEDULE_3, ProcessorRatingFunctionClass.MAX_CONNECTIVITY, scheduleMap);
-                    addGantt(queue6, QUEUE_6_SCHEDULE_3, ProcessorRatingFunctionClass.MAX_CONNECTIVITY, scheduleMap);
-                    addGantt(queue16, QUEUE_16_SCHEDULE_3, ProcessorRatingFunctionClass.MAX_CONNECTIVITY, scheduleMap);
+                    addGantt(graph, queue2, QUEUE_2_SCHEDULE_3, ProcessorRatingFunctionClass.MAX_CONNECTIVITY, scheduleMap);
+                    addGantt(graph, queue6, QUEUE_6_SCHEDULE_3, ProcessorRatingFunctionClass.MAX_CONNECTIVITY, scheduleMap);
+                    addGantt(graph, queue16, QUEUE_16_SCHEDULE_3, ProcessorRatingFunctionClass.MAX_CONNECTIVITY, scheduleMap);
 
-                    addGantt(queue2, QUEUE_2_SCHEDULE_5, ProcessorRatingFunctionClass.SHORTEST_PATH, scheduleMap);
-                    addGantt(queue6, QUEUE_6_SCHEDULE_5, ProcessorRatingFunctionClass.SHORTEST_PATH, scheduleMap);
-                    addGantt(queue16, QUEUE_16_SCHEDULE_5, ProcessorRatingFunctionClass.SHORTEST_PATH, scheduleMap);
+                    addGantt(graph, queue2, QUEUE_2_SCHEDULE_5, ProcessorRatingFunctionClass.SHORTEST_PATH, scheduleMap);
+                    addGantt(graph, queue6, QUEUE_6_SCHEDULE_5, ProcessorRatingFunctionClass.SHORTEST_PATH, scheduleMap);
+                    addGantt(graph, queue16, QUEUE_16_SCHEDULE_5, ProcessorRatingFunctionClass.SHORTEST_PATH, scheduleMap);
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -75,12 +72,13 @@ public class RefreshModellerData extends Service<Void> {
     }
 
 
-    private static void addGantt(List<AcyclicDirectedGraph.Node> queue,
+    private static void addGantt( AcyclicDirectedGraph graph,
+                                  List<AcyclicDirectedGraph.Node> queue,
                                  ModellerConstants.ScheduleDescription scheduleDescription,
                                  ProcessorRatingFunctionClass processorRatingFunctionClass,
                                  Map<ModellerConstants.ScheduleDescription, SystemModel> scheduleMap) {
 
-        List<com.nightingale.model.entities.schedule.Task> convertedQueue = com.nightingale.model.entities.schedule.Task.convert(queue);
+        List<com.nightingale.model.entities.schedule.Task> convertedQueue = com.nightingale.model.entities.schedule.Task.convert(graph, queue);
 
         Loggers.debugLogger.debug(scheduleDescription + " " + convertedQueue);
         SystemModel systemModel = new SystemModel();

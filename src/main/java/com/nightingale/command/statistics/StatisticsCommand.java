@@ -91,7 +91,7 @@ public class StatisticsCommand extends Service<ObservableList<ExperimentResult>>
             }
 
             private void logResults(ObservableList<ExperimentResult> results) throws IOException {
-                String csvPath = "C:\\white_raven_statistics_" +
+                String csvPath = "D:\\white_raven_statistics_" +
                         LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm")) + ".txt";
                 CSVWriter writer = new CSVWriter(new FileWriter(csvPath));
 

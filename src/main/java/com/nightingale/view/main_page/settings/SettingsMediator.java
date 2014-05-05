@@ -13,17 +13,7 @@ import com.nightingale.view.config.Config;
 import com.nightingale.view.editor.proscessor_editor_page.mpp.IMppMediator;
 import com.nightingale.view.editor.tasks_editor_page.task_graph.ITaskGraphMediator;
 import com.nightingale.view.main_page.generate.IGeneratorView;
-import javafx.concurrent.WorkerStateEvent;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.Scene;
-import javafx.scene.layout.VBoxBuilder;
-import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -55,30 +45,21 @@ public class SettingsMediator implements ISettingsMediator {
     }
 
     private void initGenerateItem(){
-        settingsView.getGenerateTasks().setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-               generatorView.getView().show();
-            }
+        settingsView.getGenerateTasks().setOnAction(actionEvent -> {
+           generatorView.getView().show();
         });
     }
 
     private void initOpenMenuItems() {
-        settingsView.getOpenMPP().setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                File file = createFileChooser("Open MPP", Config.MPP_EXTENSION_FILTER).showOpenDialog(null);
-                if (file != null) {
-                    OpenMppCommand command = commandProvider.get(OpenMppCommand.class);
-                    command.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
-                        @Override
-                        public void handle(WorkerStateEvent workerStateEvent) {
-                            mppMediator.refresh();
-                        }
-                    });
-                    command.path = file.toPath();
-                    command.start();
-                }
+        settingsView.getOpenMPP().setOnAction(actionEvent -> {
+            File file = createFileChooser("Open MPP", Config.MPP_EXTENSION_FILTER).showOpenDialog(null);
+            if (file != null) {
+                OpenMppCommand command = commandProvider.get(OpenMppCommand.class);
+                command.setOnSucceeded(workerStateEvent -> {
+                    mppMediator.refresh();
+                });
+                command.path = file.toPath();
+                command.start();
             }
         });
 

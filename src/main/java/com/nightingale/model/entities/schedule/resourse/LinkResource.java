@@ -40,8 +40,8 @@ public class LinkResource extends SystemResource<LinkTick> {
 
         for (int i = startTime; i <= finishTime; i++) {
             useReverseTransmission = resourceTicks.get(i).setTransmission(task, src).isReverse;
-            firstProcessor.getTick(i).addIOHandling();
-            secondProcessor.getTick(i).addIOHandling();
+            firstProcessor.getTick(i).addIOHandling(src);
+            secondProcessor.getTick(i).addIOHandling(src);
         }
 
         Map<Task, TransmissionDescription> descriptionMap = useReverseTransmission ? t2TransmittedTasks : t1TransmittedTasks;
@@ -77,7 +77,7 @@ public class LinkResource extends SystemResource<LinkTick> {
         if (start + transmitLength >= resourceTicks.size())
             systemModel.increaseResourceTime((start + transmitLength) * 3 / 2);
         for (int i = start; i < start + transmitLength; i++)
-            if (!(!resourceTicks.get(i).isBusy(src) && firstProcessor.getTick(i).ioAllowed() && secondProcessor.getTick(i).ioAllowed()))
+            if (!(!resourceTicks.get(i).isBusy(src) && firstProcessor.getTick(i).ioAllowed(src) && secondProcessor.getTick(i).ioAllowed(src)))
                 return false;
         return true;
     }

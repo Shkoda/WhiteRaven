@@ -1,12 +1,12 @@
 package com.nightingale.model.entities.schedule;
 
 import com.nightingale.model.entities.graph.AcyclicDirectedGraph;
-import com.nightingale.utils.Loggers;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Created by Nightingale on 26.03.2014.
@@ -17,14 +17,11 @@ public class Task {
     public final double weight;
     public final List<Task> parents;
     private int startTime, finishTime;
+    /**
+     * key - child task, value - transmission time
+     */
+    public final Map<Task, Double> childrenMap;
 
-    public Task(int id, double weight, List<Task> parents) {
-        this.id = id;
-        this.weight = weight;
-        this.parents = parents;
-        startTime = UNDEFINED;
-        finishTime = UNDEFINED;
-    }
 
     public Task(int id, double weight) {
         this.weight = weight;
@@ -32,6 +29,7 @@ public class Task {
         parents = new ArrayList<>();
         startTime = UNDEFINED;
         finishTime = UNDEFINED;
+        childrenMap = new HashMap<>();
     }
 
     public int getMinimalStartTime() {
@@ -60,7 +58,7 @@ public class Task {
         return this;
     }
 
-    public static List<Task> convert(List<AcyclicDirectedGraph.Node> input) {
+    public static List<Task> convert(AcyclicDirectedGraph graph, List<AcyclicDirectedGraph.Node> input) {
         Map<Integer, Task> convertedTasks = new HashMap<>();
 
         input.stream().forEach(i -> convertedTasks.put(i.getId(), new Task(i.getId(), i.getWeight())));
@@ -69,24 +67,40 @@ public class Task {
         input.stream().forEach(i -> {
             Task current = convertedTasks.get(i.getId());
             i.getParentsIds().forEach(p -> current.parents.add(convertedTasks.get(p)));
+            i.getChildren().forEach(c -> {
+                int childId = c.getId();
+                int currentId = i.getId();
+                current.childrenMap.put(convertedTasks.get(childId), graph.getConnection(currentId, childId).getWeight());
+            });
             result.add(current);
         });
         return new ArrayList<>(result);
     }
 
-    public static List<Task> copy(List<Task> input) {
-        Map<Integer, Task> copy = new HashMap<>();
+    public static List<Task> copy(List<Task> original) {
+        //key - task id, value - task
+        Map<Integer, Task> tempCopyMap = new HashMap<>();
 
-        input.stream().forEach(i -> copy.put(i.id, new Task(i.id, i.weight)));
+        original.stream().forEach(originalTask -> tempCopyMap.put(originalTask.id, new Task(originalTask.id, originalTask.weight)));
         List<Task> result = new ArrayList<>();
-        input.stream().forEach(i -> {
-            Task current = copy.get(i.id);
-            i.parents.forEach(p -> current.parents.add(copy.get(p.id)));
+        original.stream().forEach(originalTask -> {
+            Task current = tempCopyMap.get(originalTask.id);
+            originalTask.parents
+                    .forEach(originalParent -> current.parents.add(tempCopyMap.get(originalParent.id)));
+            originalTask.childrenMap.keySet()
+                    .forEach(originalChild -> {
+                        Task copiedChild = tempCopyMap.get(originalChild.id);
+                        Double transmissionTime = originalTask.childrenMap.get(originalChild);
+                        current.childrenMap.put(copiedChild, transmissionTime);
+                    });
             result.add(current);
         });
         return result;
     }
 
+    public int getId() {
+        return id;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -95,11 +109,8 @@ public class Task {
 
         Task task = (Task) o;
 
-        if (finishTime != task.finishTime) return false;
         if (id != task.id) return false;
-        if (startTime != task.startTime) return false;
         if (Double.compare(task.weight, weight) != 0) return false;
-        if (parents != null ? !parents.equals(task.parents) : task.parents != null) return false;
 
         return true;
     }
@@ -111,9 +122,6 @@ public class Task {
         result = id;
         temp = Double.doubleToLongBits(weight);
         result = 31 * result + (int) (temp ^ (temp >>> 32));
-        result = 31 * result + (parents != null ? parents.hashCode() : 0);
-        result = 31 * result + startTime;
-        result = 31 * result + finishTime;
         return result;
     }
 

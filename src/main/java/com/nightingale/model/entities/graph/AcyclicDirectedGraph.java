@@ -1,12 +1,11 @@
 package com.nightingale.model.entities.graph;
 
-import com.nightingale.utils.Loggers;
 import com.nightingale.view.view_components.modeller.ModellerConstants;
 
 import java.io.Serializable;
 import java.util.*;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Created by Nightingale on 20.03.2014.
@@ -14,6 +13,7 @@ import java.util.stream.Collectors;
 public class AcyclicDirectedGraph implements Serializable {
     private Map<Integer, Node> roots = new HashMap<>();
     private Map<Integer, Node> ids = new HashMap<>();
+    private Map<Integer, List<Connection>> outerConnections = new HashMap<>();
     private static final transient Comparator<Node> increaseRatingComparator = (o1, o2) -> ((Double) o1.getRating()).compareTo(o2.getRating());
     private static final transient Comparator<Node> decreaseRatingComparator = (o1, o2) -> (-(((Double) o1.getRating()).compareTo(o2.getRating())));
 
@@ -63,13 +63,45 @@ public class AcyclicDirectedGraph implements Serializable {
             roots.put(child.id, child);
     }
 
+    public boolean isConnectionAllowed(int parentId, int childId) {
+        Node parent = ids.get(parentId);
+        Node child = ids.get(childId);
+        return !(parent == null || child == null || edgeExist(parent, child) || isParent(child, parentId) || parent == child);
+    }
+
+    public boolean addLink(Connection connection) {
+        //    Node parent = search(parentId);
+        //   Node child = search(childId);
+
+        //   if (parent == null || child == null || edgeExist(parent, child) || isParent(child, parentId) || parent == child)
+        //      return false;
+        Node parent = ids.get(connection.firstVertexId);
+        Node child = ids.get(connection.secondVertexId);
+
+        if (isRoot(child.id))
+            roots.remove(child.id);
+        parent.children.add(child);
+        child.parents.add(parent);
+        outerConnections.putIfAbsent(parent.id, new ArrayList<>());
+        outerConnections.get(parent.id).add(connection);
+        return true;
+    }
+
+    public Connection getConnection(int srcId, int dstId) {
+        return outerConnections.get(srcId).stream()
+                .filter(c -> c.getSecondVertexId() == dstId)
+                .collect(Collectors.toList()).get(0);
+    }
 
     public boolean addLink(int parentId, int childId) {
-        Node parent = search(parentId);
-        Node child = search(childId);
+        //    Node parent = search(parentId);
+        //   Node child = search(childId);
 
-        if (parent == null || child == null || edgeExist(parent, child) || isParent(child, parentId) || parent == child)
-            return false;
+        //   if (parent == null || child == null || edgeExist(parent, child) || isParent(child, parentId) || parent == child)
+        //      return false;
+        Node parent = ids.get(parentId);
+        Node child = ids.get(childId);
+
         if (isRoot(childId))
             roots.remove(childId);
         parent.children.add(child);
@@ -133,7 +165,32 @@ public class AcyclicDirectedGraph implements Serializable {
         Comparator<AcyclicDirectedGraph.Node> comparator = queueType.taskSortingIncreaseOrder ?
                 increaseRatingComparator : decreaseRatingComparator;
         nodes.sort(comparator);
+        checkParentDependencies(nodes);
         return nodes;
+    }
+
+    private void checkParentDependencies(List<Node> queue) {
+        for (int i = 0; i < queue.size(); i++) {
+            Node current = queue.get(i);
+            if (current.parents.isEmpty())      //if hasn't parents dependencies are always OK
+                continue;
+            List<Node> alreadyLoaded = queue.subList(0, i);
+            List<Node> notLoadedParents = current.parents.stream()
+                    .filter(parent -> !alreadyLoaded.contains(parent)).collect(Collectors.toList());
+            if (notLoadedParents.isEmpty())     //if all parents were loaded continue
+                continue;
+
+            int maxParentIndex = notLoadedParents.stream().mapToInt(queue::indexOf).max().getAsInt();
+            swipe(queue, i, maxParentIndex);
+            i = -1;
+        }
+
+    }
+
+    private void swipe(List<Node> list, int firstIndex, int secondIndex) {
+        Node first = list.get(firstIndex);
+        list.set(firstIndex, list.get(secondIndex));
+        list.set(secondIndex, first);
     }
 
     public class Node implements Serializable {
@@ -206,18 +263,13 @@ public class AcyclicDirectedGraph implements Serializable {
             Node node = (Node) o;
 
             if (id != node.id) return false;
-            if (children != null ? !children.equals(node.children) : node.children != null) return false;
-            if (parents != null ? !parents.equals(node.parents) : node.parents != null) return false;
 
             return true;
         }
 
         @Override
         public int hashCode() {
-            int result = id;
-            result = 31 * result + (parents != null ? parents.hashCode() : 0);
-            result = 31 * result + (children != null ? children.hashCode() : 0);
-            return result;
+            return id;
         }
     }
 }

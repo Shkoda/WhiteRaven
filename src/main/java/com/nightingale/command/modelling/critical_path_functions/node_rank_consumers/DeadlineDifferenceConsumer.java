@@ -36,9 +36,9 @@ public class DeadlineDifferenceConsumer implements Consumer<AcyclicDirectedGraph
 
         double weightDown = vertexWeightFunction
                 .apply(CriticalPath.find(node, vertexWeightFunction, CriticalPath.Direction.DOWN))
-                .doubleValue();// + node.getWeight();
+                .doubleValue()+ node.getWeight();
 
-        node.setRating(criticalPathWeight - weightDown + weightUp);
-        Loggers.debugLogger.debug("node #" + node.getId() + " up=" + weightUp + " down=" + weightDown + " rating=" + node.getRating());
+        node.setRating(criticalPathWeight - weightDown - weightUp);//+weightUp
+        Loggers.debugLogger.debug("------------>>>>>>>  node #" + node.getId() + " up=" + weightUp + " down=" + weightDown + " rating=" + node.getRating());
     }
 }

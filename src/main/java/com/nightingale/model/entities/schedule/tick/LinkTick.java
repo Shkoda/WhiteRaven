@@ -20,7 +20,7 @@ public class LinkTick extends Tick {
     }
 
     public boolean isBusy(int src) {
-        if (!firstProcessorTick.ioAllowed() || !secondProcessorTick.ioAllowed())
+        if (!firstProcessorTick.ioAllowed(src) || !secondProcessorTick.ioAllowed(src))
             return true;
         if (!fullDuplexEnabled)
             return t1.transmitTask != null || t2.transmitTask != null;

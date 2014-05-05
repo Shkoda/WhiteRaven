@@ -1,19 +1,21 @@
 package com.nightingale.model.entities.schedule;
 
 import com.nightingale.model.DataManager;
-import com.nightingale.model.entities.schedule.resourse.LinkResource;
-import com.nightingale.model.entities.schedule.resourse.ProcessorResource;
 import com.nightingale.model.entities.graph.Connection;
 import com.nightingale.model.entities.graph.Graph;
+import com.nightingale.model.entities.schedule.resourse.LinkResource;
+import com.nightingale.model.entities.schedule.resourse.ProcessorResource;
 import com.nightingale.model.mpp.ProcessorLinkModel;
 import com.nightingale.model.mpp.ProcessorModel;
 import com.nightingale.model.tasks.TaskLinkModel;
 import com.nightingale.model.tasks.TaskModel;
 import com.nightingale.utils.Loggers;
+import com.nightingale.utils.TriFunction;
 
-import java.util.*;
-import java.util.function.BiFunction;
-import java.util.logging.Logger;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -80,11 +82,11 @@ public class SystemModel {
         return this;
     }
 
-    public void loadTasks(List<Task> queue, BiFunction<List<ProcessorResource>, List<Task>, ProcessorResource> selectProcessorFunction) {
+    public void loadTasks(List<Task> queue, TriFunction<List<ProcessorResource>, List<Task>, Task, ProcessorResource> selectProcessorFunction) {
         Task.copy(queue).stream().forEach(task -> loadTask(task, selectProcessorFunction));
     }
 
-    private void loadTask(Task task, BiFunction<List<ProcessorResource>, List<Task>, ProcessorResource> selectProcessorFunction) {
+    private void loadTask(Task task, TriFunction<List<ProcessorResource>, List<Task>, Task, ProcessorResource> selectProcessorFunction) {
         Loggers.debugLogger.debug("loading T" + task.id);
 
         int minimalStartTime = task.getMinimalStartTime();
@@ -93,7 +95,7 @@ public class SystemModel {
         List<ProcessorResource> availableProcessors = getAvailableProcessors(minimalStartTime);
         Loggers.debugLogger.debug("availableProcessors=" + availableProcessors);
 
-        ProcessorResource processor = selectProcessorFunction.apply(availableProcessors, task.parents);
+        ProcessorResource processor = selectProcessorFunction.apply(availableProcessors, task.parents, task);
         Loggers.debugLogger.debug("processor " + processor.name);
         if (!task.parents.isEmpty())
             minimalStartTime = transmitParentData(task.parents, task, processor);
@@ -134,7 +136,6 @@ public class SystemModel {
         double transmissionWeight = taskGraph.getConnection(parentTask.id, childTask.id).getWeight();
 
         for (int i = 0; i < path.length; i++) {
-
             Connection connection = path.links.get(srcProcessorId);
             ProcessorResource currentDst = processorResources.get(connection.getOtherVertexId(srcProcessorId));
             Integer taskAvailableTime = currentDst.loadedTasks.get(parentTask);
@@ -179,9 +180,10 @@ public class SystemModel {
                         .max().getAsInt();
     }
 
-    public int getProcessorNumber(){
+    public int getProcessorNumber() {
         return processorResources.size();
     }
+
     public Map<Integer, ProcessorResource> getTaskOnProcessorsMap() {
         return taskOnProcessorsMap;
     }
