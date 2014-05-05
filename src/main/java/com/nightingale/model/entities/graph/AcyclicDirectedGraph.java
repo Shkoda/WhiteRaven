@@ -5,7 +5,6 @@ import com.nightingale.view.view_components.modeller.ModellerConstants;
 import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * Created by Nightingale on 20.03.2014.
@@ -181,16 +180,19 @@ public class AcyclicDirectedGraph implements Serializable {
                 continue;
 
             int maxParentIndex = notLoadedParents.stream().mapToInt(queue::indexOf).max().getAsInt();
-            swipe(queue, i, maxParentIndex);
+            shift(queue, i, maxParentIndex);
             i = -1;
         }
 
     }
 
-    private void swipe(List<Node> list, int firstIndex, int secondIndex) {
+    private void shift(List<Node> list, int firstIndex, int secondIndex) {
         Node first = list.get(firstIndex);
-        list.set(firstIndex, list.get(secondIndex));
+        for (int i = firstIndex+1; i<=secondIndex; i++)
+            list.set(i-1, list.get(i));
         list.set(secondIndex, first);
+//        list.set(firstIndex, list.get(secondIndex));
+//        list.set(secondIndex, first);
     }
 
     public class Node implements Serializable {
